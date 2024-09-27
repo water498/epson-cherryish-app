@@ -1,0 +1,37 @@
+{
+  "project_info": {
+    "project_number": "877005315390",
+    "project_id": "seeya-bd99d",
+    "storage_bucket": "seeya-bd99d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:877005315390:android:944dfaeb8960883c6ee06f",
+        "android_client_info": {
+          "package_name": "com.cherryish.seeya"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWzSPMaDie5GjMYruMY10i4ieyI3QEDSo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "877005315390-f4edma2d73rt0o2uq254rksc34kd0ae2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cherryish.seeya"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

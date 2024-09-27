@@ -6,9 +6,31 @@
 	<string>877005315390-f4edma2d73rt0o2uq254rksc34kd0ae2.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.877005315390-f4edma2d73rt0o2uq254rksc34kd0ae2</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>877005315390-sq0df6gc4mi05v081s7blj9cndqe9tbp.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCEWm2M95AUrwadm2wegNVBHlK1HJpnOvc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>877005315390</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.cherryish.seeya</string>
+	<key>PROJECT_ID</key>
+	<string>seeya-bd99d</string>
+	<key>STORAGE_BUCKET</key>
+	<string>seeya-bd99d.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:877005315390:ios:0b47f28ebd7e46b76ee06f</string>
 </dict>
 </plist>

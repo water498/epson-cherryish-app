@@ -1,4 +1,5 @@
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 abstract class DeviceInfoUtils {
@@ -32,6 +33,12 @@ abstract class DeviceInfoUtils {
         "${iosInfo.model}"
         "${iosInfo.localizedModel}");
     return iosInfo.model;
+  }
+
+
+  static String getDeviceCountry() {
+    var countryCode = WidgetsBinding.instance.platformDispatcher.locale.countryCode ?? "KR";
+    return countryCode;
   }
 
 

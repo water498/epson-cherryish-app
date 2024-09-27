@@ -1,83 +1,94 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:seeya/constants/app_themes.dart';
 import 'package:seeya/view/screens.dart';
 
 import '../../constants/app_colors.dart';
+import '../../controller/controllers.dart';
 
-class RootScreen extends StatefulWidget {
+
+class RootScreen extends GetView<RootController> {
   const RootScreen({super.key});
 
   @override
-  State<RootScreen> createState() => _RootScreenState();
-}
-
-class _RootScreenState extends State<RootScreen> {
-
-  int _currentIndex = 0;
-
-  final Map<int, Widget> tabPages = {
-    0: HomeScreen(),
-  };
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: List.generate(3, (index) => tabPages[index] ?? Container()),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedLabelStyle: const TextStyle(fontSize: 8,),
-        unselectedLabelStyle: const TextStyle(fontSize: 8,),
-        selectedItemColor: AppColors.main700,
-        unselectedItemColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        elevation: 0,
-        backgroundColor: AppColors.grey500,
-        currentIndex: _currentIndex,
-        onTap: (value) {
-          onTabTapped(value);
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: '홈'
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.photo_library_outlined),
-              activeIcon: Icon(Icons.photo_library),
-              label: '리스트'
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.tag_faces),
-            activeIcon: Icon(Icons.tag_faces_rounded),
-            label: '내정보'
-          ),
-        ],
+
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          if(controller.currentIndex.value != 0){
+            controller.currentIndex.value = 0;
+          }else {
+            SystemNavigator.pop();
+          }
+        }
+      },
+      child: Scaffold(
+        body: Column(
+          children: [
+            Expanded(
+              child: Obx(() {
+                return IndexedStack(
+                  index: controller.currentIndex.value,
+                  children: List.generate(3, (index) => controller.tabPages[index] ?? Container()),
+                );
+              },),
+            ),
+            const Divider(height: 2, color: AppColors.blueGrey600,)
+          ],
+        ),
+        bottomNavigationBar: Obx(() {
+          return Theme(
+            data: ThemeData(
+              splashColor: Colors.transparent, // ripple 효과 색상
+              highlightColor: Colors.transparent // long click 시 나타나는 색상
+            ),
+            child: BottomNavigationBar(
+              selectedLabelStyle: AppThemes.bodySmall,
+              unselectedLabelStyle: AppThemes.bodySmall,
+              selectedItemColor: AppColors.blueGrey200,
+              unselectedItemColor: AppColors.blueGrey500,
+              type: BottomNavigationBarType.fixed,
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              elevation: 0,
+              backgroundColor: Colors.white,
+              currentIndex: controller.currentIndex.value,
+              onTap: (value) {
+                controller.onTabTapped(value);
+              },
+              items: [
+                BottomNavigationBarItem(
+                    icon: SvgPicture.asset("assets/image/ic_home.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey500, BlendMode.srcIn),),
+                    activeIcon: SvgPicture.asset("assets/image/ic_home.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey200, BlendMode.srcIn),),
+                    label: '홈'
+                ),
+                BottomNavigationBarItem(
+                    icon: SvgPicture.asset("assets/image/ic_map.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey500, BlendMode.srcIn),),
+                    activeIcon: SvgPicture.asset("assets/image/ic_map.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey200, BlendMode.srcIn),),
+                    label: '지도'
+                ),
+                BottomNavigationBarItem(
+                    icon: SvgPicture.asset("assets/image/ic_my_page.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey500, BlendMode.srcIn),),
+                    activeIcon: SvgPicture.asset("assets/image/ic_my_page.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey200, BlendMode.srcIn),),
+                    label: '마이페이지'
+                ),
+              ],
+            ),
+          );
+        },),
       ),
     );
   }
 
-  void onTabTapped(int index) {
-
-    if (!tabPages.containsKey(index)) {
-      switch (index) {
-        case 1:
-          tabPages[index] = PhotoListScreen();
-          break;
-        case 2:
-          tabPages[index] = MyPageScreen();
-          break;
-      }
-    }
-
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
 }
+
+
+
+
 
 

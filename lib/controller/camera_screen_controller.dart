@@ -1,25 +1,32 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:camera/camera.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:gal/gal.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:seeya/constants/app_secret.dart';
+import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/data/model/models.dart';
+import 'package:seeya/view/common/loading_overlay.dart';
 
 import '../utils/file_utils.dart';
 import '../utils/image_utils.dart';
 
 class CameraScreenController extends GetxController{
 
-
   // camera
   CameraController? cameraController;
   late List<CameraDescription> descriptions;
 
+  // state
   var isInitialized = false.obs;
   var showFlashAnim = false.obs;
   var showImage = false.obs;
@@ -28,26 +35,65 @@ class CameraScreenController extends GetxController{
   // image files
   File? currentMergedImageFile;
 
-  // filter
-  late PhotoFilter photoFilter;
+  // gallery image
+  Rx<Uint8List?> latestPhoto = Rx<Uint8List?>(null);
+  late ValueChanged<MethodCall> galleryListener;
 
+  // controller
+  final frameController = Get.put(DecorateFrameController());
+
+  // inner filter pageview
+  late PageController pageController;
+  var currentPage = 0.obs;
+  late TempEventFilter currentFilter;
 
 
   @override
   void onInit() {
 
-    photoFilter = Get.arguments;
+    currentPage.value = Get.arguments["selected_index"];
+    currentFilter = frameController.eventFilterList[currentPage.value];
 
-    initCameraController();
+    pageController = PageController(
+      initialPage: currentPage.value,
+      viewportFraction: 0.27
+    );
+    pageController.addListener(pageListener);
+
+    initWithAwait();
     super.onInit();
   }
 
   @override
   void onClose() {
+    PhotoManager.removeChangeCallback(galleryListener);
+    pageController.removeListener(pageListener);
+    pageController.dispose();
     cameraController?.dispose();
     cameraController = null;
+    latestPhoto.value = null;
     super.onClose();
   }
+
+
+  Future<void> initWithAwait() async {
+    await initCamera();
+    await startWatchingRecentImage();
+  }
+
+
+
+  void pageListener(){
+    if(pageController.page != null){
+      currentPage.value = pageController.page!.round();
+      currentFilter = frameController.eventFilterList[currentPage.value];
+    }
+  }
+
+
+
+
+
 
   void startFlashAnim() {
     showFlashAnim.value = true;
@@ -56,47 +102,113 @@ class CameraScreenController extends GetxController{
     });
   }
 
+
+
+
+
+
   Future<void> initCamera() async {
 
     PermissionStatus cameraPermissionStatus = await Permission.camera.request();
     if(cameraPermissionStatus.isDenied){
-      Get.snackbar("⚠️", "권한을 허용해 주세요.",colorText: Colors.white);
+      Fluttertoast.showToast(msg: "권한을 허용해 주세요.");
       Get.back();
       return;
     }
 
-    if (!(await Gal.hasAccess())) {
-      await Gal.requestAccess();
+
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      status = await Permission.storage.request();
     }
 
-    descriptions = await availableCameras();
-    cameraController = CameraController(descriptions[1], ResolutionPreset.ultraHigh);
 
-    cameraController?.initialize().then((_) {
+
+    try {
+      // 사용 가능한 카메라 확인
+      descriptions = await availableCameras();
+
+      if (descriptions.isEmpty) {
+        throw ("사용 가능한 카메라가 없습니다.");
+      }
+
+      // 카메라 컨트롤러 초기화
+      cameraController = CameraController(
+        descriptions[1], // descriptions[1] 대신 descriptions의 인덱스를 안전하게 선택해야 함
+        ResolutionPreset.ultraHigh,
+        enableAudio: false,
+      );
+
+      await cameraController?.initialize();
       cameraController?.setFlashMode(FlashMode.off);
       isInitialized(true);
-    }).catchError((Object e) {
+
+    } catch (e) {
+      // Camera initialization error
       if (e is CameraException) {
         switch (e.code) {
           case 'CameraAccessDenied':
-            print("CameraController Error : CameraAccessDenied");
-            // Handle access errors here.
+            Fluttertoast.showToast(msg: "카메라를 권한을 허용해주세요.");
             break;
           default:
-            print("CameraController Error");
-            // Handle other errors here.
+            Fluttertoast.showToast(msg: "카메라를 초기화하는 중 오류가 발생했습니다.");
             break;
         }
+      }else {
+        Fluttertoast.showToast(msg: "카메라를 초기화하는 중 오류가 발생했습니다. ($e)");
+      }
+
+    }
+
+  }
+
+
+
+
+  Future<void> startWatchingRecentImage() async {
+    PhotoManager.requestPermissionExtend().then((ps) {
+      if (ps.isAuth || ps.hasAccess) {
+
+        // 초기 최신 사진 제공
+        _updateLatestPhoto();
+
+        // 리스너 추가
+        galleryListener = (value) {
+          _updateLatestPhoto();
+        };
+
+        // 갤러리 변경 감지 콜백 설정
+        PhotoManager.addChangeCallback(galleryListener);
+
+        // 권한 감지
+        PhotoManager.startChangeNotify();
       }
     });
-  }
 
-  Future<void> initCameraController() async {
-    await initCamera();
   }
 
 
-  Future<File?> takePicture() async {
+
+
+
+  Future<void> _updateLatestPhoto() async {
+    List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(
+      type: RequestType.image,
+      onlyAll: true,
+    );
+
+    if (albums.isNotEmpty) {
+      List<AssetEntity> photos = await albums.first.getAssetListRange(start: 0, end: 1);
+      if (photos.isNotEmpty) {
+        latestPhoto.value = await photos.first.thumbnailDataWithSize(const ThumbnailSize(200, 200));
+      } else {
+        latestPhoto.value = null;
+      }
+    }
+  }
+
+
+  Future<File?> takePicture(int index) async {
     if(cameraController == null){
       return null;
     }
@@ -106,18 +218,24 @@ class CameraScreenController extends GetxController{
 
 
     try {
+
+      var savePath = "${(await getApplicationDocumentsDirectory())}/temp_photos";
+      var filter = frameController.eventFilterList[index];
+
+      LoadingOverlay.show(null);
+
       startFlashAnim();
+
+      isImgProcessing(true);
       final XFile tempFile = await cameraController!.takePicture();
 
 
-      await Future.delayed(const Duration(milliseconds: 200));
-      isImgProcessing(true);
-
-
-      var ratio = photoFilter.height/photoFilter.width;
+      var ratio = filter.height/filter.width;
 
       // fit & rotate
-      await ImageUtils().fixRotateAndFlipImage(tempFile.path);
+      LoadingOverlay.show("이미지를 올바르게 회전 중입니다.");
+      bool isFront = cameraController!.description.lensDirection == CameraLensDirection.front;
+      await ImageUtils().fixRotateAndFlipImage(isFront, tempFile.path);
 
       // picture image properties
       ImageProperties properties = await FlutterNativeImage.getImageProperties(tempFile.path);
@@ -125,27 +243,91 @@ class CameraScreenController extends GetxController{
       var height = properties.height!;
       Logger().d("temp file 즉 원본이미지 - orientation ::: ${properties.orientation} width ::: ${width} height :::: ${height}");
 
+
       double targetHeight = width * (ratio);
       int offsetX = 0;
       int offsetY = (height - targetHeight) ~/ 2;
 
+      LoadingOverlay.show("이미지 사이즈를 조절중입니다.");
       final croppedUserImageFile = await FlutterNativeImage.cropImage(tempFile.path, offsetX, offsetY, width, (width*(ratio)).toInt());
-      final overlayImage = await FileUtils.findFileFromUrl("${AppSecret.s3url}${photoFilter.thumbnail_image_filepath}");
 
-      final finalImage = await ImageUtils().overlayImages(width, (width*(ratio)).toInt(), croppedUserImageFile, overlayImage);
-      Logger().d("finalImage path ::: ${finalImage.path}");
+      if(filter.imageFilepath != null){
+        LoadingOverlay.show("이미지 합치는 중입니다.");
+        final overlayImage = await FileUtils.findFileFromUrl("${AppSecret.s3url}${filter.imageFilepath}");
+        final finalImage = await ImageUtils().overlayImages(width, (width*(ratio)).toInt(), croppedUserImageFile, overlayImage);
+        Logger().d("finalImage path ::: ${finalImage.path}");
 
-      Gal.putImage(finalImage.path);
+        var model = CameraResultModel(filter_uid: filter.uid, file: finalImage);
+        frameController.mergedPhotoList[index] = model;
 
-      isImgProcessing(false);
+        return File(finalImage.path);
+      }else {
 
-      return File(finalImage.path);
+        var model = CameraResultModel(filter_uid: filter.uid, file: croppedUserImageFile);
+        frameController.mergedPhotoList[index] = model;
+
+        return File(croppedUserImageFile.path);
+      }
+
     } catch (e) {
       isImgProcessing(false);
       Logger().e('Error taking picture: $e');
+      Fluttertoast.showToast(msg: "e ::: $e",toastLength: Toast.LENGTH_LONG);
       return null;
+    } finally {
+      LoadingOverlay.hide();
     }
   }
 
+
+
+  Future<XFile?> pickImage() async {
+    XFile? selectedImage;
+    try{
+      selectedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if(selectedImage != null){
+        return selectedImage;
+      }else {
+        return null;
+      }
+
+    }catch (e){
+      if(Platform.isIOS){
+        var status = await Permission.photos.status;
+        if (status.isDenied) {
+          Logger().d('Access Denied');
+          openAppSettings();
+        } else {
+          Logger().e('Exception occured! ::: $e');
+        }
+      }
+      return null;
+    }
+
+  }
+
+
+
+  void switchingCamera(){
+    if (cameraController?.description.lensDirection == CameraLensDirection.back) {
+      cameraController?.setDescription(descriptions[1]);
+    } else {
+      cameraController?.setDescription(descriptions[0]);
+    }
+  }
+
+
+
+
+  Future<void> deleteImageFile(File file) async {
+    try {
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      Logger().e("Failed to delete file: $e");
+    }
+  }
 
 }

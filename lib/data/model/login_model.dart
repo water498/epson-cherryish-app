@@ -2,51 +2,38 @@ import 'dart:io';
 
 class LoginRequestModel{
 
-  String name;
+  String? name;
+  String? email;
+  String? profile_url;
   String social_type;
   String social_id;
   String? fcm_token;
-  String? birth;
-  String? phone;
-  String email;
-  String device;
-  String os;
-  String os_version;
-
-  String? profileUrl;
-  String? iapReceipt;
+  String? os_name;
+  String? os_version;
 
   LoginRequestModel({
-    required this.name,
+    this.name,
+    this.email,
+    this.profile_url,
     required this.social_type,
     required this.social_id,
     this.fcm_token,
-    this.birth,
-    this.phone,
-    required this.email,
-    required this.device,
-    required this.os,
-    required this.os_version,
-    this.profileUrl,
-    this.iapReceipt,
+    this.os_name,
+    this.os_version,
   }){
-    os = Platform.isIOS ? "ios" : "aos";
+    os_name = Platform.isIOS ? "ios" : "aos";
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {
       'name': name,
+      'email': email,
+      'profile_url': profile_url,
       'social_type': social_type,
       'social_id': social_id,
       'fcm_token': fcm_token,
-      'birth': birth,
-      'phone': phone,
-      'email': email,
-      'device': device,
-      'os': os,
+      'os_name': os_name,
       'os_version': os_version,
-      'profile_url': profileUrl,
-      'iap_receipt' : iapReceipt,
     };
 
     json.removeWhere((key, value) => value == null || value == '');
@@ -58,18 +45,21 @@ class LoginRequestModel{
 }
 
 class LoginResponseModel {
-  UserInfoResponseModel? user;
-  String? accessToken;
+  UserInfoModel user;
+  bool need_phone_verification;
+  String access_token;
 
   LoginResponseModel({
-    this.user,
-    this.accessToken
+    required this.user,
+    required this.need_phone_verification,
+    required this.access_token
   });
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
     return LoginResponseModel(
-      user: json['user'] != null ? UserInfoResponseModel.fromJson(json['user']) : null,
-      accessToken: json['access_token'],
+      user: UserInfoModel.fromJson(json['item']),
+      need_phone_verification : json['need_phone_verification'],
+      access_token: json['access_token'],
     );
   }
 
@@ -78,63 +68,82 @@ class LoginResponseModel {
 
 
 
-class UserInfoResponseModel {
-  String? kakaoId;
-  String? appleId;
-  String? googleId;
-  String? naverId;
-  String? socialType;
-  int? uid;
-  int? createdTime; // 4/1 date -> timestamp
+// public
+class UserInfoModel {
+  int id;
   String? name;
-  String? fcmToken;
-  String? birth;
-  String? phone;
   String? email;
-  String? deviceType;
-  String? osType;
-  String? profileUrl;
-  String? updateTime;
+  String? profile_url;
+  String? fcm_token;
+  String? os_name;
+  String? os_version;
+  String created_date;
+  String last_login_date;
+  String? deleted_date;
+  String? social_type;
 
 
-  UserInfoResponseModel({
-    this.kakaoId,
-    this.appleId,
-    this.googleId,
-    this.naverId,
-    this.socialType,
-    this.uid,
-    this.createdTime,
+
+  UserInfoModel({
+    required this.id,
     this.name,
-    this.fcmToken,
-    this.birth,
-    this.phone,
     this.email,
-    this.deviceType,
-    this.profileUrl,
-    this.osType,
-    this.updateTime,
+    this.profile_url,
+    this.fcm_token,
+    this.os_name,
+    this.os_version,
+    required this.created_date,
+    required this.last_login_date,
+    this.deleted_date,
+    this.social_type,
   });
 
-  factory UserInfoResponseModel.fromJson(Map<String, dynamic> json) {
-    return UserInfoResponseModel(
-      kakaoId: json['kakao_id'],
-      appleId: json['apple_id'],
-      googleId: json['google_id'],
-      naverId: json['naver_id'],
-      socialType: json['social_type'],
-      uid: json['uid'],
-      createdTime: json['created_time'],
+  factory UserInfoModel.fromJson(Map<String, dynamic> json) {
+    return UserInfoModel(
+      id: json['id'],
       name: json['name'],
-      fcmToken: json['fcm_token'],
-      birth: json['birth'],
-      phone: json['phone'],
       email: json['email'],
-      deviceType: json['device_type'],
-      profileUrl: json['profile_url'],
-      osType: json['os_type'],
-      updateTime: json['update_time'],
+      profile_url: json['profile_url'],
+      fcm_token: json['fcm_token'],
+      os_name: json['os_name'],
+      os_version: json['os_version'],
+      created_date: json['created_date'],
+      last_login_date: json['last_login_date'],
+      deleted_date: json['deleted_date'],
+      social_type: json['social_type'],
     );
   }
+
+
+  UserInfoModel copyWith({
+    int? id,
+    String? name,
+    String? email,
+    String? profile_url,
+    String? fcm_token,
+    String? os_name,
+    String? os_version,
+    String? created_date,
+    String? last_login_date,
+    String? deleted_date,
+    String? social_type,
+  }) {
+    return UserInfoModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      profile_url: profile_url ?? this.profile_url,
+      fcm_token: fcm_token ?? this.fcm_token,
+      os_name: os_name ?? this.os_name,
+      os_version: os_version ?? this.os_version,
+      created_date: created_date ?? this.created_date,
+      last_login_date: last_login_date ?? this.last_login_date,
+      deleted_date: deleted_date ?? this.deleted_date,
+      social_type: social_type ?? this.social_type,
+    );
+  }
+
+
+
 }
 

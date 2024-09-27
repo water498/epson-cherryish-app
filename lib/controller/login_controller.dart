@@ -33,21 +33,16 @@ class LoginController extends GetxController{
     Logger().d("fetchUserData request ::: ${jsonEncode(loginRequest)}");
 
     try {
-      CommonResponseModel commonResponse = await loginRepository.fetchLoginApi(loginRequest.toJson());
+      CommonResponseModel commonResponse = await loginRepository.callLoginApi(loginRequest.toJson());
 
       if(commonResponse.successModel != null){
         LoginResponseModel response = LoginResponseModel.fromJson(commonResponse.successModel!.content);
 
-        if(response.user != null && response.accessToken != null && response.user!.uid != null){
-          // UserService.instance.rxUserInfo.value = response.user; //
-          await AppPreferences().prefs?.setInt(AppPrefsKeys.userId, response.user!.uid!);
-          await AppPreferences().prefs?.setString(AppPrefsKeys.userAccessToken, response.accessToken!);
+        // UserService.instance.rxUserInfo.value = response.user; //
+        await AppPreferences().prefs?.setString(AppPrefsKeys.userAccessToken, response.access_token);
 
-          int? userId = AppPreferences().prefs?.getInt(AppPrefsKeys.userId);
-          Get.offAndToNamed(AppRouter.root);
-        }else {
-          Get.snackbar('An error has occurred', '[error code : ${105}]', colorText: Colors.white);
-        }
+        Get.offAndToNamed(AppRouter.root);
+
       } else if(commonResponse.failModel != null) {
         String? reason = commonResponse.failModel!.reason;
         if(reason == APIFailEnum.bad_access.toDisplayString()){
@@ -55,8 +50,6 @@ class LoginController extends GetxController{
         }else {
           Get.snackbar("⚠️", '알 수 없는 오류가 발생하였습니다', colorText: Colors.white);
         }
-      } else {
-        Get.snackbar('An error has occurred', '[error code : ${104}]', colorText: Colors.white);
       }
 
     } catch (e, stackTrace) {
@@ -82,14 +75,13 @@ class LoginController extends GetxController{
       );
 
       LoginRequestModel loginRequest = LoginRequestModel(
-        social_id: credential.userIdentifier ?? "unknown",
-        social_type: LoginPlatform.apple.toDisplayString(),
-        fcm_token : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
-        email : credential.email ?? "",
         name: credential.familyName ?? "unknown",
-        iapReceipt: null,
-        device: Platform.isIOS ?  await DeviceInfoUtils.getIOSDeviceType() : await DeviceInfoUtils.getAOSDeviceType(),
-        os: Platform.isIOS ? "ios" : "aos",
+        email : credential.email ?? "",
+        profile_url: null,
+        social_type: LoginPlatform.apple.toDisplayString(),
+        social_id: credential.userIdentifier ?? "unknown",
+        fcm_token : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
+        os_name: Platform.isIOS ? "ios" : "aos",
         os_version: Platform.isIOS ?  await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
       );
 
@@ -111,16 +103,13 @@ class LoginController extends GetxController{
         final GoogleSignInAuthentication googleSignInAuthentication = await googleUser.authentication;
 
         LoginRequestModel loginRequest = LoginRequestModel(
-
-          social_id: googleUser.id,
-          social_type: LoginPlatform.google.toDisplayString(),
           name : googleUser.displayName ?? "unknown",
-          fcm_token : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
           email : googleUser.email,
-          profileUrl: googleUser.photoUrl,
-          iapReceipt: null,
-          device: Platform.isIOS ?  await DeviceInfoUtils.getIOSDeviceType() : await DeviceInfoUtils.getAOSDeviceType(),
-          os: Platform.isIOS ? "ios" : "aos",
+          profile_url: googleUser.photoUrl,
+          social_type: LoginPlatform.google.toDisplayString(),
+          social_id: googleUser.id,
+          fcm_token : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
+          os_name: Platform.isIOS ? "ios" : "aos",
           os_version: Platform.isIOS ?  await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
         );
 

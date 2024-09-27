@@ -5,12 +5,12 @@ import '../model/models.dart';
 import '../provider/providers.dart';
 
 class LoginRepository extends BaseApiRepository {
-  final LoginApi loginApi;
+  final AuthApi authApi;
 
-  LoginRepository({required this.loginApi});
+  LoginRepository({required this.authApi});
 
-  Future<CommonResponseModel> fetchLoginApi(request) async {
-    return handleApiResponse(loginApi.fetchLoginApi(request));
+  Future<CommonResponseModel> callLoginApi(request) async {
+    return handleApiResponse(authApi.callLoginApi(request));
   }
 
 }

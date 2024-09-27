@@ -13,11 +13,13 @@ class BaseApi extends GetConnect {
       ..baseUrl = AppSecret.baseUrl
     // ..defaultDecoder = CommonResponseModel().fromJson; // 모든 요청은 jsonEncode로 CommonResponseModel.fromJson()를 거칩니다.
       ..defaultContentType = 'application/json'
-      ..timeout = const Duration(seconds: 30)
+      ..timeout = const Duration(seconds: 10)
       ..addRequestModifier<dynamic>((request) {
         request.headers['api-key'] = AppSecret.apiKey;
-        final token = AppPreferences().prefs?.getString(AppPrefsKeys.userAccessToken) ?? "";
-        request.headers['authorization'] = 'Bearer $token';
+        final token = AppPreferences().prefs?.getString(AppPrefsKeys.userAccessToken);
+        if(token != null){
+          request.headers['authorization'] = 'Bearer $token';
+        }
         return request;
       });
     super.onInit();

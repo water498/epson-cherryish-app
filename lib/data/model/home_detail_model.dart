@@ -95,6 +95,8 @@ class PhotoLayout {
   String background_color;
   String original_image_filepath;
   String thumbnail_image_filepath;
+  String preview_original_image_filepath;
+  String preview_thumbnail_image_filepath;
 
   PhotoLayout({
     required this.uid,
@@ -104,6 +106,8 @@ class PhotoLayout {
     required this.background_color,
     required this.original_image_filepath,
     required this.thumbnail_image_filepath,
+    required this.preview_original_image_filepath,
+    required this.preview_thumbnail_image_filepath,
   });
 
   factory PhotoLayout.fromJson(Map<String, dynamic> json) {
@@ -116,6 +120,8 @@ class PhotoLayout {
       background_color: json['background_color'] as String,
       original_image_filepath: json['original_image_filepath'] as String,
       thumbnail_image_filepath: json['thumbnail_image_filepath'] as String,
+      preview_original_image_filepath: json['preview_original_image_filepath'] as String,
+      preview_thumbnail_image_filepath: json['preview_thumbnail_image_filepath'] as String,
     );
   }
 

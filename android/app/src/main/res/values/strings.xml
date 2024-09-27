@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Naver Login -->
+    <string name="client_id">E1yxVG4Lk8q7jXbgWLGv</string>
+    <string name="client_secret">JwkZ2DJ32r</string>
+    <string name="client_name">naver</string>
+
+</resources>

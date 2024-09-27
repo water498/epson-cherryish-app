@@ -10,6 +10,7 @@ abstract class AppThemes {
     titleTextStyle: TextStyle(
       fontSize: 13.0,
       fontWeight: FontWeight.bold,
+      fontFamily: "DungGeunMo",
     ),
     iconTheme: IconThemeData(
         color: AppColors.backgroundReverse
@@ -19,6 +20,7 @@ abstract class AppThemes {
   );
 
   static const textTheme = TextTheme(
+
     bodySmall: TextStyle(color: AppColors.backgroundReverse),
     bodyMedium: TextStyle(color: AppColors.backgroundReverse),
     bodyLarge: TextStyle(color: AppColors.backgroundReverse),
@@ -37,18 +39,18 @@ abstract class AppThemes {
   );
 
   // textfiled 밑줄 색상
-  static const inputDecorationTheme = InputDecorationTheme(
-      hintStyle: TextStyle(color: Color(0xFFB4B4B4)),
-      disabledBorder: UnderlineInputBorder(
+  static InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
+      hintStyle: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey600),
+      disabledBorder: const UnderlineInputBorder(
         borderSide: BorderSide(color: AppColors.backgroundReverse),
       ),
-      enabledBorder: UnderlineInputBorder(
+      enabledBorder: const UnderlineInputBorder(
         borderSide: BorderSide(color: AppColors.backgroundReverse),
       ),
-      focusedBorder: UnderlineInputBorder(
+      focusedBorder: const UnderlineInputBorder(
         borderSide: BorderSide(color: AppColors.backgroundReverse),
       ),
-      counterStyle: TextStyle(color: AppColors.backgroundReverse) // 글자수 제한(?) 색
+      counterStyle: const TextStyle(color: AppColors.backgroundReverse), // 글자수 제한(?) 색
   );
 
   static const dialogTheme = DialogTheme(
@@ -58,12 +60,71 @@ abstract class AppThemes {
   );
 
   static const fabTheme = FloatingActionButtonThemeData(
-    backgroundColor: AppColors.main,
+    backgroundColor: AppColors.primary400,
   );
 
   static const expansionTileTheme = ExpansionTileThemeData(
       iconColor: AppColors.backgroundReverse,
       collapsedIconColor: AppColors.backgroundReverse
   );
+
+
+
+
+
+
+
+
+
+  static const headline01 = TextStyle(
+      fontSize: 28,
+      height: 1.71428,
+      fontWeight: FontWeight.w400,
+      letterSpacing: -0.4
+  );
+
+  static const headline02 = TextStyle(
+      fontSize: 24,
+      height: 1.66667,
+      fontWeight: FontWeight.w400,
+      letterSpacing: -0.3
+  );
+
+  static const headline03 = TextStyle(
+      fontSize: 20,
+      height: 1.6,
+      fontWeight: FontWeight.w400,
+      letterSpacing: -0.3
+  );
+
+  static const headline04 = TextStyle(
+      fontSize: 18,
+      height: 1.77778,
+      fontWeight: FontWeight.w400,
+      letterSpacing: -0.3
+  );
+
+  static const headline05 = TextStyle(
+      fontSize: 16,
+      height: 1.75,
+      fontWeight: FontWeight.w400,
+      letterSpacing: -0.3
+  );
+
+  static const bodyMedium = TextStyle(
+      fontSize: 14,
+      height: 1.71428,
+      fontWeight: FontWeight.w400,
+      letterSpacing: -0.3
+  );
+
+  static const bodySmall = TextStyle(
+      fontSize: 12,
+      height: 1.66667,
+      fontWeight: FontWeight.w400,
+      letterSpacing: -0.3
+  );
+
+
 
 }

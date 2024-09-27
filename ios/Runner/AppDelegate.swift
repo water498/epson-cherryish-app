@@ -1,7 +1,8 @@
 import Flutter
 import UIKit
+import NaverThirdPartyLogin
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
     _ application: UIApplication,
@@ -10,4 +11,21 @@ import UIKit
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
+    
+
+    
+
+    override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        if url.absoluteString.hasPrefix("kakao"){
+            super.application(app, open:url, options: options)
+            return true
+        } else if url.absoluteString.contains("thirdPartyLoginResult") {
+            NaverThirdPartyLoginConnection.getSharedInstance().application(app, open: url, options: options)
+            return true
+        } else {
+            return true
+        }
+    }
+
+
 }

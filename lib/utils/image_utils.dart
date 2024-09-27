@@ -3,14 +3,21 @@ import 'dart:io';
 import 'package:fc_native_image_resize/fc_native_image_resize.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
-import 'package:gal/gal.dart';
 import 'package:image/image.dart' as img;
 import 'dart:ui' as ui;
 
 import 'package:image_editor/image_editor.dart';
 import 'package:logger/logger.dart';
+import 'package:native_exif/native_exif.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:seeya/constants/app_secret.dart';
+import 'package:seeya/data/model/models.dart';
+import 'package:seeya/utils/utils.dart';
+
+import '../constants/app_colors.dart';
 
 
 class ImageUtils {
@@ -76,18 +83,39 @@ class ImageUtils {
 
 
 
-  Future<void> fixRotateAndFlipImage(String path) async {
+  Future<void> fixRotateAndFlipImage(bool isFront,String path) async {
     final fixedImageFile = File(path);
     Uint8List? imageBytes = await fixedImageFile.readAsBytes();
 
-    // flip && rotation
-    final ImageEditorOption option = ImageEditorOption();
-    option.addOption(const FlipOption(horizontal: true));
-    option.addOption(const RotateOption(0));
-    imageBytes = await ImageEditor.editImage(image: imageBytes, imageEditorOption: option);
+    // flip
+    if(isFront){
+      final ImageEditorOption option = ImageEditorOption();
+      option.addOption(const FlipOption(horizontal: true));
+      // option.addOption(const RotateOption(0));
+      imageBytes = await ImageEditor.editImage(image: imageBytes, imageEditorOption: option);
 
-    if(imageBytes != null){
-      await fixedImageFile.writeAsBytes(imageBytes);
+      if(imageBytes != null){
+        await fixedImageFile.writeAsBytes(imageBytes);
+      }
+    }
+
+    // rotation
+    await FlutterExifRotation.rotateImage(path: path);
+  }
+
+
+  static Future<bool> checkNeedFlip(imagePath) async {
+    final exif = await Exif.fromPath(imagePath);
+    final orientation = await exif.getAttribute('Orientation');
+    final int orientationValue = int.tryParse(orientation?.toString() ?? '1') ?? 1;  // g 피셜 1이 normal이라는데 0으로 들어오긴 함
+    await exif.close();
+
+    Logger().d("orientation ::: ${orientationValue}");
+
+    if (orientationValue == 2 || orientationValue == 4 || orientationValue == 5 || orientationValue == 7) {
+      return true;
+    }else {
+      return false;
     }
   }
 
@@ -123,59 +151,63 @@ class ImageUtils {
 
 
 
-  // Future<File?> saveCompositeImage(List<File> images) async {
-  //
-  //   const frameWidth = 4000.0;
-  //   const frameHeight = 6000.0;
-  //
-  //
-  //   final recorder = ui.PictureRecorder();
-  //   final canvas = Canvas(recorder, Rect.fromPoints(Offset(0, 0), Offset(frameWidth, frameHeight)));
-  //
-  //   // 배경 색상
-  //   final paint = Paint()..color = const Color(0xffffffff);
-  //   canvas.drawRect(Rect.fromLTWH(0, 0, frameWidth, frameHeight), paint);
-  //
-  //   // 이미지 로드
-  //   var backgroundAsset = "asset/image/frame_4000_6000.png";
-  //   var isHane = SocketService.instance.isHaneMode.value;
-  //   if(isHane){
-  //     backgroundAsset = "asset/image/frame_for_hane_4000_6000.png";
-  //   }
-  //
-  //
-  //   final backgroundImage = await loadImageFromAsset(backgroundAsset);
-  //   final image1 = await loadImageFromFile(images[0].path);
-  //   final image2 = await loadImageFromFile(images[1].path);
-  //   final image3 = await loadImageFromFile(images[2].path);
-  //   final image4 = await loadImageFromFile(images[3].path);
-  //
-  //   // 비율을 유지하면서 이미지 크기 조정
-  //   drawImage(canvas, backgroundImage, const Offset(0, 0), frameWidth, frameHeight);
-  //   drawImage(canvas, image1, const Offset(frameWidth * 0.069750, frameHeight * 0.078666), frameWidth * 0.4125, frameHeight * 0.36666);
-  //   drawImage(canvas, image2, const Offset(frameWidth * 0.06975, frameHeight * 0.479333), frameWidth * 0.4125, frameHeight * 0.36666);
-  //   drawImage(canvas, image3, const Offset(frameWidth * 0.5175, frameHeight * 0.154), frameWidth * 0.4125, frameHeight * 0.36666);
-  //   drawImage(canvas, image4, const Offset(frameWidth * 0.5175, frameHeight * 0.554666), frameWidth * 0.4125, frameHeight * 0.36666);
-  //
-  //   final picture = recorder.endRecording();
-  //   final img = await picture.toImage(frameWidth.toInt(), frameHeight.toInt());
-  //   final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
-  //   final buffer = byteData?.buffer.asUint8List();
-  //
-  //   // 파일로 저장
-  //   final saveFile = File(images[3].path);
-  //   if(buffer != null){
-  //     await saveFile.writeAsBytes(buffer);
-  //     Gal.putImage(saveFile.path);
-  //
-  //     return saveFile;
-  //   }else {
-  //     return null;
-  //   }
-  //
-  // }
 
-  Future<ui.Image> loadImageFromFile(String path) async {
+
+  static Future<File?> makeFinalFrameImage(TempEventFrame eventFrame, Map<int,CameraResultModel?> images, List<TempEventFilter> eventFilters) async {
+
+    final frameWidth = eventFrame.width.toDouble();
+    final frameHeight = eventFrame.height.toDouble();
+
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder, Rect.fromPoints(const Offset(0, 0), Offset(frameWidth, frameHeight)));
+
+    // 배경 색상
+    final paint = Paint()..color = AppColors.blueGrey800;
+    canvas.drawRect(Rect.fromLTWH(0, 0, frameWidth, frameHeight), paint);
+
+    // 이미지 로드
+    var originalFrameImage = await DownloadUtils.loadImageFromUrl("${AppSecret.s3url}${eventFrame.originalImageFilepath}");
+
+    final image1 = await loadImageFromFile(images[0]!.file.path);
+    final image2 = await loadImageFromFile(images[1]!.file.path);
+    final image3 = await loadImageFromFile(images[2]!.file.path);
+    final image4 = await loadImageFromFile(images[3]!.file.path);
+    final frameImage = await loadImageFromFile(originalFrameImage.path);
+
+    // 비율을 유지하면서 이미지 크기 조정
+    drawImage(canvas, image1, Offset(eventFilters[0].x.toDouble(), eventFilters[0].y.toDouble()), eventFilters[0].width.toDouble(), eventFilters[0].height.toDouble());
+    drawImage(canvas, image2, Offset(eventFilters[1].x.toDouble(), eventFilters[1].y.toDouble()), eventFilters[0].width.toDouble(), eventFilters[0].height.toDouble());
+    drawImage(canvas, image3, Offset(eventFilters[2].x.toDouble(), eventFilters[2].y.toDouble()), eventFilters[0].width.toDouble(), eventFilters[0].height.toDouble());
+    drawImage(canvas, image4, Offset(eventFilters[3].x.toDouble(), eventFilters[3].y.toDouble()), eventFilters[0].width.toDouble(), eventFilters[0].height.toDouble());
+    drawImage(canvas, frameImage, const Offset(0, 0), frameWidth, frameHeight);
+
+    final picture = recorder.endRecording();
+    final img = await picture.toImage(frameWidth.toInt(), frameHeight.toInt());
+    final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    final buffer = byteData?.buffer.asUint8List();
+
+    // 디렉토리 경로 가져오기
+    final directory = await getApplicationDocumentsDirectory();
+    final resultDir = Directory("${directory.path}/result");
+
+    // 디렉토리가 존재하지 않으면 생성
+    if (!await resultDir.exists()) {
+      await resultDir.create(recursive: true);
+    }
+
+    // 파일로 저장
+    final saveFile = File("${resultDir.path}/result.png");
+    if(buffer != null){
+      await saveFile.writeAsBytes(buffer);
+
+      return saveFile;
+    }else {
+      return null;
+    }
+
+  }
+
+  static Future<ui.Image> loadImageFromFile(String path) async {
     final file = File(path);
     final bytes = await file.readAsBytes();
     final codec = await ui.instantiateImageCodec(bytes);
@@ -183,7 +215,7 @@ class ImageUtils {
     return frame.image;
   }
 
-  Future<ui.Image> loadImageFromAsset(String path) async {
+  static Future<ui.Image> loadImageFromAsset(String path) async {
     final ByteData data = await rootBundle.load(path);
     final Completer<ui.Image> completer = Completer();
 
@@ -196,7 +228,7 @@ class ImageUtils {
 
 
 
-  void drawImage(Canvas canvas, ui.Image image, Offset offset, double maxWidth, double maxHeight) {
+  static void drawImage(Canvas canvas, ui.Image image, Offset offset, double maxWidth, double maxHeight) {
     final imageWidth = image.width.toDouble();
     final imageHeight = image.height.toDouble();
     final aspectRatio = imageWidth / imageHeight;
@@ -226,6 +258,36 @@ class ImageUtils {
   }
 
 
+
+
+
+
+
+
+
+  static Future<ui.Image> loadImage(Uint8List imgBytes) async {
+    final Completer<ui.Image> completer = Completer();
+    ui.decodeImageFromList(imgBytes, (ui.Image img) {
+      completer.complete(img);
+    });
+    return completer.future;
+  }
+
+  static Future<Map<String, int>> getImageDimensions(File imageFile) async {
+    try {
+      // 이미지 파일을 바이트로 읽어들임
+      final Uint8List imgBytes = await imageFile.readAsBytes();
+      // 이미지 디코딩
+      final ui.Image image = await loadImage(imgBytes);
+      // 이미지의 너비와 높이 반환
+      return {
+        'width': image.width,
+        'height': image.height,
+      };
+    } catch (e) {
+      throw Exception("이미지 크기를 가져오는 중 에러가 발생했습니다: $e");
+    }
+  }
 
 
 

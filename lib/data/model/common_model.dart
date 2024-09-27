@@ -3,11 +3,13 @@ import 'models.dart';
 class CommonFailModel{
   String? url;
   String? reason; // TOKEN_EMPTY, TOKEN_EXPIRED, BAD_ACCESS
+  String detail;
   // String? message;
 
   CommonFailModel({
     required this.url,
     required this.reason,
+    required this.detail,
     // required this.message,
   });
 
@@ -15,6 +17,7 @@ class CommonFailModel{
     return CommonFailModel(
       url: json['url'],
       reason: json['reason'],
+      detail: json['detail'],
       // message: json['message'],
     );
   }
@@ -47,7 +50,7 @@ class CommonSuccessModel{
   factory CommonSuccessModel.fromJson(Map<String, dynamic> json) {
     return CommonSuccessModel(
       result: json['result'],
-      content: json['content'],
+      content: json,
     );
   }
 }

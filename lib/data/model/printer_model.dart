@@ -1,23 +1,17 @@
 class PrinterRequestModel {
 
-  int user_uid;
-  String photo_layout_uid;
-  String printer_uid;
-  String product_uid;
+  String photo_product_uid;
+  int copies;
 
   PrinterRequestModel({
-    required this.user_uid,
-    required this.photo_layout_uid,
-    required this.printer_uid,
-    required this.product_uid,
+    required this.photo_product_uid,
+    required this.copies
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'user_uid': user_uid,
-      'photo_layout_uid': photo_layout_uid,
-      'printer_uid': printer_uid,
-      'product_uid': product_uid,
+      'photo_product_uid': photo_product_uid,
+      'copies': copies,
     };
   }
 
