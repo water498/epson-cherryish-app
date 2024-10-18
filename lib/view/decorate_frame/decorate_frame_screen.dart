@@ -8,6 +8,7 @@ import 'package:seeya/constants/app_colors.dart';
 import 'package:seeya/constants/app_router.dart';
 import 'package:seeya/constants/app_secret.dart';
 import 'package:seeya/constants/app_themes.dart';
+import 'package:seeya/constants/seeya_frame_configs.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/data/model/models.dart';
 import 'package:seeya/utils/file_utils.dart';
@@ -22,9 +23,12 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
   
   @override
   Widget build(BuildContext context) {
-    
-    
-    final controller = Get.put(DecorateFrameController());
+
+    const frameWidth = SeeyaFrameConfigs.frameWidth;
+    const frameHeight = SeeyaFrameConfigs.frameHeight;
+    const filterWidth = SeeyaFrameConfigs.filterWidth;
+    const filterHeight = SeeyaFrameConfigs.filterHeight;
+
     final shortestSide = MediaQuery.of(context).size.shortestSide;
     final isTablet = shortestSide > 600;
     
@@ -60,7 +64,7 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
             child: GestureDetector(
               onTap: () async {
 
-                controller.printFinalFrame();
+                controller.printFinalFrame(context);
 
               },
               child: Obx(() {
@@ -94,14 +98,14 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
                         child: AspectRatio(
-                          aspectRatio: controller.eventFrame.width / controller.eventFrame.height,
+                          aspectRatio: frameWidth / frameHeight,
                           child: LayoutBuilder(
                             builder: (context, constraints) {
 
                               var frame = controller.eventFrame;
 
-                              double scaleX = constraints.maxWidth / frame.width;
-                              double scaleY = constraints.maxHeight / frame.height;
+                              double scaleX = constraints.maxWidth / frameWidth;
+                              double scaleY = constraints.maxHeight / frameHeight;
 
                               return Stack(
                                 alignment: Alignment.center,
@@ -110,13 +114,15 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
                                   ...controller.eventFilterList.asMap().entries.map((e) {
 
                                     int index = e.key;
-                                    TempEventFilter filter = e.value;
+                                    EventFilterModel filter = e.value;
+
+                                    final Point filterPoint = SeeyaFrameConfigs.getFilterXY(frame.frame_type, filter.type);
 
                                     return Positioned(
-                                      left: filter.x.toDouble() * scaleX,
-                                      top: filter.y.toDouble() * scaleY,
-                                      width: filter.width.toDouble() * scaleX,
-                                      height: filter.height.toDouble() * scaleY,
+                                      left: filterPoint.x * scaleX,
+                                      top: filterPoint.y * scaleY,
+                                      width: filterWidth * scaleX,
+                                      height: filterHeight * scaleY,
                                       child: GestureDetector(
                                         behavior: HitTestBehavior.translucent,
                                         onTap: () async {
@@ -148,9 +154,9 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
 
                                             // filter
                                             Obx(() {
-                                              if(controller.mergedPhotoList[index] == null && filter.imageFilepath != null){
+                                              if(controller.mergedPhotoList[index] == null && filter.image_filepath != null){
                                                 return CachedNetworkImage(
-                                                  imageUrl: Uri.encodeFull("${AppSecret.s3url}${filter.imageFilepath}"),
+                                                  imageUrl: Uri.encodeFull("${AppSecret.s3url}${filter.image_filepath}"),
                                                   fit: BoxFit.fill,
                                                 );
                                               }else {
@@ -179,7 +185,7 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
                                   // original frame
                                   IgnorePointer(
                                     child: CachedNetworkImage(
-                                      imageUrl: Uri.encodeFull("${AppSecret.s3url}${controller.eventFrame.originalImageFilepath}"),
+                                      imageUrl: Uri.encodeFull("${AppSecret.s3url}${controller.eventFrame.original_image_filepath}"),
                                       fit: BoxFit.fill,
                                     ),
                                   ),

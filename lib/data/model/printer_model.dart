@@ -1,29 +1,47 @@
-class PrinterRequestModel {
+import 'models.dart';
 
-  String photo_product_uid;
-  int copies;
+class PrinterAccessResponseModel {
 
-  PrinterRequestModel({
-    required this.photo_product_uid,
-    required this.copies
+  final String result;
+  final int? print_queue_id; // result == "posible" 인 경우만 존재
+  final UserPrivateModel userModel;
+
+  PrinterAccessResponseModel({
+    required this.result,
+    this.print_queue_id,
+    required this.userModel
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'photo_product_uid': photo_product_uid,
-      'copies': copies,
-    };
+  factory PrinterAccessResponseModel.fromJson(Map<String, dynamic> json) {
+    return PrinterAccessResponseModel(
+      result : json['result'],
+      print_queue_id : json['print_queue_id'],
+      userModel: UserPrivateModel.fromJson(json['user']),
+    );
   }
 
 }
 
 
-class PrinterResponseModel{
 
-  String a;
 
-  PrinterResponseModel({
-    required this.a,
+
+class RequestPrintResponseModel {
+
+  final int wait_count;
+  final UserPrivateModel userModel;
+
+  RequestPrintResponseModel({
+    required this.wait_count,
+    required this.userModel
   });
 
+  factory RequestPrintResponseModel.fromJson(Map<String, dynamic> json) {
+    return RequestPrintResponseModel(
+      wait_count : json['wait_count'],
+      userModel: UserPrivateModel.fromJson(json['user']),
+    );
+  }
+
 }
+

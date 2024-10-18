@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/constants/app_router.dart';
 import 'package:seeya/data/repository/repositories.dart';
+import 'package:seeya/service/services.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
 import '../data/model/models.dart';
@@ -73,6 +74,7 @@ class PhoneVerificationController extends GetxController{
 
   @override
   void onClose() {
+    stopTimer();
     phoneFocusNode.dispose();
     codeFocusNode.dispose();
     phoneTextController.dispose();
@@ -90,6 +92,7 @@ class PhoneVerificationController extends GetxController{
 
   verifyPhoneNumber(String phoneNumber) async {
 
+    phoneFocusNode.unfocus();
     stopTimer();
     showVerifyCodeWidget(false);
     String fullPhoneNumber = "$countryCode${int.parse(phoneNumber).toString()}";
@@ -98,15 +101,19 @@ class PhoneVerificationController extends GetxController{
     Logger().d("fullPhoneNumber ::: ${fullPhoneNumber}");
 
 
+    LoadingOverlay.show();
+
     await auth.verifyPhoneNumber(
       phoneNumber: fullPhoneNumber,
       timeout: Duration(seconds: timeoutSeconds),
       verificationCompleted: (phoneAuthCredential) async {
 
+        LoadingOverlay.hide();
         handleVerificationCompleted(phoneAuthCredential);
 
       },
       verificationFailed: (e) {
+        LoadingOverlay.hide();
         stopTimer();
         Logger().e("verificationFailed!!! check auth : error : ${e.code} ${e.message} ${e.stackTrace}");
         if (e.code.contains("captcha-check-failed")) {
@@ -123,11 +130,13 @@ class PhoneVerificationController extends GetxController{
 
       },
       codeSent: (verificationId, forceResendingToken) async {
+        LoadingOverlay.hide();
         showVerifyCodeWidget(true);
         _verificationId = verificationId;
         startTimer();
       },
       codeAutoRetrievalTimeout: (verificationId) {
+        LoadingOverlay.hide();
         Logger().d("codeAutoRetrievalTimeout!!! verificationId ::: $verificationId");
         // 시간 초과 시 호출됩니다.
         _verificationId = verificationId;
@@ -159,7 +168,7 @@ class PhoneVerificationController extends GetxController{
 
   handleVerificationCompleted(PhoneAuthCredential credential) async {
     try{
-      LoadingOverlay.show(null);
+      LoadingOverlay.show();
 
       UserCredential userCredential = await auth.signInWithCredential(credential);
       String finalPhoneNumber = userCredential.user?.phoneNumber ?? latestPhoneNumber;
@@ -266,10 +275,12 @@ class PhoneVerificationController extends GetxController{
 
       if(commonResponse.successModel != null){
 
-        // TODO reponse(user model) 로 user update 처리
+        UserPrivateModel response = UserPrivateModel.fromJson(commonResponse.successModel!.content['item']);
+        UserService.instance.userPublicInfo.value = response.userPublicModel;
+        UserService.instance.userPrivateInfo.value = response;
 
         stopTimer();
-        Get.back(result: {"result" : "success"});
+        Get.back(result: "success");
 
       } else if(commonResponse.failModel != null) {
 

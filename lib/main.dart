@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -13,6 +14,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/constants/app_router.dart';
 import 'package:seeya/service/services.dart';
+import 'package:seeya/view/common/loading_overlay.dart';
 
 import 'constants/app_colors.dart';
 import 'constants/app_prefs_keys.dart';
@@ -36,7 +38,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 initializeNotification() async {
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: false,
+    alert: true,
     badge: true,
     sound: true,
   );
@@ -76,6 +78,13 @@ void main() async {
   ]);
 
 
+  // control android global back press
+  BackButtonInterceptor.add((stopDefaultButtonEvent, routeInfo) {
+    if(LoadingOverlay.overlayEntry != null) return true;
+    return false;
+  },);
+
+
   // init firebase
   try{
     await Firebase.initializeApp(
@@ -90,13 +99,22 @@ void main() async {
   }
 
 
+  // ********** Delay 때문에 Custom Splash 로 이동 **********
   // fcm token
-  String? fcmToken = await FirebaseMessaging.instance.getToken();
-  Logger().d("fcmToken ::: ${fcmToken}");
-  if(Platform.isIOS || Platform.isMacOS){
-    String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-    Logger().d("apnsToken ::: ${apnsToken}");
-  }
+  // if(Platform.isIOS){
+  //   String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+  //   if (apnsToken == null) {
+  //     Logger().d("APNS token is not set yet");
+  //     await Future.delayed(const Duration(seconds: 1)); // apns 콜백 받고 getToken을 호출해야되는데 따로 콜백이 없음 stackoverflow 대처
+  //     apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+  //   } else {
+  //     Logger().d("APNS token: ${apnsToken}");
+  //   }
+  // }
+  //
+  // String? fcmToken = await FirebaseMessaging.instance.getToken();
+  // Logger().d("fcmToken ::: ${fcmToken}");
+
 
 
 
@@ -119,7 +137,8 @@ void main() async {
 
   // init preferences
   await AppPreferences().init();
-  AppPreferences().prefs?.setString(AppPrefsKeys.fcmToken, fcmToken ?? ""); // fcmToken 삽입
+  // ********** Delay 때문에 Custom Splash 로 이동 **********
+  // AppPreferences().prefs?.setString(AppPrefsKeys.fcmToken, fcmToken ?? ""); // fcmToken 삽입
 
   runApp(const MyApp());
 }

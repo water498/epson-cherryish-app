@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_login/flutter_naver_login.dart';
+import 'package:flutter_naver_login_plus/flutter_naver_login_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -22,10 +22,8 @@ import '../utils/device_info_utils.dart';
 class LoginComponentController extends GetxController{
 
   final LoginRepository loginRepository;
-  final void Function()? onLoginSuccess;
 
   LoginComponentController({
-    this.onLoginSuccess,
     required this.loginRepository
   });
 
@@ -40,7 +38,7 @@ class LoginComponentController extends GetxController{
     Logger().d("fetchUserData request ::: ${jsonEncode(loginRequest)}");
 
     try {
-      LoadingOverlay.show(null);
+      LoadingOverlay.show();
 
       CommonResponseModel commonResponse = await loginRepository.callLoginApi(loginRequest.toJson());
 
@@ -48,27 +46,32 @@ class LoginComponentController extends GetxController{
         LoginResponseModel response = LoginResponseModel.fromJson(commonResponse.successModel!.content);
 
         await AppPreferences().prefs?.setString(AppPrefsKeys.userAccessToken, response.access_token);
-        UserService.instance.userInfo.value = response.user; // access token 삽입 후 코드 진행 되어야함 => getx ever때문
+        UserService.instance.userPublicInfo.value = response.user; // access token 삽입 후 코드 진행 되어야함 => getx ever때문
 
         if(response.need_phone_verification){
           LoadingOverlay.hide();
-          var result = await Get.offNamed(AppRouter.phone_verification);
-          if(result == null || result["result"] == null || result["result"] != "success"){
+
+
+
+          dynamic phoneVerificationResult;
+
+          if(Get.currentRoute == AppRouter.root){
+            phoneVerificationResult = await Get.toNamed(AppRouter.phone_verification);
+          } else {
+            phoneVerificationResult = await Get.offNamed(AppRouter.phone_verification);
+          }
+
+          if(phoneVerificationResult != "success"){
             return;
           }
-        }
-
-
-
-        // 다 있는 경우 Login success 케이스에 맞게 처리
-        if(onLoginSuccess != null){
-          onLoginSuccess!();
         }
 
       } else if(commonResponse.failModel != null) {
 
         if(commonResponse.statusCode == 409){
           Fluttertoast.showToast(msg: "이미 가입되어 있는 이메일 주소입니다.");
+        } else if(commonResponse.statusCode == 410) {
+          Fluttertoast.showToast(msg: "계정이 탈퇴 처리되었습니다. 재가입은 3개월 후에 가능합니다.");
         } else if(commonResponse.statusCode == 422){
           Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
           Logger().e("첫 로그인(가입)시에 이메일 정보가 request에 담겨있지 않음");
@@ -141,8 +144,8 @@ class LoginComponentController extends GetxController{
   void signInWithNaver() async {
 
     try{
-      final NaverLoginResult result = await FlutterNaverLogin.logIn();
-      NaverAccessToken res = await FlutterNaverLogin.currentAccessToken;
+      final NaverLoginResult result = await FlutterNaverLoginPlus.logIn();
+      NaverAccessToken res = await FlutterNaverLoginPlus.currentAccessToken;
 
       if (result.status == NaverLoginStatus.loggedIn) {
 

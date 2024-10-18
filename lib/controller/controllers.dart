@@ -2,9 +2,7 @@ export 'root_controller.dart';
 export 'home_controller.dart';
 export 'login_controller.dart';
 export 'camera_screen_controller.dart';
-export 'purchase_controller.dart';
 export 'my_page_controller.dart';
-export 'image_list_viewer_controller.dart';
 
 
 export 'map_tab_controller.dart';
@@ -22,3 +20,6 @@ export 'image_crop_controller.dart';
 export 'report_controller.dart';
 export 'error_report_controller.dart';
 export 'inquiry_detail_controller.dart';
+export 'setting_controller.dart';
+export 'withdrawal_controller.dart';
+export 'qr_share_controller.dart';

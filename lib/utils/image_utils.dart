@@ -14,6 +14,7 @@ import 'package:logger/logger.dart';
 import 'package:native_exif/native_exif.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:seeya/constants/app_secret.dart';
+import 'package:seeya/constants/seeya_frame_configs.dart';
 import 'package:seeya/data/model/models.dart';
 import 'package:seeya/utils/utils.dart';
 
@@ -153,20 +154,22 @@ class ImageUtils {
 
 
 
-  static Future<File?> makeFinalFrameImage(TempEventFrame eventFrame, Map<int,CameraResultModel?> images, List<TempEventFilter> eventFilters) async {
+  static Future<File?> makeFinalFrameImage(EventFrameModel eventFrame, Map<int,CameraResultModel?> images, List<EventFilterModel> eventFilters) async {
 
-    final frameWidth = eventFrame.width.toDouble();
-    final frameHeight = eventFrame.height.toDouble();
+    const frameWidth = SeeyaFrameConfigs.frameWidth;//eventFrame.width.toDouble();
+    const frameHeight = SeeyaFrameConfigs.frameHeight;//eventFrame.height.toDouble();
+    const filterWidth = SeeyaFrameConfigs.filterWidth;
+    const filterHeight = SeeyaFrameConfigs.filterHeight;
 
     final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder, Rect.fromPoints(const Offset(0, 0), Offset(frameWidth, frameHeight)));
+    final canvas = Canvas(recorder, Rect.fromPoints(const Offset(0, 0), const Offset(frameWidth, frameHeight)));
 
     // 배경 색상
     final paint = Paint()..color = AppColors.blueGrey800;
-    canvas.drawRect(Rect.fromLTWH(0, 0, frameWidth, frameHeight), paint);
+    canvas.drawRect(const Rect.fromLTWH(0, 0, frameWidth, frameHeight), paint);
 
     // 이미지 로드
-    var originalFrameImage = await DownloadUtils.loadImageFromUrl("${AppSecret.s3url}${eventFrame.originalImageFilepath}");
+    var originalFrameImage = await DownloadUtils.loadImageFromUrl("${AppSecret.s3url}${eventFrame.original_image_filepath}");
 
     final image1 = await loadImageFromFile(images[0]!.file.path);
     final image2 = await loadImageFromFile(images[1]!.file.path);
@@ -174,11 +177,18 @@ class ImageUtils {
     final image4 = await loadImageFromFile(images[3]!.file.path);
     final frameImage = await loadImageFromFile(originalFrameImage.path);
 
+
     // 비율을 유지하면서 이미지 크기 조정
-    drawImage(canvas, image1, Offset(eventFilters[0].x.toDouble(), eventFilters[0].y.toDouble()), eventFilters[0].width.toDouble(), eventFilters[0].height.toDouble());
-    drawImage(canvas, image2, Offset(eventFilters[1].x.toDouble(), eventFilters[1].y.toDouble()), eventFilters[0].width.toDouble(), eventFilters[0].height.toDouble());
-    drawImage(canvas, image3, Offset(eventFilters[2].x.toDouble(), eventFilters[2].y.toDouble()), eventFilters[0].width.toDouble(), eventFilters[0].height.toDouble());
-    drawImage(canvas, image4, Offset(eventFilters[3].x.toDouble(), eventFilters[3].y.toDouble()), eventFilters[0].width.toDouble(), eventFilters[0].height.toDouble());
+    for (int i = 0; i < eventFilters.length; i++) {
+
+      // 하드코딩된 lt lb rt rb 값 가져옴
+      final Point filterPoint = SeeyaFrameConfigs.getFilterXY(eventFrame.frame_type, eventFilters[i].type);
+
+      drawImage(canvas,
+          i == 0 ? image1 : i == 1 ? image2 : i == 2 ? image3 : image4,
+          Offset(filterPoint.x.toDouble(), filterPoint.y.toDouble()),
+          filterWidth, filterHeight);
+    }
     drawImage(canvas, frameImage, const Offset(0, 0), frameWidth, frameHeight);
 
     final picture = recorder.endRecording();

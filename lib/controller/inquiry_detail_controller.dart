@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
+import 'package:seeya/data/model/models.dart';
+import 'package:seeya/data/repository/repositories.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
 class InquiryDetailController extends GetxController{
 
+  final InquiryDetailRepository inquiryDetailRepository;
+
+  InquiryDetailController({required this.inquiryDetailRepository});
+
+
+
+  late int reportId;
+  var isLoading = true.obs;
+  InquiryItemModel? inquiryItem;
 
 
   @override
   void onInit() {
-    // TODO: implement onInit
+    reportId = Get.arguments;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchInquiryState();
     });
@@ -17,25 +30,35 @@ class InquiryDetailController extends GetxController{
 
   @override
   void onClose() {
-    // TODO: implement onClose
     super.onClose();
   }
 
 
   Future<void> fetchInquiryState() async {
-
     try {
-      LoadingOverlay.show(null);
+      isLoading(true);
+      CommonResponseModel commonResponse = await inquiryDetailRepository.fetchReportApi(reportId);
 
-      await Future.delayed(Duration(milliseconds: 500));
+      if(commonResponse.successModel != null){
 
-    } catch(e){
+        InquiryItemModel response = InquiryItemModel.fromJson(commonResponse.successModel!.content["item"]);
+        inquiryItem = response;
 
+      } else if(commonResponse.failModel != null) {
+
+        if(commonResponse.statusCode == 422){
+          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+          Logger().e("Validation Error");
+        }
+
+      }
+
+    } catch (e,stackTrace){
+      Logger().e("error ::: $e");
+      Logger().e("stackTrace ::: $stackTrace");
     } finally {
-      LoadingOverlay.hide();
+      isLoading(false);
     }
-
-
   }
 
 }

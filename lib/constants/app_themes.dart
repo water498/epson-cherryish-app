@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'app_colors.dart';
 
@@ -6,6 +7,7 @@ abstract class AppThemes {
   AppThemes._();
 
   static const appBarTheme = AppBarTheme(
+    toolbarHeight: 80,
     color: AppColors.background,
     titleTextStyle: TextStyle(
       fontSize: 13.0,
@@ -17,6 +19,10 @@ abstract class AppThemes {
     ),
     surfaceTintColor: Colors.transparent,
     foregroundColor: Colors.transparent,
+    systemOverlayStyle: SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.light,
+    ),
   );
 
   static const textTheme = TextTheme(

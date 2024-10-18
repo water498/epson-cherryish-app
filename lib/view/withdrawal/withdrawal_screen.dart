@@ -1,26 +1,16 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:seeya/constants/app_router.dart';
 
 import '../../constants/app_colors.dart';
-import '../../constants/app_prefs_keys.dart';
 import '../../constants/app_themes.dart';
-import '../../data/enum/enums.dart';
-import '../../service/services.dart';
-import '../common/loading_overlay.dart';
+import '../../controller/controllers.dart';
 
 class WithdrawalScreen extends GetView<WithdrawalController> {
   const WithdrawalScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    final controller = Get.put(WithdrawalController());
 
     return Scaffold(
       appBar: AppBar(
@@ -137,8 +127,7 @@ class WithdrawalScreen extends GetView<WithdrawalController> {
                         onTap: () async {
                           if(!controller.isAgree.value) return;
 
-                          // TODO delete firebase auth
-                          controller.signOut();
+                          controller.withdraw();
                         },
                         child: Container(
                           margin: const EdgeInsets.only(bottom: 20 ),
@@ -166,43 +155,4 @@ class WithdrawalScreen extends GetView<WithdrawalController> {
 
 }
 
-class WithdrawalController extends GetxController{
 
-  var isAgree = false.obs;
-
-  void signOut() async {
-
-    LoadingOverlay.show(null);
-    await Future.delayed(const Duration(milliseconds: 500));
-    LoadingOverlay.hide();
-
-    String? loginPlatform = AppPreferences().prefs?.getString(AppPrefsKeys.loginPlatform);
-
-    if(loginPlatform != null){
-      switch (loginPlatform) {
-        case 'google':
-          await GoogleSignIn().signOut();
-          break;
-        case 'kakao':
-          await UserApi.instance.logout();
-          break;
-        case 'naver':
-          await FlutterNaverLogin.logOut();
-          break;
-        case 'apple':
-        case 'none':
-          break;
-      }
-    }
-
-    await FirebaseAuth.instance.signOut();
-    await AppPreferences().prefs?.remove(AppPrefsKeys.userAccessToken); // remove access token
-    await AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.none.toDisplayString());
-    UserService.instance.userInfo.value = null;
-
-
-    Get.offAllNamed(AppRouter.custom_splash);
-
-  }
-
-}

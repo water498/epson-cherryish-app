@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:seeya/constants/app_colors.dart';
+import 'package:seeya/constants/app_router.dart';
+import 'package:seeya/constants/app_secret.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -13,8 +15,6 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
 
   @override
   Widget build(BuildContext context) {
-
-    final controller = Get.put(PrintHistoryController());
 
     return Scaffold(
       appBar: AppBar(
@@ -48,10 +48,28 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                   controller: controller.pageController,
                   itemCount: controller.historyList.length,
                   itemBuilder: (context, index) {
+
+                    var history = controller.historyList[index];
+
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: CachedNetworkImage(
-                        imageUrl: Uri.encodeFull("https://img.wkorea.com/w/2022/12/style_638816e9c23d8.jpg")
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.toNamed(
+                              AppRouter.image_viewer,
+                              arguments: {
+                                "image_path" : Uri.encodeFull("${AppSecret.s3url}${history.print_filepath}"),
+                                "hero_tag" : "print_history_viewer$index",
+                              }
+                          );
+                        },
+                        child: Hero(
+                          tag: "print_history_viewer$index",
+                          child: CachedNetworkImage(
+                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${history.print_filepath}"),
+                            placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
+                          ),
+                        ),
                       ),
                     );
                   },

@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/constants/app_router.dart';
+import 'package:seeya/data/repository/repositories.dart';
 import 'package:seeya/utils/utils.dart';
 
 import '../constants/app_secret.dart';
@@ -18,6 +19,16 @@ import '../view/common/loading_overlay.dart';
 
 
 class MapTabController extends GetxController with GetSingleTickerProviderStateMixin{
+
+  final MapTabRepository mapTabRepository;
+
+  MapTabController({required this.mapTabRepository});
+
+
+
+
+
+
 
   // bottom sheet
   late AnimationController _animationController;
@@ -32,14 +43,14 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
   late final NaverMapController naverMapController;
 
   // location
-  var currentPosition = Rx<Position?>(null);
+  var userCurrentPosition = Rx<Position?>(null);
   StreamSubscription<Position>? _positionStreamSubscription;
 
   // event data
-  RxList<TempEvent> curEventList = <TempEvent>[].obs;
-  List<TempEvent> allEventList = [];
+  RxList<EventModel> curEventList = <EventModel>[].obs;
+  List<EventModel> allEventList = [];
   var isEventListFetched = false.obs;
-  RxList<TempEvent> selectedClusterMarker = <TempEvent>[].obs;
+  RxList<EventModel> selectedClusterMarker = <EventModel>[].obs;
 
   // search
   var searchResult = "".obs;
@@ -53,11 +64,11 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
   @override
   void onInit() {
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
-    initNaverMap().then((value) {
+    initNaverMap().then((value) async {
       isMapInitialized(true);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        fetchEventList();
+        fetchEventList(null);
       });
     },);
 
@@ -91,15 +102,32 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
 
 
   // Get event list
-  Future<void> fetchEventList() async {
+  Future<void> fetchEventList(String? eventIds) async {
 
     try{
-      LoadingOverlay.show(null);
+      LoadingOverlay.show();
 
-      await Future.delayed(const Duration(milliseconds: 800));
+      CommonResponseModel commonResponse = await mapTabRepository.fetchEventListApi(eventIds);
 
-      curEventList.value = TempEvent.dummy_data.map((data) => TempEvent.fromJson(data)).toList();
-      allEventList = TempEvent.dummy_data.map((data) => TempEvent.fromJson(data)).toList();
+
+      if(commonResponse.successModel != null){
+        List<EventModel> response = EventModel.fromJsonList(commonResponse.successModel!.content["items"]);
+
+        if(eventIds == null){
+          sortEventsByPopularity(response);
+          allEventList = response;
+        } else {
+
+        }
+
+        curEventList.value = response;
+
+
+
+      } else if(commonResponse.failModel != null) {
+
+      }
+
       isEventListFetched(true);
 
     }catch(e, stackTrace){
@@ -122,7 +150,7 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
     naverMapController.addOverlay(
         NMarker(
             id: "my_location",
-            position: NLatLng(currentPosition.value!.latitude,currentPosition.value!.longitude),
+            position: NLatLng(userCurrentPosition.value!.latitude,userCurrentPosition.value!.longitude),
             icon: const NOverlayImage.fromAssetImage("assets/image/my_location.png"),
             size: const Size(48, 48)
         )..setZIndex(1000)
@@ -142,12 +170,13 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
 
 
 
-  Future<void> getCurrentLocation() async {
+  Future<bool> getCurrentLocation() async {
+    bool hasNoError = false;
 
     // check location service
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
+      return false;
     }
 
     // check permission
@@ -155,39 +184,52 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('permissions are denied');
+        return false;
       }
     }
 
 
-    if(isMapInitialized.value){
-
+    if (isMapInitialized.value) {
       // once
-      currentPosition.value ??= await Geolocator.getCurrentPosition();
+      try {
+        userCurrentPosition.value ??= await Geolocator.getCurrentPosition();
+      } catch (e) {
+        return false;
+      }
 
       _addMyLocationMarker();
-      _updateCameraToPosition(NLatLng(currentPosition.value!.latitude,currentPosition.value!.longitude));
-
-
+      _updateCameraToPosition(
+          NLatLng(userCurrentPosition.value!.latitude, userCurrentPosition.value!.longitude));
 
       // add stream
       const locationSettings = LocationSettings(
         accuracy: LocationAccuracy.high,
-        distanceFilter: 5, // 위치가 10미터 이상 변경되면 업데이트
+        distanceFilter: 5, // 위치가 5미터 이상 변경되면 업데이트
       );
+
+
+      // 거리순인 경우 sort
+      if (searchSortKey.value == EventSortKeyEnum.distance && userCurrentPosition.value != null) {
+        sortEventsByDistance(userCurrentPosition.value!, curEventList);
+      }
+
       _positionStreamSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen(
             (Position position) {
-
-          currentPosition.value = position;
+          userCurrentPosition.value = position;
           _addMyLocationMarker();
+
+          // 거리순인 경우 sort
+          if (searchSortKey.value == EventSortKeyEnum.distance) {
+            sortEventsByDistance(position, curEventList);
+          }
 
         },
       );
 
-
+      hasNoError = true;
     }
 
-
+    return hasNoError;
   }
 
 
@@ -197,7 +239,7 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
     if(isMapInitialized.value && curEventList.isNotEmpty){
 
 
-      var markers = await updateMarker(context);
+      var markers = await updateMarker();
 
       final cameraUpdate = NCameraUpdate.scrollAndZoomTo(
         target: NLatLng(curEventList[0].latitude,curEventList[0].longitude),
@@ -212,21 +254,21 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
 
 
 
-  Future<Set<NAddableOverlay<NOverlay<void>>>> updateMarker(BuildContext context) async {
+  Future<Set<NAddableOverlay<NOverlay<void>>>> updateMarker() async {
 
     // add markers
     Set<NAddableOverlay> markers = {};
 
     // 클러스터링 범위 (m)
     const double clusterRadius = 15.0; // merter
-    List<List<TempEvent>> clusters = _clusterEvents(curEventList, clusterRadius);
+    List<List<EventModel>> clusters = _clusterEvents(curEventList, clusterRadius);
 
     for (int index = 0; index < clusters.length; index++) {
 
       final cluster = clusters[index];
       final eventInfo = cluster.first;
 
-      var markerFile = await DownloadUtils.loadImageFromUrl("${AppSecret.s3url}${eventInfo.mapPinImageFilepath}");
+      var markerFile = await DownloadUtils.loadImageFromUrl("${AppSecret.s3url}${eventInfo.map_pin_image_filepath}");
 
       markers.add(
           NMarker(
@@ -249,7 +291,7 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
               selectedClusterMarker.value = cluster;
             }
 
-            await updateMarker(context);
+            await updateMarker();
 
           },)
       );
@@ -267,8 +309,8 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
 
 
 
-  List<List<TempEvent>> _clusterEvents(List<TempEvent> eventList, double clusterRadius) {
-    List<List<TempEvent>> clusters = [];
+  List<List<EventModel>> _clusterEvents(List<EventModel> eventList, double clusterRadius) {
+    List<List<EventModel>> clusters = [];
 
     for (final event in eventList) {
       bool addedToCluster = false;
@@ -310,8 +352,15 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
   void openSearch() async {
     var result = await Get.toNamed(AppRouter.search);
 
+    String keyword = result['keyword'];
+    String eventIds = result['event_ids'];
+
+    if(eventIds.isEmpty) eventIds = "-1";
+
     if(result != null){
-      searchResult.value = result;
+      searchResult.value = keyword;
+      await fetchEventList(eventIds);
+      updateMarker();
     }
 
   }
@@ -356,5 +405,21 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
     }
   }
 
+
+
+
+
+
+  // sort
+  void sortEventsByPopularity(List<EventModel> events) {
+    events.sort((a, b) => b.popularity_score.compareTo(a.popularity_score));
+  }
+  void sortEventsByDistance(Position userLatLong, List<EventModel> events) {
+    events.sort((a, b) {
+      final distanceA = GeoUtils.calculateDistance(userLatLong, a.latitude, a.longitude);
+      final distanceB = GeoUtils.calculateDistance(userLatLong, b.latitude, b.longitude);
+      return distanceA.compareTo(distanceB);
+    });
+  }
 
 }

@@ -19,16 +19,18 @@ class HomeScreen extends GetView<HomeController> {
     final rootController = Get.find<RootController>();
 
     return Scaffold(
+      backgroundColor: AppColors.blueGrey800,
       appBar: AppBar(
+        backgroundColor: AppColors.blueGrey800,
         leadingWidth: 108,
         leading: Row(
           children: [
             const SizedBox(width: 24,),
             GestureDetector(
               onTap: () {
-                // if(kDebugMode){
+                if(kDebugMode){
                   Get.toNamed(AppRouter.test);
-                // }
+                }
               },
               child: Image.asset("assets/image/seeya_logo_small.png", width: 84, height: 36,)
             ),
@@ -84,8 +86,10 @@ class HomeScreen extends GetView<HomeController> {
                         child: Transform.scale(
                           scale: scaleValue,
                           child: CachedNetworkImage(
-                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${controller.homeList[index].flippedImageFilepath}"),
+                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${controller.homeList[index].flipped_image_filepath}"),
                             fit: BoxFit.contain,
+                            placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
+                            errorWidget: (context, url, error) => Image.asset("assets/image/loading02.gif"),
                           ),
                         ),
                       );

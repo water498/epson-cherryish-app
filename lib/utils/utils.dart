@@ -6,3 +6,4 @@ export 'image_utils.dart';
 export 'package_info_utils.dart';
 export 'calculate_utils.dart';
 export 'ga_utils.dart';
+export 'geo_utils.dart';

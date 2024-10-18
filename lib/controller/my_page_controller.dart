@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_login/flutter_naver_login.dart';
+import 'package:flutter_naver_login_plus/flutter_naver_login_plus.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
@@ -42,14 +42,13 @@ class MyPageController extends GetxController {
 
   Future<void> validateToken() async {
     try {
-      CommonResponseModel commonResponse = await myPageRepository.validateTokenApi();
+      CommonResponseModel commonResponse = await myPageRepository.fetchMyProfile();
 
       if(commonResponse.successModel != null){
-        ValidateTokenResponseModel response = ValidateTokenResponseModel.fromJson(commonResponse.successModel!.content);
+        UserPrivateModel response = UserPrivateModel.fromJson(commonResponse.successModel!.content['item']);
 
-        if(response.success){
-          UserService.instance.userInfo.value = response.user;
-        }
+        UserService.instance.userPublicInfo.value = response.userPublicModel;
+        UserService.instance.userPrivateInfo.value = response;
 
       }
 
@@ -67,7 +66,7 @@ class MyPageController extends GetxController {
 
   void signOut() async {
 
-    LoadingOverlay.show(null);
+    LoadingOverlay.show();
     await Future.delayed(const Duration(milliseconds: 400));
     LoadingOverlay.hide();
 
@@ -82,7 +81,7 @@ class MyPageController extends GetxController {
           await UserApi.instance.logout();
           break;
         case 'naver':
-          await FlutterNaverLogin.logOut();
+          await FlutterNaverLoginPlus.logOut();
           break;
         case 'apple':
         case 'none':
@@ -93,7 +92,7 @@ class MyPageController extends GetxController {
     await FirebaseAuth.instance.signOut();
     await AppPreferences().prefs?.remove(AppPrefsKeys.userAccessToken); // remove access token
     await AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.none.toDisplayString());
-    UserService.instance.userInfo.value = null;
+    UserService.instance.userPublicInfo.value = null;
 
   }
 

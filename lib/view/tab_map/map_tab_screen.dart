@@ -82,11 +82,14 @@ class MapTabScreen extends GetView<MapTabController> {
                             child: Row(
                               children: [
                                 const SizedBox(width: 16,),
-                                Expanded(child: Obx(() => Text(controller.searchResult.value.isEmpty ? "지역, 장소명, 테마로 찾아보세요." : controller.searchResult.value, style: AppThemes.bodyMedium.copyWith(color: controller.searchResult.value.isEmpty ? AppColors.blueGrey600 : AppColors.blueGrey100, height: 1), overflow: TextOverflow.ellipsis, maxLines: 1,),)),
+                                Expanded(child: Obx(() => Text(controller.searchResult.value.isEmpty ? "장소명, 이벤트명으로 찾아보세요." : controller.searchResult.value, style: AppThemes.bodyMedium.copyWith(color: controller.searchResult.value.isEmpty ? AppColors.blueGrey600 : AppColors.blueGrey100, height: 1), overflow: TextOverflow.ellipsis, maxLines: 1,),)),
                                 GestureDetector(
                                   onTap: () {
                                     if(controller.searchResult.value.isNotEmpty){
                                       controller.searchResult.value = "";
+                                      controller.selectedClusterMarker([]);
+                                      controller.curEventList.value = controller.allEventList;
+                                      controller.updateMarker();
                                     }
                                   },
                                   child: Obx(() {
@@ -122,13 +125,12 @@ class MapTabScreen extends GetView<MapTabController> {
 
                       var sheetHeight = controller.sheetHeight.value!;
 
-                      /// 선택된 클러스터 마커 없는경우
                       return Stack(
                         children: [
 
                           Positioned(
                             left: 20,
-                            bottom: controller.selectedClusterMarker.isEmpty ? controller.minHeight + 20 : controller.minHeight + 70,
+                            bottom: controller.selectedClusterMarker.isEmpty ? controller.minHeight + 20 : controller.minHeight + 100,
                             child: BouncingButton(
                               onTap: () {
                                 controller.getCurrentLocation();
@@ -207,34 +209,61 @@ class MapTabScreen extends GetView<MapTabController> {
                                                 if(controller.searchResult.value.isNotEmpty) return const SizedBox();
                                                 return const Expanded(child: SizedBox());
                                               },),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  showModalBottomSheet(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return SortKeyListBottomSheet(onSelected: (sortKeyEnum) {
-                                                        print("sort Key ::: " + sortKeyEnum.toDisplayString());
-                                                        // TODO sort events
-                                                      },);
-                                                    },
+                                              Obx(() {
+                                                if(!controller.isMapInitialized.value) return const SizedBox();
+
+                                                if(controller.curEventList.isEmpty){
+                                                  return Expanded(
+                                                    child: Container(
+                                                      margin: const EdgeInsets.only(top: 30),
+                                                      child: const Center(
+                                                        child: Text("진행중인 이벤트가 없습니다.")
+                                                      ),
+                                                    ),
                                                   );
-                                                },
-                                                child: Container(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                        color: AppColors.blueGrey700,
-                                                        width: 2,
-                                                      )
-                                                  ),
-                                                  child: Row(
-                                                    children: [
-                                                      Obx(() => Text(EventSortKeyHelper.getSortOptionString(controller.searchSortKey.value), style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey100),),),
-                                                      SvgPicture.asset("assets/image/ic_arrow_down.svg")
-                                                    ],
-                                                  ),
-                                                ),
-                                              )
+                                                }else {
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      showModalBottomSheet(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return SortKeyListBottomSheet(onSelected: (sortKeyEnum) async {
+
+                                                            if(sortKeyEnum == EventSortKeyEnum.distance){
+                                                              bool noError = await controller.getCurrentLocation();
+                                                              if(!noError) {
+                                                                controller.searchSortKey.value = EventSortKeyEnum.popular;
+                                                                Fluttertoast.showToast(msg: "위치를 불러올 수 없습니다. 위치 권한을 확인해 주세요.");
+                                                                return;
+                                                              }
+                                                            }
+
+                                                            if(sortKeyEnum == EventSortKeyEnum.popular){
+                                                              controller.sortEventsByPopularity(controller.curEventList);
+                                                            }
+
+                                                          },);
+                                                        },
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                            color: AppColors.blueGrey700,
+                                                            width: 2,
+                                                          )
+                                                      ),
+                                                      child: Row(
+                                                        children: [
+                                                          Obx(() => Text(EventSortKeyHelper.getSortOptionString(controller.searchSortKey.value), style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey100),),),
+                                                          SvgPicture.asset("assets/image/ic_arrow_down.svg")
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                              },),
                                             ],
                                           ),
                                         ),
@@ -274,7 +303,7 @@ class MapTabScreen extends GetView<MapTabController> {
                                                               child: AspectRatio(
                                                                   aspectRatio: 1,
                                                                   child: CachedNetworkImage(
-                                                                    imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnailImageFilepath}"),
+                                                                    imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnail_image_filepath}"),
                                                                     fit: BoxFit.cover,
                                                                   )
                                                               ),
@@ -284,10 +313,10 @@ class MapTabScreen extends GetView<MapTabController> {
                                                               child: Column(
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                 children: [
-                                                                  Text(event.eventName, style: AppThemes.headline05.copyWith(color: AppColors.blueGrey100), overflow: TextOverflow.ellipsis, maxLines: 1,),
-                                                                  Text(event.placeName, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300), overflow: TextOverflow.ellipsis, maxLines: 2,),
+                                                                  Text(event.event_name, style: AppThemes.headline05.copyWith(color: AppColors.blueGrey100), overflow: TextOverflow.ellipsis, maxLines: 1,),
+                                                                  Text(event.place_name, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300), overflow: TextOverflow.ellipsis, maxLines: 2,),
                                                                   const Expanded(child: SizedBox()),
-                                                                  Text("기간 ${FormatUtils.formatDate01(event.startDate)} - ${FormatUtils.formatDate01(event.endDate)}", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300)),
+                                                                  Text("기간 ${FormatUtils.formatDate01(event.start_date)} - ${FormatUtils.formatDate01(event.end_date)}", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300)),
                                                                 ],
                                                               ),
                                                             )
@@ -317,23 +346,24 @@ class MapTabScreen extends GetView<MapTabController> {
                                 bottom: 0,
                                 left: 0,
                                 right: 0,
-                                height: sheetHeight + 50,
+                                height: sheetHeight + 80,
                                 child: Container(
                                   color: Colors.white,
                                   child: Column(
                                     children: [
                                       const Divider(height: 2, thickness: 2, color: AppColors.blueGrey600,),
+                                      const SizedBox(height: 10,),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
-                                            Text(controller.selectedClusterMarker[0].placeName, style: AppThemes.headline04.copyWith(color: AppColors.blueGrey000),),
+                                            Text(controller.selectedClusterMarker[0].place_name, style: AppThemes.headline04.copyWith(color: AppColors.blueGrey000),),
                                             const Expanded(child: SizedBox()),
                                             GestureDetector(
                                                 onTap: (){
                                                   controller.selectedClusterMarker([]);
-                                                  controller.updateMarker(context);
+                                                  controller.updateMarker();
                                                 },
                                                 child: SvgPicture.asset("assets/image/ic_close.svg")
                                             ),
@@ -363,13 +393,13 @@ class MapTabScreen extends GetView<MapTabController> {
                                                       Expanded(
                                                         child: AspectRatio(
                                                           aspectRatio: 1,
-                                                          child: CachedNetworkImage(imageUrl: "${AppSecret.s3url}${event.thumbnailImageFilepath}",fit: BoxFit.cover,),
+                                                          child: CachedNetworkImage(imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnail_image_filepath}"),fit: BoxFit.cover,),
                                                         ),
                                                       ),
-                                                      const SizedBox(height: 6,),
-                                                      Align(alignment: Alignment.centerLeft,child: Text(event.eventName, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100),maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.start, )),
-                                                      Align(alignment: Alignment.centerLeft,child: Text("${FormatUtils.formatDate01(event.startDate)} - ${FormatUtils.formatDate01(event.endDate)}", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300), textAlign: TextAlign.start,)),
-                                                      const SizedBox(height: 6,),
+                                                      const SizedBox(height: 12,),
+                                                      Align(alignment: Alignment.centerLeft,child: Text(event.event_name, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100),maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.start, )),
+                                                      Align(alignment: Alignment.centerLeft,child: Text("${FormatUtils.formatDate01(event.start_date)} - ${FormatUtils.formatDate01(event.end_date)}", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300), textAlign: TextAlign.start, maxLines: 1, overflow: TextOverflow.ellipsis,)),
+                                                      const SizedBox(height: 30,),
                                                     ],
                                                   ),
                                                 ),

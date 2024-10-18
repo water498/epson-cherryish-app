@@ -12,4 +12,8 @@ class MyPageRepository extends BaseApiRepository {
     return handleApiResponse(authApi.validateTokenApi());
   }
 
+  Future<CommonResponseModel> fetchMyProfile() async {
+    return handleApiResponse(authApi.fetchMyProfileApi());
+  }
+
 }

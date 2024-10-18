@@ -13,11 +13,15 @@ class AuthApi extends BaseApi {
   }
 
   Future<Response> fetchMyProfileApi() async {
-    return await post("/mobile/auth/profile", null);
+    return await get("/mobile/auth/profile");
   }
 
   Future<Response> phoneVerificationApi(Map<String, dynamic> request) async {
     return await put("/mobile/auth/phone/verification", request);
+  }
+
+  Future<Response> withdrawalApi() async {
+    return await delete("/mobile/auth/signout");
   }
 
 }

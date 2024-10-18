@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:seeya/constants/app_colors.dart';
 import 'package:seeya/constants/app_router.dart';
@@ -15,8 +16,6 @@ class ReportScreen extends GetView<ReportController> {
 
   @override
   Widget build(BuildContext context) {
-
-    final controller = Get.put(ReportController());
 
     return Scaffold(
       backgroundColor: AppColors.blueGrey800,
@@ -43,13 +42,13 @@ class ReportScreen extends GetView<ReportController> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    controller.isUsageSelected(true);
+                    controller.selectedTabIndex(0);
                   },
                   child: Obx(() {
                     return Container(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      color: controller.isUsageSelected.value ? Colors.white : Colors.transparent,
-                      child: Center(child: Text("이용 내역", style: AppThemes.headline05.copyWith(color: controller.isUsageSelected.value ? AppColors.blueGrey100 : AppColors.blueGrey400),)),
+                      color: controller.selectedTabIndex.value == 0 ? Colors.white : Colors.transparent,
+                      child: Center(child: Text("이용 내역", style: AppThemes.headline05.copyWith(color: controller.selectedTabIndex.value == 0 ? AppColors.blueGrey100 : AppColors.blueGrey400),)),
                     );
                   },),
                 ),
@@ -57,13 +56,13 @@ class ReportScreen extends GetView<ReportController> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    controller.isUsageSelected(false);
+                    controller.selectedTabIndex(1);
                   },
                   child: Obx(() {
                     return Container(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      color: controller.isUsageSelected.value ? Colors.transparent : Colors.white,
-                      child: Center(child: Text("문의 내역", style: AppThemes.headline05.copyWith(color: controller.isUsageSelected.value ? AppColors.blueGrey400 : AppColors.blueGrey100),)),
+                      color: controller.selectedTabIndex.value == 0 ? Colors.transparent : Colors.white,
+                      child: Center(child: Text("문의 내역", style: AppThemes.headline05.copyWith(color: controller.selectedTabIndex.value == 0 ? AppColors.blueGrey400 : AppColors.blueGrey100),)),
                     );
                   },),
                 ),
@@ -77,30 +76,75 @@ class ReportScreen extends GetView<ReportController> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
-                return Future.delayed(const Duration(milliseconds: 1000));
+                if(controller.selectedTabIndex.value == 0){
+                  await controller.fetchPrintHistories();
+                } else {
+                  await controller.fetchReports();
+                }
               },
               backgroundColor: Colors.white,
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        UsageHistoryItem(),
-                        InquiryHistoryItem(),
-                      ],
-                    ),
-                  );
-                },
-              ),
+              child: Obx(() => IndexedStack(
+                index: controller.selectedTabIndex.value,
+                children: [
+                  page1(),
+                  page2(),
+                ],
+              ),),
             ),
           )
 
 
         ],
       ),
+    );
+
+
+  }
+
+  Widget page1(){
+    return ListView.builder(
+      itemCount: controller.usageHistoryList.length,
+      itemBuilder: (context, index) {
+
+        var historyItem = controller.usageHistoryList[index];
+
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          color: Colors.white,
+          child: UsageHistoryItem(
+            index: index,
+            printHistory: historyItem,
+            reportErrorClick: () {
+              Get.toNamed(AppRouter.error_report, arguments: historyItem);
+            },
+            reprintClick: () {
+              controller.showReprintAlert(context, historyItem);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget page2(){
+    return ListView.builder(
+      itemCount: controller.inquiryList.length,
+      itemBuilder: (context, index) {
+
+        var inquiryItem = controller.inquiryList[index];
+
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          color: Colors.white,
+          child: InquiryHistoryItem(
+            index: index,
+            inquiryItem: inquiryItem,
+            onItemClick: () {
+              Get.toNamed(AppRouter.inquiry_detail, arguments: inquiryItem.id);
+            },
+          ),
+        );
+      },
     );
   }
 

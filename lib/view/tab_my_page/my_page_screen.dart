@@ -66,9 +66,9 @@ class MyPageScreen extends GetView<MyPageController> {
                           width: 73,
                           height: 73,
                           child: Obx(() {
-                            if(UserService.instance.userInfo.value?.profile_url != null){
+                            if(UserService.instance.userPublicInfo.value?.profile_url != null){
                               return CachedNetworkImage(
-                                imageUrl: Uri.encodeFull("${UserService.instance.userInfo.value!.profile_url!}"),
+                                imageUrl: Uri.encodeFull("${UserService.instance.userPublicInfo.value!.profile_url!}"),
                                 fit: BoxFit.cover,
                               );
                             }else {
@@ -82,8 +82,8 @@ class MyPageScreen extends GetView<MyPageController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Obx(() => Text("[${UserService.instance.userInfo.value?.name ?? "시야 손님 ${UserService.instance.userInfo.value?.id ?? ""}"}]", style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),),),
-                          Obx(() => Text("${UserService.instance.userInfo.value?.social_type}로 로그인", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),),
+                          Obx(() => Text("[${UserService.instance.userPublicInfo.value?.name ?? "시야 손님 ${UserService.instance.userPublicInfo.value?.id ?? ""}"}]", style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),),),
+                          Obx(() => Text("${UserService.instance.userPublicInfo.value?.social_type}로 로그인", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),),
                         ],
                       )
                     ],
@@ -92,11 +92,7 @@ class MyPageScreen extends GetView<MyPageController> {
               } else {
                 return Container(
                   margin: const EdgeInsets.only(top: 80),
-                  child: LoginComponent(
-                    onLoginSuccess: () {
-                      // TODO
-                    },
-                  ),
+                  child: const LoginComponent(),
                 );
               }
             },),

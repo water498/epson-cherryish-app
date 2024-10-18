@@ -10,7 +10,7 @@ class RootRepository extends BaseApiRepository {
   RootRepository({required this.homeApi});
 
   Future<CommonResponseModel> fetchPhotoListApi() async {
-    return handleApiResponse(homeApi.fetchTemplateListApi());
+    return handleApiResponse(homeApi.fetchHomeFrameListApi());
   }
 
 }

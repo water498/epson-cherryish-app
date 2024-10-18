@@ -41,14 +41,17 @@ class SeeyaGuideScreen extends GetView<SeeyaGuideController> {
               controller: controller.scrollController,
               child: SingleChildScrollView(
                 controller: controller.scrollController,
-                child: Column(
-                  children: [
-                    Text("내 손 안의 포토부스, 시야", style: AppThemes.headline04.copyWith(color: Colors.black),),
-                    const SeeyaGuideItem(step: "step 1", title: "찾고", description: "특별했던 장소의 프레임을\n'시야'에서 찾아보세요!", imgUrl: "assets/image/seeya_guide01.png",),
-                    const SeeyaGuideItem(step: "step 2", title: "찍고", description: "선택한 프레임에 기억하고 싶은 순간들을\n넣어보세요!", imgUrl: "assets/image/seeya_guide02.png",),
-                    const SeeyaGuideItem(step: "step 3", title: "뽑고", description: "결제를 마치고 조금만 기다리면\n한장에 담기는 소중한 오늘이 당신 손안에!", imgUrl: "assets/image/seeya_guide03.png",),
-                    const SizedBox(height: 100,),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      Text("내 손 안의 포토부스, 시야", style: AppThemes.headline04.copyWith(color: Colors.black),),
+                      const SeeyaGuideItem(step: "step 1", title: "찾고", description: "특별했던 장소의 프레임을\n'시야'에서 찾아보세요!", imgUrl: "assets/image/seeya_guide01.png",),
+                      const SeeyaGuideItem(step: "step 2", title: "찍고", description: "선택한 프레임에 기억하고 싶은 순간들을\n넣어보세요!", imgUrl: "assets/image/seeya_guide02.png",),
+                      const SeeyaGuideItem(step: "step 3", title: "뽑고", description: "결제를 마치고 조금만 기다리면\n한장에 담기는 소중한 오늘이 당신 손안에!", imgUrl: "assets/image/seeya_guide03.png",),
+                      const SizedBox(height: 100,),
+                    ],
+                  ),
                 ),
               ),
             ),

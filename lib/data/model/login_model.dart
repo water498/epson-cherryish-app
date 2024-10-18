@@ -45,7 +45,7 @@ class LoginRequestModel{
 }
 
 class LoginResponseModel {
-  UserInfoModel user;
+  UserPublicModel user;
   bool need_phone_verification;
   String access_token;
 
@@ -57,7 +57,7 @@ class LoginResponseModel {
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
     return LoginResponseModel(
-      user: UserInfoModel.fromJson(json['item']),
+      user: UserPublicModel.fromJson(json['item']),
       need_phone_verification : json['need_phone_verification'],
       access_token: json['access_token'],
     );
@@ -69,25 +69,25 @@ class LoginResponseModel {
 
 
 // public
-class UserInfoModel {
+class UserPublicModel {
   int id;
   String? name;
-  String? email;
+  String email;
   String? profile_url;
   String? fcm_token;
   String? os_name;
   String? os_version;
-  String created_date;
-  String last_login_date;
-  String? deleted_date;
-  String? social_type;
+  DateTime created_date;
+  DateTime last_login_date;
+  DateTime? deleted_date;
+  String social_type;
 
 
 
-  UserInfoModel({
+  UserPublicModel({
     required this.id,
     this.name,
-    this.email,
+    required this.email,
     this.profile_url,
     this.fcm_token,
     this.os_name,
@@ -95,11 +95,11 @@ class UserInfoModel {
     required this.created_date,
     required this.last_login_date,
     this.deleted_date,
-    this.social_type,
+    required this.social_type,
   });
 
-  factory UserInfoModel.fromJson(Map<String, dynamic> json) {
-    return UserInfoModel(
+  factory UserPublicModel.fromJson(Map<String, dynamic> json) {
+    return UserPublicModel(
       id: json['id'],
       name: json['name'],
       email: json['email'],
@@ -107,43 +107,44 @@ class UserInfoModel {
       fcm_token: json['fcm_token'],
       os_name: json['os_name'],
       os_version: json['os_version'],
-      created_date: json['created_date'],
-      last_login_date: json['last_login_date'],
-      deleted_date: json['deleted_date'],
+      created_date: DateTime.parse(json['created_date']),
+      last_login_date: DateTime.parse(json['last_login_date']),
+      deleted_date: json['deleted_date'] != null ? DateTime.parse(json['deleted_date']) : null,
       social_type: json['social_type'],
     );
   }
 
 
-  UserInfoModel copyWith({
-    int? id,
-    String? name,
-    String? email,
-    String? profile_url,
-    String? fcm_token,
-    String? os_name,
-    String? os_version,
-    String? created_date,
-    String? last_login_date,
-    String? deleted_date,
-    String? social_type,
-  }) {
-    return UserInfoModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      profile_url: profile_url ?? this.profile_url,
-      fcm_token: fcm_token ?? this.fcm_token,
-      os_name: os_name ?? this.os_name,
-      os_version: os_version ?? this.os_version,
-      created_date: created_date ?? this.created_date,
-      last_login_date: last_login_date ?? this.last_login_date,
-      deleted_date: deleted_date ?? this.deleted_date,
-      social_type: social_type ?? this.social_type,
+}
+
+
+
+
+
+class UserPrivateModel {
+  UserPublicModel userPublicModel;
+  String phone_number;
+  DateTime phone_number_verification_date;
+  String social_id;
+
+
+  UserPrivateModel({
+    required this.userPublicModel,
+    required this.phone_number,
+    required this.phone_number_verification_date,
+    required this.social_id,
+  });
+
+  factory UserPrivateModel.fromJson(Map<String, dynamic> json) {
+    return UserPrivateModel(
+      userPublicModel: UserPublicModel.fromJson(json),
+      phone_number: json['phone_number'],
+      phone_number_verification_date: DateTime.parse(json['phone_number_verification_date']),
+      social_id: json['social_id'],
     );
   }
 
 
-
 }
+
 

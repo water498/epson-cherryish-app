@@ -23,7 +23,7 @@ class LocalNotificationService {
       initializationsSettings,
       onDidReceiveNotificationResponse: (details) async {
         print("foreground 알림을 클릭");
-        if (details.payload == null) return;
+        // if (details.payload == null) return;
         // 알림으로 받은 Payload를 활용하여 알림을 클릭했을 때 동작을 여기서 제어
       },
     );

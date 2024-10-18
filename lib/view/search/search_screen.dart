@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:seeya/constants/app_router.dart';
 import 'package:seeya/constants/app_themes.dart';
 import 'package:seeya/controller/controllers.dart';
+import 'package:seeya/data/model/models.dart';
+import 'package:seeya/view/common/bouncing_button.dart';
 import 'package:seeya/view/search/search_list_item.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../constants/app_colors.dart';
 
@@ -13,10 +18,6 @@ class SearchScreen extends GetView<SearchScreenController> {
 
   @override
   Widget build(BuildContext context) {
-
-
-    final controller = Get.put(SearchScreenController());
-
 
 
     return Scaffold(
@@ -60,11 +61,25 @@ class SearchScreen extends GetView<SearchScreenController> {
                         children: [
                           Expanded(
                             child: TextField(
-                              textInputAction: TextInputAction.done,
-                              onSubmitted: (value) {
-                                Get.back(result: "$value");
+                              textInputAction: TextInputAction.search,
+                              focusNode: controller.focusNode,
+                              maxLength: 20,
+                              onSubmitted: (value) async {
+
+                                if(value.trim().isEmpty) return;
+
+                                await controller.historyManager.addSearchItem(
+                                  SearchHistoryModel(
+                                    keyword: value,
+                                    isEvent: false,
+                                    id: Uuid().v4()
+                                  )
+                                );
+
+                                await controller.searchComplete(value);
                               },
                               decoration: const InputDecoration(
+                                counterText:'',
                                 enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide.none
                                 ),
@@ -72,12 +87,13 @@ class SearchScreen extends GetView<SearchScreenController> {
                                     borderSide: BorderSide.none
                                 ),
                                 contentPadding: EdgeInsets.only(left: 16,top: 0,bottom: 0,right: 0),
-                                hintText: "지역, 장소명, 테마로 찾아보세요.",
+                                hintText: "장소명, 이벤트명으로 찾아보세요.",
                               ),
                               cursorColor: AppColors.primary400,
                               cursorWidth: 2,
                               autofocus: true,
                               controller: controller.textController,
+                              style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100),
                             )
                           ),
                           GestureDetector(
@@ -118,9 +134,15 @@ class SearchScreen extends GetView<SearchScreenController> {
                         padding: const EdgeInsets.symmetric(vertical: 6),
                         child: Row(
                           children: [
-                            Text("최근 검색어", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey000),),
+                            Text("최근 검색", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey000),),
                             const Expanded(child: SizedBox()),
-                            Text("전체 지우기", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),),
+                            BouncingButton(
+                              onTap: () async {
+                                await controller.historyManager.clearSearchHistory();
+                                await controller.setSearchHistoryData();
+                              },
+                              child: Text("전체 지우기", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
+                            ),
                           ],
                         ),
                       ),
@@ -130,12 +152,35 @@ class SearchScreen extends GetView<SearchScreenController> {
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 1,
-                            itemBuilder: (context, index) {
-                              return SearchListItem(onTap: () {
-                                Get.back(result: "생일 카페 (keyword)");
-                              },eventName: "생일 카페", isPlace: index % 2 == 0 ? true : false, isRecorded: true,);
-                            },
+                            itemCount: controller.searchHistories.length,
+                            itemBuilder: (context, index) => Obx((){
+
+                              var searchHistory = controller.searchHistories[index];
+
+                              return SearchListItem(
+                                onTap: () async {
+
+                                  await controller.historyManager.moveDuplicateToTop(searchHistory);
+
+                                  if(searchHistory.isEvent){
+                                    await controller.setSearchHistoryData();
+                                    Get.toNamed(AppRouter.event_detail, arguments: searchHistory.event_id ?? 0);
+                                    return;
+                                  }
+
+                                  await controller.searchComplete(searchHistory.keyword);
+                                },
+                                onDelete: () async {
+                                  await controller.historyManager.removeSearchItem(searchHistory.id);
+                                  await controller.setSearchHistoryData();
+                                },
+                                title: searchHistory.isEvent ? searchHistory.event_name ?? "" : "${controller.searchHistories[index].keyword}",
+                                subTitle: searchHistory.place_name ?? "",
+                                isEvent: searchHistory.isEvent,
+                                isFromPref: true,
+                              );
+
+                            }),
                           ),
                         ),
                       )
@@ -157,11 +202,24 @@ class SearchScreen extends GetView<SearchScreenController> {
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 3,
+                          itemCount: controller.searchMatchingHistories.length,
                           itemBuilder: (context, index) {
-                            return SearchListItem(onTap: () {
-                              Get.back(result: "result 22222222222222");
-                            },eventName: "생일 카페", isPlace: true, isRecorded: true,);
+
+                            var matchingHistories = controller.searchMatchingHistories[index];
+
+                            return SearchListItem(
+                              onTap: () async {
+                                await controller.historyManager.moveDuplicateToTop(matchingHistories);
+                                await controller.searchComplete(matchingHistories.keyword);
+                              },
+                              onDelete: () {
+
+                              },
+                              title: matchingHistories.keyword,
+                              subTitle: "",
+                              isEvent: true,
+                              isFromPref: true,
+                            );
                           },
                         ),
                       ),
@@ -174,11 +232,31 @@ class SearchScreen extends GetView<SearchScreenController> {
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 20,
+                          itemCount: controller.searchResponseList.length,
                           itemBuilder: (context, index) {
-                            return SearchListItem(onTap: () {
-                              Get.back(result: "result 33333333333333");
-                            },eventName: "데일리 프롯", isPlace: true, isRecorded: false,);
+
+                            var searchResponseEvent = controller.searchResponseList[index];
+
+                            return SearchListItem(
+                              onTap: () async {
+                                await controller.historyManager.addSearchItem(
+                                    SearchHistoryModel(
+                                      keyword: "",
+                                      isEvent: true,
+                                      id: Uuid().v4(),
+                                      event_id: searchResponseEvent.event_id,
+                                      event_name: searchResponseEvent.event_name,
+                                      place_name: searchResponseEvent.place_name,
+                                    )
+                                );
+                                Get.toNamed(AppRouter.event_detail, arguments: searchResponseEvent.event_id);
+                              },
+                              onDelete: () {},
+                              title: searchResponseEvent.event_name,
+                              subTitle: searchResponseEvent.place_name,
+                              isEvent: true,
+                              isFromPref: false,
+                            );
                           },
                         ),
                       ),

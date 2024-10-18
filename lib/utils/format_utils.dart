@@ -52,5 +52,27 @@ abstract class FormatUtils {
   }
 
 
+  static String formatDateTimeToYYYYMMDDHHMM(DateTime? dateTime) {
+    if(dateTime == null) return "";
+
+    final year = dateTime.year.toString().padLeft(4, '0');
+    final month = dateTime.month.toString().padLeft(2, '0');
+    final day = dateTime.day.toString().padLeft(2, '0');
+    final hour = dateTime.hour.toString().padLeft(2, '0');
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+
+    return "$year.$month.$day $hour:$minute";
+  }
+
+  static String formatDateTimeToYYYYMMDD(DateTime? dateTime) {
+    if(dateTime == null) return "";
+    final year = dateTime.year.toString().padLeft(4, '0');
+    final month = dateTime.month.toString().padLeft(2, '0');
+    final day = dateTime.day.toString().padLeft(2, '0');
+
+    return "$year.$month.$day";
+  }
+
+
 
 }

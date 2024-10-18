@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:seeya/data/model/models.dart';
+import 'package:seeya/data/repository/repositories.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
 class PrintHistoryController extends GetxController{
 
-  RxList<String> historyList = <String>[].obs;
+  final PrintHistoryRepository printHistoryRepository;
+
+  PrintHistoryController({required this.printHistoryRepository});
+
+
+
+
+
+
+  RxList<PrintHistoryModel> historyList = <PrintHistoryModel>[].obs;
   var isLoadFinish = false.obs;
   late final PageController pageController;
 
@@ -31,18 +42,23 @@ class PrintHistoryController extends GetxController{
 
   Future<void> fetchHistory() async {
     try {
-      LoadingOverlay.show(null);
+      CommonResponseModel commonResponse = await printHistoryRepository.fetchPrintHistories();
 
-      await Future.delayed(Duration(milliseconds: 300));
+      if(commonResponse.successModel != null){
 
-      historyList.value = ["", ""];
+        List<PrintHistoryModel> response = PrintHistoryModel.fromJsonList(commonResponse.successModel!.content["items"]);
+        historyList.value = response;
+
+      } else if(commonResponse.failModel != null){
+
+      }
+
 
     } catch (e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
     } finally {
       isLoadFinish(true);
-      LoadingOverlay.hide();
     }
   }
 

@@ -9,8 +9,8 @@ class HomeRepository extends BaseApiRepository {
 
   HomeRepository({required this.homeApi});
 
-  Future<CommonResponseModel> fetchTemplateListApi() async {
-    return handleApiResponse(homeApi.fetchTemplateListApi());
+  Future<CommonResponseModel> fetchHomeFrameListApi() async {
+    return handleApiResponse(homeApi.fetchHomeFrameListApi());
   }
 
 }

@@ -30,14 +30,10 @@ class LoginScreen extends GetView<LoginController> {
           const SizedBox(width: 8,),
         ],
       ),
-      body: Column(
+      body: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          LoginComponent(
-            onLoginSuccess: () {
-              Get.back(result: "success");
-            },
-          ),
+          LoginComponent(),
         ],
       ),
     );

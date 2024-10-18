@@ -23,7 +23,7 @@ class HomeController extends GetxController{
 
   late final PageController pageController;
   var isInitialized = false.obs;
-  RxList<TempHomeBestFrame> homeList = <TempHomeBestFrame>[].obs;
+  RxList<HomeBestFrame> homeList = <HomeBestFrame>[].obs;
 
 
 
@@ -62,11 +62,17 @@ class HomeController extends GetxController{
   Future<void> fetchHomeList() async {
 
     try{
-      LoadingOverlay.show(null);
+      LoadingOverlay.show();
 
-      await homeRepository.fetchTemplateListApi();
-      await Future.delayed(const Duration(milliseconds: 500));
-      homeList.value = TempHomeBestFrame.dummy_data.map((data) => TempHomeBestFrame.fromJson(data)).toList();
+      CommonResponseModel commonResponse = await homeRepository.fetchHomeFrameListApi();
+
+      if(commonResponse.successModel != null){
+        homeList.value = HomeBestFrame.fromJsonList(commonResponse.successModel!.content["items"]);
+
+      } else if(commonResponse.failModel != null) {
+
+      }
+
     }catch(e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");

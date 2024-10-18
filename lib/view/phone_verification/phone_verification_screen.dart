@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/utils/utils.dart';
 import 'package:seeya/view/common/common_widget.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/app_themes.dart';

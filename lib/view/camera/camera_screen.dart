@@ -10,6 +10,7 @@ import 'package:logger/logger.dart';
 import 'package:seeya/constants/app_colors.dart';
 import 'package:seeya/constants/app_secret.dart';
 import 'package:seeya/constants/app_themes.dart';
+import 'package:seeya/constants/seeya_frame_configs.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/view/common/bouncing_button.dart';
 
@@ -21,6 +22,10 @@ class CameraScreen extends GetView<CameraScreenController> {
 
   @override
   Widget build(BuildContext context) {
+
+    const filterWidth = SeeyaFrameConfigs.filterWidth;
+    const filterHeight = SeeyaFrameConfigs.filterHeight;
+
     return Scaffold(
       backgroundColor: AppColors.blueGrey000,
       appBar: AppBar(
@@ -79,10 +84,10 @@ class CameraScreen extends GetView<CameraScreenController> {
                       var curFilter = controller.frameController.eventFilterList[controller.currentPage.value];
 
                       return AspectRatio(
-                          aspectRatio: curFilter.width/curFilter.height,
+                          aspectRatio: filterWidth / filterHeight,
                           child: ClipRect(
                             child: Transform.scale(
-                              scale: curFilter.height/curFilter.width,
+                              scale: filterHeight / filterWidth,
                               child: Center(
                                 child: CameraPreview(controller.cameraController!)
                               ),
@@ -102,12 +107,12 @@ class CameraScreen extends GetView<CameraScreenController> {
 
                       var curFilter = controller.frameController.eventFilterList[controller.currentPage.value];
 
-                      if(curFilter.imageFilepath == null) return const SizedBox();
+                      if(curFilter.image_filepath == null) return const SizedBox();
 
                       return AspectRatio(
-                        aspectRatio: curFilter.width/curFilter.height,
+                        aspectRatio: filterWidth / filterHeight,
                         child: CachedNetworkImage(
-                          imageUrl: Uri.encodeFull("${AppSecret.s3url}${curFilter.imageFilepath}"),
+                          imageUrl: Uri.encodeFull("${AppSecret.s3url}${curFilter.image_filepath}"),
                           fit: BoxFit.fill
                         ),
                       );
@@ -135,7 +140,7 @@ class CameraScreen extends GetView<CameraScreenController> {
                     return Container(
                       color: AppColors.blueGrey000,
                       child: AspectRatio(
-                        aspectRatio: curFilter.width/curFilter.height,
+                        aspectRatio: filterWidth / filterHeight,
                         child: Image.file(
                           mergedPhoto.file,
                           fit: BoxFit.contain,

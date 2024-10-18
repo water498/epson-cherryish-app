@@ -39,7 +39,7 @@ class TestScreen extends GetView<TestController> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("테스트", style: TextStyle(color: Colors.blue),),
+        title: Text("테스트 ( Debug mode )", style: TextStyle(color: Colors.blue),),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -65,8 +65,8 @@ class TestScreen extends GetView<TestController> {
             ),
         
             ElevatedButton(onPressed: () async {
-              LoadingOverlay.show(null);
-              await Future.delayed(const Duration(milliseconds: 500));
+              LoadingOverlay.show();
+              await Future.delayed(const Duration(milliseconds: 1500));
               LoadingOverlay.hide();
             }, child: Text("loading show")),
         

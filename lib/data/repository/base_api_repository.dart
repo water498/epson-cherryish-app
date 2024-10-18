@@ -53,12 +53,13 @@ class BaseApiRepository extends GetxService {
         Get.toNamed(AppRouter.phone_verification);
       },
       402: () {
-        Fluttertoast.showToast(msg: '관리자에 의해 차단되었습니다.');
+        Get.offAllNamed(AppRouter.block);
       },
       403: () async {
-        UserService.instance.userInfo.value = null;
+        UserService.instance.userPublicInfo.value = null;
+        UserService.instance.userPrivateInfo.value = null;
         await AppPreferences().prefs?.remove(AppPrefsKeys.userAccessToken); // remove access token
-        if(requestPath == "/mobile/auth/validate/token"){
+        if(requestPath == "/mobile/auth/validate/token" || requestPath == "/mobile/auth/profile"){
           return;
         }
         Get.toNamed(AppRouter.login);
@@ -68,6 +69,9 @@ class BaseApiRepository extends GetxService {
       },
       500: () {
         Fluttertoast.showToast(msg: '처리중 알 수 없는 에러가 발생하였습니다.');
+      },
+      503: () {
+        Get.offAllNamed(AppRouter.server_maintenance);
       },
     };
 

@@ -1,7 +1,7 @@
 import 'models.dart';
 
 class ValidateTokenResponseModel {
-  UserInfoModel user;
+  UserPublicModel user;
   bool success;
 
   ValidateTokenResponseModel({
@@ -11,7 +11,7 @@ class ValidateTokenResponseModel {
 
   factory ValidateTokenResponseModel.fromJson(Map<String, dynamic> json) {
     return ValidateTokenResponseModel(
-      user: UserInfoModel.fromJson(json['user']),
+      user: UserPublicModel.fromJson(json['user']),
       success : json['success'],
     );
   }

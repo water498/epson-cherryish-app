@@ -2,12 +2,30 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:seeya/constants/app_colors.dart';
+import 'package:seeya/constants/app_secret.dart';
 import 'package:seeya/constants/app_themes.dart';
+import 'package:seeya/data/model/models.dart';
+import 'package:seeya/utils/format_utils.dart';
+import 'package:seeya/view/common/common_widget.dart';
+import 'package:seeya/view/report/history_status/history_statuses.dart';
 
 import '../../constants/app_router.dart';
 
 class UsageHistoryItem extends StatelessWidget {
-  const UsageHistoryItem({super.key});
+
+  final int index;
+  final PrintHistoryModel printHistory;
+  final VoidCallback reportErrorClick;
+  final VoidCallback reprintClick;
+
+  const UsageHistoryItem({
+    required this.index,
+    required this.printHistory,
+    required this.reportErrorClick,
+    required this.reprintClick,
+    super.key
+  });
+
 
   @override
   Widget build(BuildContext context) {
@@ -17,34 +35,60 @@ class UsageHistoryItem extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                color: AppColors.primary900,
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Text("대기중", style: AppThemes.bodySmall.copyWith(color: AppColors.primary400),),
-              ),
-              Expanded(child: const SizedBox()),
-              Text("2000.00.00 14:00 인쇄 전송", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey400),)
+              HistoryStatuses(printHistory: printHistory),
+              const Expanded(child: SizedBox()),
+              Text("${printHistory.printing_date == null ? "" : "${FormatUtils.formatDateTimeToYYYYMMDDHHMM(printHistory.printing_date!)} 인쇄 전송"}", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey400),)
             ],
           ),
           const SizedBox(height: 12,),
-          const Divider(thickness: 2, color: AppColors.blueGrey800,),
+          const Divider(thickness: 2, color: AppColors.blueGrey800, height: 2,),
           const SizedBox(height: 12,),
           Row(
             children: [
-              CachedNetworkImage(imageUrl: "https://i0.wp.com/digital-photography-school.com/wp-content/uploads/2013/07/ar-09.jpg?ssl=1", height: 110,),
+              GestureDetector(
+                onTap: () {
+                  Get.toNamed(
+                      AppRouter.image_viewer,
+                      arguments: {
+                        "image_path" : Uri.encodeFull("${AppSecret.s3url}${printHistory.print_filepath}"),
+                        "hero_tag" : "usage_history_viewer$index",
+                      }
+                  );
+                },
+                child: SizedBox(
+                  height: 110,
+                  child: AspectRatio(
+                    aspectRatio: 2/3,
+                    child: Container(
+                      color: AppColors.blueGrey800,
+                      child: Hero(
+                        tag: "usage_history_viewer$index",
+                        child: CachedNetworkImage(
+                          imageUrl: Uri.encodeFull("${AppSecret.s3url}${printHistory.print_filepath}"),
+                          fit: BoxFit.contain,
+                          placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(width: 12,),
               Expanded(
                 child: SizedBox(
                   height: 110,
                   child: Column(
                     children: [
-                      Text("이벤트명은 여기에 이렇게 두줄까지만 표시되도록 해주세요. 두 줄을 넘어갈 경우엔 ...처리해주세요.", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Text("${printHistory.event_name}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100), maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.start,)
+                      ),
                       const Expanded(child: SizedBox()),
                       Row(
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Get.toNamed(AppRouter.error_report);
+                              reportErrorClick();
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -57,9 +101,10 @@ class UsageHistoryItem extends StatelessWidget {
                               child: Text("에러 리포트하기", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey200),)
                             )
                           ),
+                          addW(8),
                           GestureDetector(
                             onTap: () {
-
+                              reprintClick();
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

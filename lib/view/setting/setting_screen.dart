@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:seeya/constants/app_router.dart';
+import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/data/enum/enums.dart';
+import 'package:seeya/view/common/bouncing_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/app_colors.dart';
@@ -12,7 +15,7 @@ import '../../utils/utils.dart';
 import '../tab_my_page/my_page_menu_button.dart';
 import 'setting_sns_icon.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends GetView<SettingController> {
   const SettingScreen({super.key});
 
   @override
@@ -68,7 +71,7 @@ class SettingScreen extends StatelessWidget {
                             width: maxLabelWidth,
                             child: Text("이름", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                         ),
-                        Expanded(child: Obx(() => Text("${UserService.instance.userInfo.value?.name ?? "시야 손님 ${UserService.instance.userInfo.value?.id ?? ""}"}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
+                        Expanded(child: Obx(() => Text("${UserService.instance.userPublicInfo.value?.name ?? "시야 손님 ${UserService.instance.userPublicInfo.value?.id ?? ""}"}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
                       ],
                     ),
                     const SizedBox(height: 20,),
@@ -78,7 +81,29 @@ class SettingScreen extends StatelessWidget {
                             width: maxLabelWidth,
                             child: Text("연락처", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                         ),
-                        // Expanded(child: Obx(() => Text("${UserService.instance.userInfo.value?.phone_number ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
+                        Obx(() {
+                          if(UserService.instance.userPrivateInfo.value == null){
+                            return BouncingButton(
+                              onTap: () async {
+                                var result = await Get.toNamed(AppRouter.phone_verification);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: AppColors.blueGrey100,
+                                        width: 1
+                                    )
+                                ),
+                                child: Text("휴대폰 인증", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100,fontFamily: "Inter"),),
+                              ),
+                            );
+                          }else {
+                            return Expanded(child: Obx(() => Text("${UserService.instance.userPrivateInfo.value?.phone_number ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),));
+                          }
+                        },),
+
+
                       ],
                     ),
                     const SizedBox(height: 20,),
@@ -88,7 +113,7 @@ class SettingScreen extends StatelessWidget {
                             width: maxLabelWidth,
                             child: Text("이메일", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                         ),
-                        Expanded(child: Obx(() => Text("${UserService.instance.userInfo.value?.email ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
+                        Expanded(child: Obx(() => Text("${UserService.instance.userPublicInfo.value?.email ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
                       ],
                     ),
                   ],

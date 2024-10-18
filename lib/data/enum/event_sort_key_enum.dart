@@ -1,7 +1,7 @@
 enum EventSortKeyEnum {
   popular,  // 인기 순
   distance, // 거리 순
-  relevance // 관련도 순
+  // relevance // 관련도 순
 }
 
 class EventSortKeyHelper {
@@ -12,8 +12,8 @@ class EventSortKeyHelper {
         return "인기 순";
       case EventSortKeyEnum.distance:
         return "거리 순";
-      case EventSortKeyEnum.relevance:
-        return "관련도 순";
+      // case EventSortKeyEnum.relevance:
+      //   return "관련도 순";
       default:
         return "알 수 없음";
     }
@@ -32,8 +32,8 @@ extension EventSortKeyExtension on EventSortKeyEnum {
         return "인기 순";
       case EventSortKeyEnum.distance:
         return "거리 순";
-      case EventSortKeyEnum.relevance:
-        return "관련도 순";
+      // case EventSortKeyEnum.relevance:
+      //   return "관련도 순";
       default:
         return "알 수 없음";
     }

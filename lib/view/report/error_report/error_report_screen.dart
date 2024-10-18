@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:seeya/constants/app_colors.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/view/common/bouncing_button.dart';
+import 'package:seeya/view/common/common_widget.dart';
 
 import '../../../constants/app_themes.dart';
 
@@ -13,8 +14,6 @@ class ErrorReportScreen extends GetView<ErrorReportController> {
 
   @override
   Widget build(BuildContext context) {
-
-    final controller = Get.put(ErrorReportController());
 
     return Scaffold(
       appBar: AppBar(
@@ -64,7 +63,14 @@ class ErrorReportScreen extends GetView<ErrorReportController> {
                   onTap: () async {
                     if(controller.selectedImage.value == null) return;
 
-                    await controller.uploadImage();
+                    await controller.uploadImage(onSuccess: (filepath) async {
+                      await controller.reportError(
+                        reportFilepath: filepath,
+                        onSuccess: () {
+                          controller.showSuccessDialog(context);
+                        },
+                      );
+                    },);
                   },
                   child: Obx(() {
                     return Container(
@@ -85,65 +91,100 @@ class ErrorReportScreen extends GetView<ErrorReportController> {
             ],
           )
       ),
-      body: Scrollbar(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("에러가 발생한 상황이나\n프레임의 사진을 첨부해주세요.", style: AppThemes.headline05.copyWith(color: AppColors.blueGrey200),textAlign: TextAlign.start,),
-                const SizedBox(height: 20,),
-                Obx(() {
-                  if(controller.selectedImage.value == null){
-                    return BouncingButton(
-                      onTap: () async {
-                        await controller.pickImage();
-                      },
-                      child: DottedBorder(
-                        borderType: BorderType.Rect,
-                        color: AppColors.blueGrey600,
-                        dashPattern: const [4,4],
-                        strokeWidth: 2,
-                        child: Container(
-                          color: AppColors.blueGrey800,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset("assets/image/ic_image.svg"),
-                                Text("사진 첨부하기",style: AppThemes.headline04.copyWith(color: AppColors.blueGrey200),),
-                              ],
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scrollbar(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("에러가 발생한 상황이나\n프레임의 사진을 첨부해주세요.", style: AppThemes.headline05.copyWith(color: AppColors.blueGrey200),textAlign: TextAlign.start,),
+                  const SizedBox(height: 20,),
+                  Obx(() {
+                    if(controller.selectedImage.value == null){
+                      return BouncingButton(
+                        onTap: () async {
+                          await controller.pickImage();
+                        },
+                        child: DottedBorder(
+                          borderType: BorderType.Rect,
+                          color: AppColors.blueGrey600,
+                          dashPattern: const [4,4],
+                          strokeWidth: 2,
+                          child: Container(
+                            color: AppColors.blueGrey800,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset("assets/image/ic_image.svg"),
+                                  Text("사진 첨부하기",style: AppThemes.headline04.copyWith(color: AppColors.blueGrey200),),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  } else {
-                    return Stack(
-                      children: [
-                        Image.file(controller.selectedImage.value!, fit: BoxFit.fitWidth,),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: GestureDetector(
-                            onTap: () {
-                              controller.selectedImage.value = null;
-                            },
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Container(width: 24, height: 24, color: AppColors.blueGrey000,),
-                                SvgPicture.asset("assets/image/ic_close.svg", colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    );
-                  }
-                },),
+                      );
+                    } else {
+                      return Align(
+                        alignment: Alignment.center,
+                        child: Stack(
+                          children: [
+                            Image.file(controller.selectedImage.value!, fit: BoxFit.contain, height: 200,),
+                            GestureDetector(
+                              onTap: () {
+                                controller.selectedImage.value = null;
+                              },
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(width: 24, height: 24, color: AppColors.blueGrey000,),
+                                  SvgPicture.asset("assets/image/ic_close.svg", colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    }
+                  },),
 
-              ],
+                  // addH(30),
+                  //
+                  // Container(
+                  //   child: TextField(
+                  //     focusNode: controller.focusNode,
+                  //     controller: controller.textController,
+                  //     maxLength: 300,
+                  //     maxLines: 8,
+                  //     decoration: const InputDecoration(
+                  //       enabledBorder: OutlineInputBorder(
+                  //           borderSide: BorderSide.none
+                  //       ),
+                  //       focusedBorder: OutlineInputBorder(
+                  //           borderSide: BorderSide.none
+                  //       ),
+                  //       contentPadding: EdgeInsets.only(left: 10,top: 10,bottom: 10,right: 10),
+                  //       hintText: "에러 사유를 적어주세요.",
+                  //     ),
+                  //     cursorColor: AppColors.primary400,
+                  //     cursorWidth: 5,
+                  //     style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100),
+                  //   ),
+                  //   decoration: BoxDecoration(
+                  //     border: Border.all(
+                  //       color: Colors.black,
+                  //       width: 1,
+                  //     )
+                  //   ),
+                  // ),
+
+                ],
+              ),
             ),
           ),
         ),

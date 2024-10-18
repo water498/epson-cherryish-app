@@ -1,50 +1,83 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:seeya/constants/app_secret.dart';
+import 'package:seeya/data/model/models.dart';
+import 'package:seeya/utils/format_utils.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/app_router.dart';
 import '../../constants/app_themes.dart';
+import 'inquiry_status/inquiry_statuses_with_date.dart';
 
 class InquiryHistoryItem extends StatelessWidget {
-  const InquiryHistoryItem({super.key});
+
+  final int index;
+  final InquiryItemModel inquiryItem;
+  final VoidCallback onItemClick;
+
+  const InquiryHistoryItem({
+    required this.index,
+    required this.inquiryItem,
+    required this.onItemClick,
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        Get.toNamed(AppRouter.inquiry_detail);
+        onItemClick();
       },
       child: Container(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
+            InquiryStatusesWithDate(inquiryItem: inquiryItem,),
+            const SizedBox(height: 12,),
+            const Divider(thickness: 2, color: AppColors.blueGrey800, height: 2,),
+            const SizedBox(height: 12,),
             Row(
               children: [
-                Container(
-                  color: Color(0xffE1FFE8),
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: Text("진행중", style: AppThemes.bodySmall.copyWith(color: AppColors.success),),
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(
+                        AppRouter.image_viewer,
+                        arguments: {
+                          "image_path" : Uri.encodeFull("${AppSecret.s3url}${inquiryItem.report_filepath}"),
+                          "hero_tag" : "inquiry_image_viewer$index",
+                        }
+                    );
+                  },
+                  child: SizedBox(
+                    height: 110,
+                    child: AspectRatio(
+                      aspectRatio: 2/3,
+                      child: Container(
+                        color: AppColors.blueGrey800,
+                        child: Hero(
+                          tag: "inquiry_image_viewer$index",
+                          child: CachedNetworkImage(
+                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${inquiryItem.report_filepath}"),
+                            fit: BoxFit.contain,
+                            placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                Expanded(child: const SizedBox()),
-                Text("2000.00.00 14:00 인쇄 전송", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey400),)
-              ],
-            ),
-            const SizedBox(height: 12,),
-            const Divider(thickness: 2, color: AppColors.blueGrey800,),
-            const SizedBox(height: 12,),
-            Row(
-              children: [
-                CachedNetworkImage(imageUrl: "https://i0.wp.com/digital-photography-school.com/wp-content/uploads/2013/07/ar-09.jpg?ssl=1", height: 110,),
                 const SizedBox(width: 12,),
                 Expanded(
                   child: SizedBox(
                     height: 110,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("2024.08.01 14:00 인쇄 완료", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey400),),
-                        Text("이벤트명은 여기에 이렇게 두줄까지만 표시되도록 해주세요. 두 줄을 넘어갈 경우엔 ...처리해주세요.", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100), maxLines: 2, overflow: TextOverflow.ellipsis,),
+                        Text("${FormatUtils.formatDateTimeToYYYYMMDDHHMM(inquiryItem.printing_date)} 인쇄 완료", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey400),),
+                        Text(inquiryItem.event_name, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100), maxLines: 2, overflow: TextOverflow.ellipsis,textAlign: TextAlign.start,),
                       ],
                     ),
                   ),

@@ -11,8 +11,6 @@ abstract class AppRouter {
   static const String home = '/home';
   static const String login = '/login';
   static const String camera = '/camera';
-  static const String purchase = '/purchase';
-  static const String image_list_viewer = '/image_list_viewer';
   static const String search = '/search';
   static const String qr_scan = '/qr_scan';
   static const String event_detail = '/event_detail';
@@ -30,6 +28,10 @@ abstract class AppRouter {
   static const String image_crop = '/image_crop';
   static const String setting = '/setting';
   static const String withdrawal = '/withdrawal';
+  static const String qr_share = '/qr_share';
+  static const String server_maintenance = '/server_maintenance';
+  static const String block = '/block';
+  static const String image_viewer = '/image_viewer';
 
 
   static const String test = '/test';
@@ -56,6 +58,9 @@ abstract class AppRouter {
       name: login,
       page: () => LoginScreen(),
       binding: LoginBinding(),
+      fullscreenDialog: true,
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 250)
     ),
     GetPage(
       name: camera,
@@ -63,20 +68,11 @@ abstract class AppRouter {
       binding: CameraBinding(),
     ),
     GetPage(
-      name: purchase,
-      page: () => PurchaseScreen(),
-      binding: PurchaseBinding(),
-    ),
-    GetPage(
-      name: image_list_viewer,
-      page: () => ImageListViewerScreen(),
-      binding: ImageListViewerBinding(),
-      transition: Transition.fade,
-    ),
-    GetPage(
       name: search,
       page: () => SearchScreen(),
-      transition: Transition.noTransition
+      binding: SearchScreenBinding(),
+      transition: Transition.noTransition,
+
     ),
     GetPage(
       name: qr_scan,
@@ -87,10 +83,12 @@ abstract class AppRouter {
     GetPage(
       name: event_detail,
       page: () => EventDetailScreen(),
+      binding: EventDetailBinding(),
     ),
     GetPage(
       name: decorate_frame,
       page: () => DecorateFrameScreen(),
+      binding: DecorateFrameBinding(),
       transition: Transition.noTransition,
       popGesture: false // 뒤로가기 제어
     ),
@@ -101,10 +99,12 @@ abstract class AppRouter {
     GetPage(
       name: print_history,
       page: () => PrintHistoryScreen(),
+      binding: PrintHistoryBinding(),
     ),
     GetPage(
       name: qna,
       page: () => QnaScreen(),
+      binding: QnaBinding()
     ),
     GetPage(
       name: custom_splash,
@@ -122,31 +122,66 @@ abstract class AppRouter {
     GetPage(
       name: report,
       page: () => ReportScreen(),
+      binding: ReportBinding(),
     ),
     GetPage(
       name: error_report,
       page: () => ErrorReportScreen(),
+      binding: ErrorReportBinding(),
     ),
     GetPage(
       name: inquiry_detail,
       page: () => InquiryDetailScreen(),
+      binding: InquiryDetailBinding(),
     ),
     GetPage(
       name: phone_verification,
       page: () => PhoneVerificationScreen(),
       binding: PhoneVerificationBinding(),
+      fullscreenDialog: true, // for hide ios black background
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 250)
     ),
     GetPage(
       name: image_crop,
       page: () => ImageCropScreen(),
+      transition: Transition.noTransition,
     ),
     GetPage(
       name: setting,
       page: () => SettingScreen(),
+      binding: SettingBinding()
     ),
     GetPage(
       name: withdrawal,
       page: () => WithdrawalScreen(),
+      binding: WithdrawalBinding(),
+    ),
+    GetPage(
+      name: qr_share,
+      page: () => QrShareScreen(),
+      fullscreenDialog: true,
+      opaque: false, // 불투면한 ? => 투명 scaffold
+      popGesture: false, // 뒤로가기 제어
+      transition: Transition.zoom,
+      transitionDuration: const Duration(milliseconds: 200),
+    ),
+    GetPage(
+      name: server_maintenance,
+      page: () => ServerMaintenanceScreen(),
+      fullscreenDialog: true,
+    ),
+    GetPage(
+      name: block,
+      page: () => BlockScreen(),
+      fullscreenDialog: true,
+    ),
+    GetPage(
+      name: image_viewer,
+      page: () => ImageViewerScreen(),
+      fullscreenDialog: true,
+      transition: Transition.fade,
+      transitionDuration: const Duration(milliseconds: 300)
     ),
 
 

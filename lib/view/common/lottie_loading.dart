@@ -37,7 +37,7 @@ class LottieLoading extends StatelessWidget {
                 child: OverflowBox(
                   maxWidth: lottieSize,
                   maxHeight: lottieSize,
-                  child: Image.asset("assets/image/loading.gif",width: lottieSize,height: lottieSize),
+                  child: Image.asset("assets/image/loading01.gif",width: lottieSize,height: lottieSize),
                   // child: Lottie.asset("assets/lottie/loading_cute.json",width: lottieSize,height: lottieSize)
                 ),
               ),

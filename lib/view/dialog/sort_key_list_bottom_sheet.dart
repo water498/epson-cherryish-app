@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:seeya/constants/app_themes.dart';
 import 'package:seeya/data/enum/enums.dart';
 
@@ -28,7 +30,7 @@ class _SortKeyListBottomSheetState extends State<SortKeyListBottomSheet> {
   @override
   Widget build(BuildContext context) {
 
-    final mapTabController = Get.put(MapTabController());
+    final mapTabController = Get.find<MapTabController>();
 
     return Container(
       color: Colors.white,
@@ -62,11 +64,11 @@ class _SortKeyListBottomSheetState extends State<SortKeyListBottomSheet> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () async {
-                        setState(() {
-                          mapTabController.searchSortKey.value = sortKeyList[index];
-                        });
+
+                        mapTabController.searchSortKey.value = sortKeyList[index];
                         widget.onSelected(sortKeyList[index]);
                         Navigator.pop(context);
+
                       },
                       child: Obx(() {
                         return Container(

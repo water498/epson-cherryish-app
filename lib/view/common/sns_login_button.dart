@@ -23,6 +23,7 @@ class SnsLoginButton extends StatelessWidget {
 
     var buttonColor = Colors.white;
     var strokeColor = Colors.white;
+    var textColor = AppColors.blueGrey000;
     var iconPath = "";
     var platformText = "";
 
@@ -53,6 +54,7 @@ class SnsLoginButton extends StatelessWidget {
         strokeColor = AppColors.blueGrey000;
         iconPath = "assets/image/ic_logo_apple.svg";
         platformText = "Apple";
+        textColor = Colors.white;
         break;
       }
       default : {
@@ -76,7 +78,7 @@ class SnsLoginButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SvgPicture.asset(iconPath),
-            Text("$platformText로 시작하기", style: AppThemes.bodyMedium,),
+            Text("$platformText로 시작하기", style: AppThemes.bodyMedium.copyWith(color: textColor),),
             Visibility(
               maintainSize: true,
               maintainAnimation: true,

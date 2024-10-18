@@ -13,12 +13,7 @@ import 'sns_login_button.dart';
 
 class LoginComponent extends GetView<LoginComponentController> {
 
-  final void Function()? onLoginSuccess;
-
-  const LoginComponent({
-    this.onLoginSuccess,
-    super.key
-  });
+  const LoginComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +25,7 @@ class LoginComponent extends GetView<LoginComponentController> {
 
     final authApi = Get.put(AuthApi());
     final loginRepository = Get.put(LoginRepository(authApi: authApi));
-    final controller = Get.put(LoginComponentController(onLoginSuccess: onLoginSuccess, loginRepository: loginRepository));
+    final controller = Get.put(LoginComponentController(loginRepository: loginRepository));
 
 
 

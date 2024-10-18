@@ -10,6 +10,7 @@ import 'package:seeya/constants/app_colors.dart';
 import 'package:seeya/constants/app_router.dart';
 import 'package:seeya/constants/app_secret.dart';
 import 'package:seeya/constants/app_themes.dart';
+import 'package:seeya/constants/seeya_frame_configs.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/service/services.dart';
 import 'package:seeya/utils/format_utils.dart';
@@ -21,8 +22,6 @@ class EventDetailScreen extends GetView<EventDetailController> {
   @override
   Widget build(BuildContext context) {
 
-
-    final controller = Get.put(EventDetailController());
     final shortestSide = MediaQuery.of(context).size.shortestSide;
     final isTablet = shortestSide > 600;
 
@@ -39,7 +38,12 @@ class EventDetailScreen extends GetView<EventDetailController> {
                   var isExpanded = controller.isAppBarExpanded.value;
                   var event = controller.event.value;
 
+
                   return SliverAppBar(
+                    systemOverlayStyle: SystemUiOverlayStyle(
+                      statusBarColor: Colors.transparent,
+                      statusBarBrightness: isExpanded? Brightness.dark : Brightness.light,
+                    ),
                     pinned: true,
                     shape: Border(
                       bottom: BorderSide(
@@ -59,7 +63,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                         ),
                       ],
                     ),
-                    title: Text(isExpanded ? "": event?.eventName ?? "", style: AppThemes.headline04.copyWith(color: AppColors.blueGrey000, height: 0),textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                    title: Text(isExpanded ? "": event?.event_name ?? "", style: AppThemes.headline04.copyWith(color: AppColors.blueGrey000, height: 0),textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis,),
                     centerTitle: true,
 
                     actions: [
@@ -68,7 +72,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
 
                         return GestureDetector(
                             onTap: () {
-                              Share.share("${event?.webLink}");
+                              Get.toNamed(AppRouter.qr_share, arguments: controller.event.value);
                             },
                             child: SvgPicture.asset("assets/image/ic_share.svg", colorFilter: ColorFilter.mode(isExpanded ? Colors.white : AppColors.blueGrey100, BlendMode.srcIn))
                         );
@@ -84,8 +88,9 @@ class EventDetailScreen extends GetView<EventDetailController> {
 
                           if(event != null)
                           CachedNetworkImage(
-                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnailImageFilepath}"),
+                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnail_image_filepath}"),
                             fit: BoxFit.cover,
+                            placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
                           ),
 
                           Container(
@@ -136,8 +141,8 @@ class EventDetailScreen extends GetView<EventDetailController> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(event?.eventName ?? "", style: AppThemes.headline03.copyWith(color: AppColors.blueGrey100),),
-                              Text(event?.placeName ?? "", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),),
+                              Text(event?.event_name ?? "", style: AppThemes.headline03.copyWith(color: AppColors.blueGrey100),),
+                              Text(event?.place_name ?? "", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),),
                               const SizedBox(height: 24,),
                               Row(
                                 children: [
@@ -145,7 +150,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                       width: maxLabelWidth,
                                       child: Text("인화 금액", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                                   ),
-                                  Expanded(child: Text("${FormatUtils.formatWithComma(event?.pricePerProduct ?? 0)}원", style: AppThemes.headline02.copyWith(color: AppColors.primary400),)),
+                                  Expanded(child: Text("${event?.need_using_fee == true ? 0: FormatUtils.formatWithComma(3000)}원", style: AppThemes.headline02.copyWith(color: AppColors.primary400),)),
                                 ],
                               ),
                               const SizedBox(height: 4,),
@@ -157,7 +162,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "${FormatUtils.formatDate01(event?.startDate) ?? ""} - ${FormatUtils.formatDate01(event?.endDate) ?? ""}",
+                                      "${FormatUtils.formatDate01(event?.start_date) ?? ""} - ${FormatUtils.formatDate01(event?.end_date) ?? ""}",
                                       style: AppThemes.headline05.copyWith(color: AppColors.blueGrey300),
                                     )
                                   ),
@@ -175,11 +180,11 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text("${event?.address ?? ""} ${event?.addressDetail ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),),
+                                        Text("${event?.address ?? ""} ${event?.address_detail ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),),
                                         GestureDetector(
                                             behavior: HitTestBehavior.translucent,
                                             onTap: () {
-                                              Clipboard.setData(ClipboardData(text: "${event?.address ?? ""} ${event?.addressDetail ?? ""}"));
+                                              Clipboard.setData(ClipboardData(text: "${event?.address ?? ""} ${event?.address_detail ?? ""}"));
                                               Fluttertoast.showToast(msg: "복사되었습니다.");
                                             },
                                             child: Text("주소 복사", style: AppThemes.bodySmall.copyWith(color: AppColors.primary400),)
@@ -204,8 +209,8 @@ class EventDetailScreen extends GetView<EventDetailController> {
 
                           bool isFinishedEvent = false;
 
-                          if(controller.event.value != null && controller.event.value!.endDate != null){
-                            isFinishedEvent = DateTime.now().isAfter(controller.event.value!.endDate!);
+                          if(controller.event.value != null && controller.event.value!.end_date != null){
+                            isFinishedEvent = DateTime.now().isAfter(controller.event.value!.end_date!);
                           }
 
                           return Container(
@@ -230,8 +235,8 @@ class EventDetailScreen extends GetView<EventDetailController> {
 
                                     bool isFinishedEvent = true;
 
-                                    if(controller.event.value != null && controller.event.value!.endDate != null){
-                                      isFinishedEvent = !DateTime.now().isBefore(controller.event.value!.endDate!);
+                                    if(controller.event.value != null && controller.event.value!.end_date != null){
+                                      isFinishedEvent = !DateTime.now().isBefore(controller.event.value!.end_date!);
                                     }
 
                                     if(isFinishedEvent) {
@@ -241,34 +246,20 @@ class EventDetailScreen extends GetView<EventDetailController> {
 
                                     if(event == null) return;
 
-                                    var selectedFrameFilters = controller.eventFilterList.where((filter) => filter.eventFrameUid == frame.uid,).toList();
+                                    var selectedFrameFilters = controller.eventFilterList.where((filter) => filter.event_editor_frame_uid == frame.uid,).toList();
 
-                                    if(UserService.instance.isLoginUser.value){
-                                      Get.toNamed(
+                                    Get.toNamed(
                                         AppRouter.decorate_frame,
                                         arguments: {
                                           "event": event,
                                           "event_frame": frame,
                                           "event_filters": selectedFrameFilters,
                                         }
-                                      );
-                                    }else {
-                                      var result = await Get.toNamed(AppRouter.login);
-                                      if(result == "success"){
-                                        Get.toNamed(
-                                          AppRouter.decorate_frame,
-                                          arguments: {
-                                            "event": event,
-                                            "event_frame": frame,
-                                            "event_filters": selectedFrameFilters,
-                                          }
-                                        );
-                                      }
-                                    }
+                                    );
 
                                   },
                                   child: AspectRatio(
-                                    aspectRatio: frame.width / frame.height,
+                                    aspectRatio: SeeyaFrameConfigs.frameWidth / SeeyaFrameConfigs.frameHeight,
                                     child: Container(
                                       decoration: BoxDecoration(
                                           color: AppColors.blueGrey800,
@@ -278,8 +269,9 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                           )
                                       ),
                                       child: CachedNetworkImage(
-                                        imageUrl: Uri.encodeFull("${AppSecret.s3url}${frame.previewImageFilepath}"),
+                                        imageUrl: Uri.encodeFull("${AppSecret.s3url}${frame.preview_image_filepath}"),
                                         fit: BoxFit.cover,
+                                        placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
                                       ),
                                     ),
                                   ),

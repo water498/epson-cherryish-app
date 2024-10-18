@@ -6,7 +6,8 @@ import 'services.dart';
 
 class UserService extends GetxService{
 
-  var userInfo = Rx<UserInfoModel?>(null);
+  var userPublicInfo = Rx<UserPublicModel?>(null);
+  var userPrivateInfo = Rx<UserPrivateModel?>(null);
   var isLoginUser = false.obs;
   var isDeveloperMode = false.obs;
 
@@ -21,13 +22,13 @@ class UserService extends GetxService{
     super.onInit();
 
     final accessToken = AppPreferences().prefs?.getString(AppPrefsKeys.userAccessToken);
-    if(userInfo.value != null && accessToken != null){
+    if(userPublicInfo.value != null && accessToken != null){
       isLoginUser(true);
     }else {
       isLoginUser(false);
     }
 
-    ever(userInfo, (userInfo) {
+    ever(userPublicInfo, (userInfo) {
       final accessToken = AppPreferences().prefs?.getString(AppPrefsKeys.userAccessToken);
       if(userInfo != null && accessToken != null){
         isLoginUser(true);

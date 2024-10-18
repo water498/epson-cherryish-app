@@ -47,37 +47,40 @@ class RootScreen extends GetView<RootController> {
               splashColor: Colors.transparent, // ripple 효과 색상
               highlightColor: Colors.transparent // long click 시 나타나는 색상
             ),
-            child: BottomNavigationBar(
-              selectedLabelStyle: AppThemes.bodySmall,
-              unselectedLabelStyle: AppThemes.bodySmall,
-              selectedItemColor: AppColors.blueGrey200,
-              unselectedItemColor: AppColors.blueGrey500,
-              type: BottomNavigationBarType.fixed,
-              showSelectedLabels: true,
-              showUnselectedLabels: true,
-              elevation: 0,
-              backgroundColor: Colors.white,
-              currentIndex: controller.currentIndex.value,
-              onTap: (value) {
-                controller.onTabTapped(value);
-              },
-              items: [
-                BottomNavigationBarItem(
-                    icon: SvgPicture.asset("assets/image/ic_home.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey500, BlendMode.srcIn),),
-                    activeIcon: SvgPicture.asset("assets/image/ic_home.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey200, BlendMode.srcIn),),
-                    label: '홈'
-                ),
-                BottomNavigationBarItem(
-                    icon: SvgPicture.asset("assets/image/ic_map.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey500, BlendMode.srcIn),),
-                    activeIcon: SvgPicture.asset("assets/image/ic_map.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey200, BlendMode.srcIn),),
-                    label: '지도'
-                ),
-                BottomNavigationBarItem(
-                    icon: SvgPicture.asset("assets/image/ic_my_page.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey500, BlendMode.srcIn),),
-                    activeIcon: SvgPicture.asset("assets/image/ic_my_page.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey200, BlendMode.srcIn),),
-                    label: '마이페이지'
-                ),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: BottomNavigationBar(
+                selectedLabelStyle: AppThemes.bodySmall,
+                unselectedLabelStyle: AppThemes.bodySmall,
+                selectedItemColor: AppColors.blueGrey200,
+                unselectedItemColor: AppColors.blueGrey500,
+                type: BottomNavigationBarType.fixed,
+                showSelectedLabels: true,
+                showUnselectedLabels: true,
+                elevation: 0,
+                backgroundColor: Colors.white,
+                currentIndex: controller.currentIndex.value,
+                onTap: (value) {
+                  controller.onTabTapped(value);
+                },
+                items: [
+                  BottomNavigationBarItem(
+                      icon: SvgPicture.asset("assets/image/ic_home.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey500, BlendMode.srcIn),),
+                      activeIcon: SvgPicture.asset("assets/image/ic_home.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey200, BlendMode.srcIn),),
+                      label: '홈'
+                  ),
+                  BottomNavigationBarItem(
+                      icon: SvgPicture.asset("assets/image/ic_map.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey500, BlendMode.srcIn),),
+                      activeIcon: SvgPicture.asset("assets/image/ic_map.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey200, BlendMode.srcIn),),
+                      label: '지도'
+                  ),
+                  BottomNavigationBarItem(
+                      icon: SvgPicture.asset("assets/image/ic_my_page.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey500, BlendMode.srcIn),),
+                      activeIcon: SvgPicture.asset("assets/image/ic_my_page.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey200, BlendMode.srcIn),),
+                      label: '마이페이지'
+                  ),
+                ],
+              ),
             ),
           );
         },),

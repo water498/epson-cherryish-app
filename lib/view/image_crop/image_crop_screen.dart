@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/constants/app_colors.dart';
+import 'package:seeya/constants/seeya_frame_configs.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/view/image_crop/image_crop_overlay.dart';
 
@@ -16,16 +18,21 @@ class ImageCropScreen extends GetView<ImageCropController> {
   @override
   Widget build(BuildContext context) {
 
+    const filterWidth = SeeyaFrameConfigs.filterWidth;
+    const filterHeight = SeeyaFrameConfigs.filterHeight;
+
     final controller = Get.put(ImageCropController());
     var deviceWidth = MediaQuery.of(context).size.width;
     var deviceHeight = MediaQuery.of(context).size.height;
+    final shortestSide = MediaQuery.of(context).size.shortestSide;
+    final isTablet = shortestSide > 600;
 
     return Scaffold(
       backgroundColor: AppColors.blueGrey000,
       appBar: AppBar(
         backgroundColor: AppColors.blueGrey000,
         automaticallyImplyLeading: false,
-        title: Obx(() => Text("x ::: ${controller.x.value}\ny ::: ${controller.y.value}\nscale ::: ${controller.scale.value}\ninitialScale ::: ${controller.initialScale}"),),
+        title: kDebugMode ? Obx(() => Text("x ::: ${controller.x.value}\ny ::: ${controller.y.value}\nscale ::: ${controller.scale.value}\ninitialScale ::: ${controller.initialScale}"),) : null,
         actions: [
           GestureDetector(
               onTap: () {
@@ -40,21 +47,27 @@ class ImageCropScreen extends GetView<ImageCropController> {
           child: GestureDetector(
             onTap: () async {
 
+              if(controller.isCapturing.value) return;
               controller.captureImage();
 
             },
-            child: Container(
-              margin: const EdgeInsets.only(left: 24, right: 24, bottom: 35, top: 20 ),
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                  color: AppColors.primary500,
-                  border: Border.all(
-                      width: 2,
-                      color: AppColors.primary400.withOpacity(0.8)
-                  )
-              ),
-              child: Text("자르기", style: AppThemes.headline05.copyWith(color: Colors.white),textAlign: TextAlign.center,),
-            ),
+            child: Obx(() {
+              return Opacity(
+                opacity: controller.isCapturing.value ? 0.0 : 1.0,
+                child: Container(
+                  margin: const EdgeInsets.only(left: 24, right: 24, bottom: 35, top: 20 ),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      color: AppColors.primary500,
+                      border: Border.all(
+                          width: 2,
+                          color: AppColors.primary400.withOpacity(0.8)
+                      )
+                  ),
+                  child: Text("자르기", style: AppThemes.headline05.copyWith(color: Colors.white),textAlign: TextAlign.center,),
+                ),
+              );
+            },),
           )
       ),
       body: GestureDetector(
@@ -70,7 +83,7 @@ class ImageCropScreen extends GetView<ImageCropController> {
           if(controller.scale.value == 0.0 || controller.cropRectWidth == 0.0 || controller.cropRectHeight == 0.0) return;
 
           if(scaleChange != 0 && details.pointerCount == 2){
-            var velocity = 2;
+            var velocity = isTablet ? 5 : 10;
             controller.scale.value = (controller.scale.value + (scaleChange/velocity)).clamp(controller.initialScale, 10.0); // set min max scale
 
             // TODO scale anchor => center 보정식
@@ -108,7 +121,7 @@ class ImageCropScreen extends GetView<ImageCropController> {
                       RepaintBoundary(
                         key: controller.boundaryKey,
                         child: AspectRatio(
-                          aspectRatio: controller.filter.width / controller.filter.height,
+                          aspectRatio: filterWidth / filterHeight,
                           child: LayoutBuilder(
                             builder: (context, constraints) {
 
@@ -160,10 +173,10 @@ class ImageCropScreen extends GetView<ImageCropController> {
 
 
                                     // filter image
-                                    if(controller.filter.imageFilepath != null)
+                                    if(controller.filter.image_filepath != null)
                                       IgnorePointer(
                                         child: CachedNetworkImage(
-                                          imageUrl: "${AppSecret.s3url}${controller.filter.imageFilepath}",
+                                          imageUrl: Uri.encodeFull("${AppSecret.s3url}${controller.filter.image_filepath}"),
                                           fit: BoxFit.fill,
                                         ),
                                       ),
@@ -178,7 +191,7 @@ class ImageCropScreen extends GetView<ImageCropController> {
 
                       // crop rect
                       AspectRatio(
-                        aspectRatio: controller.filter.width / controller.filter.height,
+                        aspectRatio: filterWidth / filterHeight,
                         child: LayoutBuilder(
                           builder: (context, constraints) {
                             return CustomPaint(

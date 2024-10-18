@@ -10,4 +10,13 @@ export 'phone_verification_repository.dart';
 
 
 export 'login_repository.dart';
-export 'purchase_repository.dart';
+export 'qna_repository.dart';
+export 'setting_repository.dart';
+export 'withdrawal_repository.dart';
+export 'print_history_repository.dart';
+export 'search_screen_repository.dart';
+export 'map_tab_repository.dart';
+export 'event_detail_repository.dart';
+export 'decorate_frame_repository.dart';
+export 'error_report_repository.dart';
+export 'inquiry_detail_repository.dart';

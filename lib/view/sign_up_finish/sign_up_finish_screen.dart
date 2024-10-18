@@ -41,7 +41,7 @@ class SignUpFinishScreen extends StatelessWidget {
           SvgPicture.asset("assets/image/ic_check_large.svg"),
           const SizedBox(height: 32,),
           Text("회원가입이\n성공적으로 완료되었습니다!", style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000), textAlign: TextAlign.center,),
-          Obx(() => Text("[${UserService.instance.userInfo.value?.name ?? ""}]님, 반갑습니다!", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300), textAlign: TextAlign.center,),),
+          Obx(() => Text("[${UserService.instance.userPublicInfo.value?.name ?? ""}]님, 반갑습니다!", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300), textAlign: TextAlign.center,),),
         ],
       ),
     );

@@ -103,7 +103,9 @@ class RootController extends GetxController{
   
   void onSearchClick(){
     onTabTapped(1);
-    var mapTabController = Get.find<MapTabController>();
+    var eventApi = Get.put(EventApi());
+    var mapTabRepository = Get.put(MapTabRepository(eventApi: eventApi));
+    var mapTabController = Get.put(MapTabController(mapTabRepository: mapTabRepository));
     mapTabController.openSearch();
   }
 

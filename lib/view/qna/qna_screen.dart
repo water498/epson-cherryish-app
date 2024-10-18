@@ -12,8 +12,6 @@ class QnaScreen extends GetView<QnaController> {
   @override
   Widget build(BuildContext context) {
 
-    final controller = Get.put(QnaController());
-
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 64,
@@ -103,7 +101,7 @@ class QnaScreen extends GetView<QnaController> {
 
                             title: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                              child: Text(qna.question, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100),),
+                              child: Text(qna.title, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100),),
                             ),
                             children: [
                               Container(

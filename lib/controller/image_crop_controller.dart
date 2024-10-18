@@ -18,7 +18,7 @@ class ImageCropController extends GetxController{
 
   final GlobalKey boundaryKey = GlobalKey();
   late File selectedImage;
-  late TempEventFilter filter;
+  late EventFilterModel filter;
 
   late double imageWidth;
   late double imageHeight;
@@ -38,7 +38,7 @@ class ImageCropController extends GetxController{
   @override
   void onInit() {
     selectedImage = File((Get.arguments["selected_image"] as XFile).path);
-    filter = Get.arguments["filter"] as TempEventFilter;
+    filter = Get.arguments["filter"] as EventFilterModel;
     init(selectedImage);
     super.onInit();
   }
@@ -65,20 +65,25 @@ class ImageCropController extends GetxController{
   }
 
   Future<void> captureImage() async {
-    isCapturing(true);
-    await Future.delayed(const Duration(milliseconds: 200));
+    try{
+      isCapturing(true);
+      await Future.delayed(const Duration(milliseconds: 200));
 
-    RenderRepaintBoundary boundary = boundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary = boundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
-    final originalRatio = imageHeight / boundary.size.height;
-    final image = await boundary.toImage(pixelRatio: 1);
-    final byteData = await image.toByteData(format: ImageByteFormat.png);
-    final pngBytes = byteData!.buffer.asUint8List();
+      // final originalRatio = imageHeight / boundary.size.height;
+      final originalRatio = 786 / boundary.size.width;
+      Logger().d("originalRatio ::: ${originalRatio}");
+      final image = await boundary.toImage(pixelRatio: originalRatio);
+      final byteData = await image.toByteData(format: ImageByteFormat.png);
+      final pngBytes = byteData!.buffer.asUint8List();
 
-    _saveImage(pngBytes, "${const Uuid().v4()}.png");
+      await _saveImage(pngBytes, "${const Uuid().v4()}.png");
+    } catch(e){
+      isCapturing(false);
+    } finally {
 
-
-    isCapturing(false);
+    }
   }
 
   Future<void> _saveImage(Uint8List pngBytes, String fileName) async {
