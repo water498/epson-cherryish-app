@@ -14,6 +14,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/constants/app_router.dart';
 import 'package:seeya/service/services.dart';
+import 'package:seeya/utils/utils.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
 import 'constants/app_colors.dart';
@@ -139,6 +140,9 @@ void main() async {
   await AppPreferences().init();
   // ********** Delay 때문에 Custom Splash 로 이동 **********
   // AppPreferences().prefs?.setString(AppPrefsKeys.fcmToken, fcmToken ?? ""); // fcmToken 삽입
+
+  FileUtils.clearTempDirExceptLibCachedImage();
+  FileUtils.clearDocumentDir();
 
   runApp(const MyApp());
 }

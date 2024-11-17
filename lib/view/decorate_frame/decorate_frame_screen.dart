@@ -226,7 +226,7 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
           onButton01Click: () async {
             controller.mergedPhotoList.forEach((key, value) async {
               if(value != null){
-                await FileUtils.deleteFile(value.file);
+                await FileUtils.deleteFile(value.file.path);
               }
             },);
             Get.back();

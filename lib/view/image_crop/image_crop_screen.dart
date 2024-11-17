@@ -34,12 +34,16 @@ class ImageCropScreen extends GetView<ImageCropController> {
         automaticallyImplyLeading: false,
         title: kDebugMode ? Obx(() => Text("x ::: ${controller.x.value}\ny ::: ${controller.y.value}\nscale ::: ${controller.scale.value}\ninitialScale ::: ${controller.initialScale}"),) : null,
         actions: [
-          GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: SvgPicture.asset("assets/image/ic_close.svg", colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),)
-          ),
+          Obx(() {
+            if(controller.isCapturing.value) return const SizedBox();
+
+            return GestureDetector(
+                onTap: () {
+                  Get.back();
+                },
+                child: SvgPicture.asset("assets/image/ic_close.svg", colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),)
+            );
+          },),
           const SizedBox(width: 16,),
         ],
       ),

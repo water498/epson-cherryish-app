@@ -109,6 +109,8 @@ class DecorateFrameController extends GetxController{
 
         if(commonResponse.statusCode == 409){
           Fluttertoast.showToast(msg: "이미 종료된 이벤트입니다.");
+        } else {
+          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.[${commonResponse.statusCode}]");
         }
 
       }
@@ -116,6 +118,7 @@ class DecorateFrameController extends GetxController{
     } catch (e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
+      Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
     } finally {
       LoadingOverlay.hide();
     }
@@ -141,6 +144,7 @@ class DecorateFrameController extends GetxController{
 
       CommonResponseModel commonResponse = await decorateFrameRepository.uploadFinalImage(event.id, resultFile);
 
+
       if(commonResponse.successModel != null){
 
         String filepath = commonResponse.successModel!.content["filepath"];
@@ -150,6 +154,8 @@ class DecorateFrameController extends GetxController{
 
         if(commonResponse.statusCode == 422){
           Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+        } else {
+          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.[${commonResponse.statusCode}]");
         }
 
       }
@@ -157,6 +163,7 @@ class DecorateFrameController extends GetxController{
     } catch (e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
+      Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
     } finally {
       LoadingOverlay.hide();
     }
@@ -190,6 +197,8 @@ class DecorateFrameController extends GetxController{
           Fluttertoast.showToast(msg: "이미 프린트 중입니다.");
         } else if(commonResponse.statusCode == 422){
           Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+        } else {
+          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.[${commonResponse.statusCode}]");
         }
 
       }
@@ -197,6 +206,7 @@ class DecorateFrameController extends GetxController{
     } catch (e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
+      Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
     } finally {
       LoadingOverlay.hide();
     }
@@ -214,7 +224,7 @@ class DecorateFrameController extends GetxController{
           title: "등록이 완료 되었습니다!\n대기번호 : ${waitCount}",
           button01text: "내역 확인하기",
           onButton01Click: () async {
-            Get.toNamed(AppRouter.report);
+            Get.offNamed(AppRouter.report);
           },
           button02text: "이벤트 페이지로 가기",
           onButton02Click: () async {

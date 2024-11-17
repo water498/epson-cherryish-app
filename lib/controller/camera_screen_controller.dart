@@ -222,10 +222,11 @@ class CameraScreenController extends GetxController{
       return null;
     }
 
+    XFile? capturedFile;
+    File? tempFile;
 
     try {
 
-      var savePath = "${(await getApplicationDocumentsDirectory())}/temp_photos";
       var filter = frameController.eventFilterList[index];
 
       LoadingOverlay.show();
@@ -233,7 +234,8 @@ class CameraScreenController extends GetxController{
       startFlashAnim();
 
       isImgProcessing(true);
-      final XFile tempFile = await cameraController!.takePicture();
+      capturedFile = await cameraController!.takePicture(); // temp directory
+      tempFile = File(capturedFile.path); // document direcotry
 
 
       var ratio = SeeyaFrameConfigs.filterHeight / SeeyaFrameConfigs.filterWidth;
@@ -256,24 +258,20 @@ class CameraScreenController extends GetxController{
 
       LoadingOverlay.show("이미지 사이즈를 조절중입니다.");
       final croppedUserImageFile = await FlutterNativeImage.cropImage(tempFile.path, offsetX, offsetY, width, (width*(ratio)).toInt());
+      await croppedUserImageFile.copy(tempFile.path);
+      FileUtils.deleteFile(croppedUserImageFile.path);
+
 
       if(filter.image_filepath != null){
         LoadingOverlay.show("이미지를 합치는 중입니다.");
         final overlayImage = await FileUtils.findFileFromUrl("${AppSecret.s3url}${filter.image_filepath}");
-        final finalImage = await ImageUtils().overlayImages(width, (width*(ratio)).toInt(), croppedUserImageFile, overlayImage);
-        Logger().d("finalImage path ::: ${finalImage.path}");
-
-        var model = CameraResultModel(filter_uid: filter.uid, file: finalImage);
-        frameController.mergedPhotoList[index] = model;
-
-        return File(finalImage.path);
-      }else {
-
-        var model = CameraResultModel(filter_uid: filter.uid, file: croppedUserImageFile);
-        frameController.mergedPhotoList[index] = model;
-
-        return File(croppedUserImageFile.path);
+        await ImageUtils().overlayImages(width, (width*(ratio)).toInt(), tempFile, overlayImage);
       }
+
+      var model = CameraResultModel(filter_uid: filter.uid, file: tempFile);
+      frameController.mergedPhotoList[index] = model;
+
+      return File(tempFile.path);
 
     } catch (e) {
       isImgProcessing(false);

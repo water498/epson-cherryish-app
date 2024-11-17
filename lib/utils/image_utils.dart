@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image/image.dart' as img;
 import 'dart:ui' as ui;
 
@@ -101,7 +102,12 @@ class ImageUtils {
     }
 
     // rotation
-    await FlutterExifRotation.rotateImage(path: path);
+    File rotatedImageFile = await FlutterExifRotation.rotateImage(path: path);
+    if (rotatedImageFile.existsSync()) {
+      await rotatedImageFile.copy(path); // 기존 파일 덮어쓰기
+      await rotatedImageFile.delete();  // 회전 후 파일 삭제
+    }
+
   }
 
 
@@ -156,64 +162,69 @@ class ImageUtils {
 
   static Future<File?> makeFinalFrameImage(EventFrameModel eventFrame, Map<int,CameraResultModel?> images, List<EventFilterModel> eventFilters) async {
 
-    const frameWidth = SeeyaFrameConfigs.frameWidth;//eventFrame.width.toDouble();
-    const frameHeight = SeeyaFrameConfigs.frameHeight;//eventFrame.height.toDouble();
-    const filterWidth = SeeyaFrameConfigs.filterWidth;
-    const filterHeight = SeeyaFrameConfigs.filterHeight;
+    try{
+      const frameWidth = SeeyaFrameConfigs.frameWidth;//eventFrame.width.toDouble();
+      const frameHeight = SeeyaFrameConfigs.frameHeight;//eventFrame.height.toDouble();
+      const filterWidth = SeeyaFrameConfigs.filterWidth;
+      const filterHeight = SeeyaFrameConfigs.filterHeight;
 
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder, Rect.fromPoints(const Offset(0, 0), const Offset(frameWidth, frameHeight)));
+      final recorder = ui.PictureRecorder();
+      final canvas = Canvas(recorder, Rect.fromPoints(const Offset(0, 0), const Offset(frameWidth, frameHeight)));
 
-    // 배경 색상
-    final paint = Paint()..color = AppColors.blueGrey800;
-    canvas.drawRect(const Rect.fromLTWH(0, 0, frameWidth, frameHeight), paint);
+      // 배경 색상
+      final paint = Paint()..color = AppColors.blueGrey800;
+      canvas.drawRect(const Rect.fromLTWH(0, 0, frameWidth, frameHeight), paint);
 
-    // 이미지 로드
-    var originalFrameImage = await DownloadUtils.loadImageFromUrl("${AppSecret.s3url}${eventFrame.original_image_filepath}");
+      // 이미지 로드
+      var originalFrameImage = await DownloadUtils.loadImageFromUrl("${AppSecret.s3url}${eventFrame.original_image_filepath}");
 
-    final image1 = await loadImageFromFile(images[0]!.file.path);
-    final image2 = await loadImageFromFile(images[1]!.file.path);
-    final image3 = await loadImageFromFile(images[2]!.file.path);
-    final image4 = await loadImageFromFile(images[3]!.file.path);
-    final frameImage = await loadImageFromFile(originalFrameImage.path);
+      final image1 = await loadImageFromFile(images[0]!.file.path);
+      final image2 = await loadImageFromFile(images[1]!.file.path);
+      final image3 = await loadImageFromFile(images[2]!.file.path);
+      final image4 = await loadImageFromFile(images[3]!.file.path);
+      final frameImage = await loadImageFromFile(originalFrameImage.path);
 
 
-    // 비율을 유지하면서 이미지 크기 조정
-    for (int i = 0; i < eventFilters.length; i++) {
+      // 비율을 유지하면서 이미지 크기 조정
+      for (int i = 0; i < eventFilters.length; i++) {
 
-      // 하드코딩된 lt lb rt rb 값 가져옴
-      final Point filterPoint = SeeyaFrameConfigs.getFilterXY(eventFrame.frame_type, eventFilters[i].type);
+        // 하드코딩된 lt lb rt rb 값 가져옴
+        final Point filterPoint = SeeyaFrameConfigs.getFilterXY(eventFrame.frame_type, eventFilters[i].type);
 
-      drawImage(canvas,
-          i == 0 ? image1 : i == 1 ? image2 : i == 2 ? image3 : image4,
-          Offset(filterPoint.x.toDouble(), filterPoint.y.toDouble()),
-          filterWidth, filterHeight);
-    }
-    drawImage(canvas, frameImage, const Offset(0, 0), frameWidth, frameHeight);
+        drawImage(canvas,
+            i == 0 ? image1 : i == 1 ? image2 : i == 2 ? image3 : image4,
+            Offset(filterPoint.x.toDouble(), filterPoint.y.toDouble()),
+            filterWidth, filterHeight);
+      }
+      drawImage(canvas, frameImage, const Offset(0, 0), frameWidth, frameHeight);
 
-    final picture = recorder.endRecording();
-    final img = await picture.toImage(frameWidth.toInt(), frameHeight.toInt());
-    final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
-    final buffer = byteData?.buffer.asUint8List();
+      final picture = recorder.endRecording();
+      final img = await picture.toImage(frameWidth.toInt(), frameHeight.toInt());
+      final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
 
-    // 디렉토리 경로 가져오기
-    final directory = await getApplicationDocumentsDirectory();
-    final resultDir = Directory("${directory.path}/result");
+      if (byteData == null) return null;
 
-    // 디렉토리가 존재하지 않으면 생성
-    if (!await resultDir.exists()) {
-      await resultDir.create(recursive: true);
-    }
+      final buffer = byteData.buffer.asUint8List();
 
-    // 파일로 저장
-    final saveFile = File("${resultDir.path}/result.png");
-    if(buffer != null){
+      // 디렉토리 경로 가져오기
+      final directory = await getApplicationDocumentsDirectory();
+      final resultDir = Directory("${directory.path}/result");
+
+      // 디렉토리가 존재하지 않으면 생성
+      if (!await resultDir.exists()) {
+        await resultDir.create(recursive: true);
+      }
+
+      // 파일로 저장
+      final saveFile = File("${resultDir.path}/result.png");
       await saveFile.writeAsBytes(buffer);
 
       return saveFile;
-    }else {
+    } catch (e){
+      Fluttertoast.showToast(msg: "$e");
       return null;
     }
+
 
   }
 

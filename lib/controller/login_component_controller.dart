@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_naver_login_plus/flutter_naver_login_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -101,9 +102,19 @@ class LoginComponentController extends GetxController{
     try {
       bool isInstalled = await isKakaoTalkInstalled();
 
-      OAuthToken token = isInstalled
-          ? await UserApi.instance.loginWithKakaoTalk()
-          : await UserApi.instance.loginWithKakaoAccount();
+      try {
+        isInstalled
+            ? await UserApi.instance.loginWithKakaoTalk()
+            : await UserApi.instance.loginWithKakaoAccount();
+      } catch (e) {
+        if (e is PlatformException && e.code == 'NotSupportError' && e.message != null && e.message!.contains("KakaoTalk is installed but not connected to Kakao account")) {
+          // 카카오톡은 설치되어 있으나, 로그인이 되어 있지 않은 경우
+          await UserApi.instance.loginWithKakaoAccount();
+        } else {
+          Fluttertoast.showToast(msg :"카카오톡 로그인 중 에러 발생하였습니다. [$e]");
+          return;
+        }
+      }
 
       User user = await UserApi.instance.me();
 

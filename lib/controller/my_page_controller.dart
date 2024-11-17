@@ -78,7 +78,11 @@ class MyPageController extends GetxController {
           await GoogleSignIn().signOut();
           break;
         case 'kakao':
-          await UserApi.instance.logout();
+          try {
+            await UserApi.instance.logout();
+          } catch (e) {
+            Logger().e("kakao logout error ::: $e");
+          }
           break;
         case 'naver':
           await FlutterNaverLoginPlus.logOut();

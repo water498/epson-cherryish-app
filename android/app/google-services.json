@@ -12,7 +12,20 @@
           "package_name": "com.cherryish.seeya"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "877005315390-sq0df6gc4mi05v081s7blj9cndqe9tbp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cherryish.seeya",
+            "certificate_hash": "7d959e2d080ad8d07081d0ed8605129334d1d5ef"
+          }
+        },
+        {
+          "client_id": "877005315390-4ci3j42p1cr1nfedafg3124hqsuf4a80.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAWzSPMaDie5GjMYruMY10i4ieyI3QEDSo"
@@ -21,6 +34,10 @@
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
+            {
+              "client_id": "877005315390-4ci3j42p1cr1nfedafg3124hqsuf4a80.apps.googleusercontent.com",
+              "client_type": 3
+            },
             {
               "client_id": "877005315390-f4edma2d73rt0o2uq254rksc34kd0ae2.apps.googleusercontent.com",
               "client_type": 2,

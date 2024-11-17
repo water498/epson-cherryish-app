@@ -200,10 +200,13 @@ class ReportController extends GetxController{
     if(Get.context == null) return;
     showDialog(
       context: Get.context!,
-      barrierDismissible: false,
       builder: (context) {
         return CommonDialog(
           title: "등록이 완료 되었습니다!\n대기번호 : ${waitCount}",
+          button01text: "확인",
+          onButton01Click: () async {
+
+          },
         );
       },);
   }
