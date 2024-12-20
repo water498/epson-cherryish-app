@@ -102,10 +102,11 @@ class ImageUtils {
     }
 
     // rotation
-    File rotatedImageFile = await FlutterExifRotation.rotateImage(path: path);
-    if (rotatedImageFile.existsSync()) {
-      await rotatedImageFile.copy(path); // 기존 파일 덮어쓰기
-      await rotatedImageFile.delete();  // 회전 후 파일 삭제
+    File rotatedFile = await FlutterExifRotation.rotateImage(path: fixedImageFile.path);
+    Uint8List rotatedBytes = await rotatedFile.readAsBytes();
+    await fixedImageFile.writeAsBytes(rotatedBytes);
+    if(Platform.isIOS){
+      await FileUtils.deleteFile(rotatedFile.path);
     }
 
   }

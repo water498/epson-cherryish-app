@@ -273,9 +273,10 @@ class CameraScreenController extends GetxController{
 
       return File(tempFile.path);
 
-    } catch (e) {
+    } catch (e, s) {
       isImgProcessing(false);
       Logger().e('Error taking picture: $e');
+      Logger().e('Error taking picture: s::: $s');
       Fluttertoast.showToast(msg: "e ::: $e",toastLength: Toast.LENGTH_LONG);
       return null;
     } finally {
