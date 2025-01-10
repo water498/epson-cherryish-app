@@ -7,7 +7,7 @@ import 'package:path/path.dart';
 class PrinterApi extends BaseApi {
 
   Future<Response> checkPrinterAccess(int eventId, String? s3_filepath) async {
-    return await post("/mobile/print/$eventId/check/access",
+    return await post("/mobile/print/$eventId/check/free/access",
         {
           "s3_filepath" : s3_filepath
         }

@@ -30,6 +30,8 @@ export 'server_maintenance/server_maintenance_screen.dart';
 export 'block/block_screen.dart';
 export 'image_viewer/image_viewer_screen.dart';
 
+export 'payment/payment_screen.dart';
+
 
 
 

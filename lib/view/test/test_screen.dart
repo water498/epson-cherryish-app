@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -114,11 +116,17 @@ class TestScreen extends GetView<TestController> {
         
         
         
-            ElevatedButton(onPressed: () {
-        
+            ElevatedButton(onPressed: () async {
+
+              var result = await Get.toNamed(AppRouter.payment, arguments: {
+                "event_id" : 2,
+                "user_id" : 9,
+                "s3_filepath" : null,
+              });
+
             }, child: Text("in app purchase"))
         
-        
+
         
         
           ],

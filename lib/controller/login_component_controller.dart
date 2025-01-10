@@ -110,6 +110,8 @@ class LoginComponentController extends GetxController{
         if (e is PlatformException && e.code == 'NotSupportError' && e.message != null && e.message!.contains("KakaoTalk is installed but not connected to Kakao account")) {
           // 카카오톡은 설치되어 있으나, 로그인이 되어 있지 않은 경우
           await UserApi.instance.loginWithKakaoAccount();
+        } else if(e is PlatformException && e.message != null && e.message!.contains("canceled") ) {
+          return;
         } else {
           Fluttertoast.showToast(msg :"카카오톡 로그인 중 에러 발생하였습니다. [$e]");
           return;

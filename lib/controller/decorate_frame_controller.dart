@@ -70,13 +70,34 @@ class DecorateFrameController extends GetxController{
         },
         button02text: "진행하기",
         onButton02Click: () async {
-          await checkPrinterAccess();
+
+          if(event.payment_type == "postpayment"){
+
+            if(UserService.instance.userPublicInfo.value == null){
+              Fluttertoast.showToast(msg: "사용자 정보를 불러올 수 없습니다.");
+              return;
+            }
+
+            var resultPrintQueueId = await Get.toNamed(AppRouter.payment, arguments: {
+              "event_id" : event.id,
+              "user_id" : UserService.instance.userPublicInfo.value!.id,
+              "s3_filepath" : null,
+            });
+
+            if(resultPrintQueueId == null) return;
+
+            await uploadFinalImage(resultPrintQueueId);
+          } else {
+            await checkPrinterAccess();
+          }
+
         },
       );
     },);
 
 
   }
+
 
 
 
@@ -97,10 +118,6 @@ class DecorateFrameController extends GetxController{
 
         } else if (response.result == "already"){
           Fluttertoast.showToast(msg: "재출력 횟수를 모두 소진하셨습니다.");
-        } else if (response.result == "need_payment"){
-          // TODO
-          Fluttertoast.showToast(msg: "먼저 결제를 완료해주세요."); // TODO
-          // TODO
         } else {
           Fluttertoast.showToast(msg: "현재 이용할 수 없는 상황입니다. 잠시 후에 다시 시도해주세요.");
         }

@@ -32,6 +32,7 @@ abstract class AppRouter {
   static const String server_maintenance = '/server_maintenance';
   static const String block = '/block';
   static const String image_viewer = '/image_viewer';
+  static const String payment = '/payment';
 
 
   static const String test = '/test';
@@ -183,7 +184,14 @@ abstract class AppRouter {
       transition: Transition.fade,
       transitionDuration: const Duration(milliseconds: 300)
     ),
-
+    GetPage(
+      name: payment,
+      page: () => PaymentScreen(),
+      binding: PaymentBinding(),
+      fullscreenDialog: true,
+      opaque: false, // 불투면한 ? => 투명 scaffold
+      popGesture: false, // 뒤로가기 제어
+    ),
 
 
 

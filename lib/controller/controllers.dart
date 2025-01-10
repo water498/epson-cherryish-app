@@ -23,3 +23,5 @@ export 'inquiry_detail_controller.dart';
 export 'setting_controller.dart';
 export 'withdrawal_controller.dart';
 export 'qr_share_controller.dart';
+
+export 'payment_controller.dart';

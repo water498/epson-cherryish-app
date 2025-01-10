@@ -4,7 +4,7 @@ class EventModel {
   final String payment_status;
   final String sale_status;
   final bool sale_enable;
-  final String payment_type;
+  final String payment_type; // sponser | prepayment 결제 X, postpayment 결제 O
   final bool need_using_fee;
   final String event_name;
   final String place_name;
