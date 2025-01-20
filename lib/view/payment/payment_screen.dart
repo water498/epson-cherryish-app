@@ -72,8 +72,8 @@ class PaymentScreen extends GetView<PaymentController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset("assets/image/loading02.gif"),
-                addH(10),
-                Text("결제를 진행중입니다."),
+                addH(30),
+                Text("결제가 진행중입니다.\n웹에서 결제를 완료해주세요!", textAlign: TextAlign.center,),
               ],
             ),
           ),
