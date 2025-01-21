@@ -19,6 +19,8 @@ class PrinterApi extends BaseApi {
       'file': MultipartFile(image, filename: basename(image.path)),
     });
 
+    httpClient.timeout = const Duration(seconds: 30);
+
     return await post("/mobile/print/$eventId/file/upload", form);
   }
 
