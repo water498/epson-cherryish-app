@@ -84,7 +84,10 @@ class DecorateFrameController extends GetxController{
               "s3_filepath" : null,
             });
 
-            if(resultPrintQueueId == null) return;
+            if(resultPrintQueueId == null || resultPrintQueueId == -1) {
+              Fluttertoast.showToast(msg: "[Error] queue id is null");
+              return;
+            }
 
             await uploadFinalImage(resultPrintQueueId);
           } else {
@@ -170,7 +173,7 @@ class DecorateFrameController extends GetxController{
       } else if(commonResponse.failModel != null){
 
         if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.[422]");
         } else {
           Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.[${commonResponse.statusCode}]");
         }
@@ -213,7 +216,7 @@ class DecorateFrameController extends GetxController{
         if(commonResponse.statusCode == 409){
           Fluttertoast.showToast(msg: "이미 프린트 중입니다.");
         } else if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.[422]");
         } else {
           Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.[${commonResponse.statusCode}]");
         }

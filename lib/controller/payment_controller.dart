@@ -64,7 +64,7 @@ class PaymentController extends GetxController{
       String? printQueueId = uri.queryParameters["print_queue_id"];
 
       if (printQueueId != null) {
-        Get.back(result: int.parse(printQueueId));
+        Get.back(result: int.tryParse(printQueueId) ?? -1);
       } else {
         Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
       }

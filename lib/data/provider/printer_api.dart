@@ -1,36 +1,61 @@
 import 'dart:io';
-
-import 'package:get/get.dart';
-import 'base_api.dart';
+import 'package:dio/dio.dart' hide Response;
+import 'package:get/get_connect/http/src/response/response.dart' as GetResponse;
+import 'package:get/get.dart' hide MultipartFile, FormData;
 import 'package:path/path.dart';
 
-class PrinterApi extends BaseApi {
+import '../../constants/app_prefs_keys.dart';
+import '../../service/services.dart';
+import 'base_api.dart';
 
+class PrinterApi extends BaseApi {
   Future<Response> checkPrinterAccess(int eventId, String? s3_filepath) async {
-    return await post("/mobile/print/$eventId/check/free/access",
-        {
-          "s3_filepath" : s3_filepath
-        }
-    );
+    return await post("/mobile/print/$eventId/check/free/access", {
+      "s3_filepath": s3_filepath
+    });
   }
 
-  Future<Response> uploadFinalImage(int eventId, File image) async {
-    final form = FormData({
-      'file': MultipartFile(image, filename: basename(image.path)),
+  Future<GetResponse.Response> uploadFinalImage(int eventId, File image) async {
+    final token = AppPreferences().prefs?.getString(AppPrefsKeys.userAccessToken);
+
+    final dio = Dio(BaseOptions(
+      baseUrl: 'https://api.seeya-printer.com',
+      headers: {
+        'Authorization': 'Bearer $token', // 혹시 토큰 필요하면
+      },
+      connectTimeout: const Duration(seconds: 40),
+      sendTimeout: const Duration(seconds: 40), // ⬅️ 중요!
+      receiveTimeout: const Duration(seconds: 40),
+    ));
+
+    final length = await image.length();
+
+    final formData = FormData.fromMap({
+      'file': MultipartFile.fromStream(
+        ()=>image.openRead(),
+        length,
+        filename: basename(image.path),
+      ),
     });
 
-    httpClient.timeout = const Duration(seconds: 30);
+    final dioResponse = await dio.post(
+      "/mobile/print/$eventId/file/upload",
+      data: formData,
+    );
 
-    return await post("/mobile/print/$eventId/file/upload", form);
+    return GetResponse.Response(
+      body: dioResponse.data,
+      statusCode: dioResponse.statusCode,
+      statusText: dioResponse.statusMessage,
+      request: null,
+    );
   }
 
   Future<Response> requestPrintApi(Map<String, dynamic> request) async {
     return await post("/mobile/print/request", request);
   }
 
-
-  Future<Response> fetchPrintHistories () async {
+  Future<Response> fetchPrintHistories() async {
     return await get("/mobile/print/history/list");
   }
-
 }

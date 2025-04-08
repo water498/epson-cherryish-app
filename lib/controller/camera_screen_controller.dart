@@ -57,7 +57,7 @@ class CameraScreenController extends GetxController{
 
     pageController = PageController(
       initialPage: currentPage.value,
-      viewportFraction: 0.27
+      viewportFraction: 0.2,
     );
     pageController.addListener(pageListener);
 

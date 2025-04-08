@@ -165,14 +165,16 @@ class CameraScreen extends GetView<CameraScreenController> {
               itemCount: 4,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) => Obx((){
-                return GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () {
-                    controller.pageController.animateToPage(index, duration: const Duration(milliseconds: 200), curve: Curves.linear);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Text("내부 필터 ${index+1}", style: AppThemes.bodyMedium.copyWith(color: controller.currentPage.value == index ? Colors.white : AppColors.blueGrey300),),
+                return Center(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      controller.pageController.animateToPage(index, duration: const Duration(milliseconds: 200), curve: Curves.linear);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      child: Text("${index+1}", style: AppThemes.headline03.copyWith(color: controller.currentPage.value == index ? Colors.white : AppColors.blueGrey300),),
+                    ),
                   ),
                 );
               }),
