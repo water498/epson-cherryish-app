@@ -53,7 +53,7 @@ class DecorateFrameController extends GetxController{
 
     bool allPhotosCaptured = mergedPhotoList.values.where((value) => value != null).length == eventFilterList.length;
     if(!allPhotosCaptured){
-      Fluttertoast.showToast(msg: "모든 컷을 채워주세요!");
+      Fluttertoast.showToast(msg: "decorate_frame.toast.empty_cut".tr);
       return;
     }
 
@@ -62,19 +62,19 @@ class DecorateFrameController extends GetxController{
     showDialog(context: context, builder: (context) {
       return CommonDialog(
         needWarning: true,
-        title: "이 단계 후\n바로 인쇄가 진행됩니다.",
-        description: "프린터가 배치된 장소와 가까이 있어주세요. 지연된 수거에 의해 발생한\n분실은 책임지지 않습니다.",
-        button01text: "앞으로 돌아가기",
+        title: "decorate_frame_confirm_dialog.title".tr,
+        description: "decorate_frame_confirm_dialog.description".tr,
+        button01text: "decorate_frame_confirm_dialog.button01".tr,
         onButton01Click: () async {
 
         },
-        button02text: "진행하기",
+        button02text: "decorate_frame_confirm_dialog.button02".tr,
         onButton02Click: () async {
 
           if(event.payment_type == "postpayment"){
 
             if(UserService.instance.userPublicInfo.value == null){
-              Fluttertoast.showToast(msg: "사용자 정보를 불러올 수 없습니다.");
+              Fluttertoast.showToast(msg: "decorate_frame.toast.not_found_user".tr);
               return;
             }
 
@@ -120,17 +120,17 @@ class DecorateFrameController extends GetxController{
           await uploadFinalImage(response.print_queue_id!);
 
         } else if (response.result == "already"){
-          Fluttertoast.showToast(msg: "재출력 횟수를 모두 소진하셨습니다.");
+          Fluttertoast.showToast(msg: "decorate_frame.toast.all_consumed".tr);
         } else {
-          Fluttertoast.showToast(msg: "현재 이용할 수 없는 상황입니다. 잠시 후에 다시 시도해주세요.");
+          Fluttertoast.showToast(msg: "decorate_frame.toast.cant_user".tr);
         }
 
       } else if(commonResponse.failModel != null){
 
         if(commonResponse.statusCode == 409){
-          Fluttertoast.showToast(msg: "이미 종료된 이벤트입니다.");
+          Fluttertoast.showToast(msg: "decorate_frame.toast.already_finish".tr);
         } else {
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.[${commonResponse.statusCode}]");
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
         }
 
       }
@@ -138,7 +138,7 @@ class DecorateFrameController extends GetxController{
     } catch (e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
-      Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
     } finally {
       LoadingOverlay.hide();
     }
@@ -148,7 +148,7 @@ class DecorateFrameController extends GetxController{
 
   Future<void> uploadFinalImage(int print_queue_id) async {
     try {
-      LoadingOverlay.show("모든 이미지를 병합중입니다..");
+      LoadingOverlay.show("loading.overlay04".tr);
 
       var resultFile = await ImageUtils.makeFinalFrameImage(
           eventFrame,
@@ -157,7 +157,7 @@ class DecorateFrameController extends GetxController{
       );
 
       if(resultFile == null) {
-        Fluttertoast.showToast(msg: "이미지를 병합하는중 오류가 발생하였습니다.");
+        Fluttertoast.showToast(msg: "decorate_frame.toast.merge_error".tr);
         return;
       }
 
@@ -173,9 +173,9 @@ class DecorateFrameController extends GetxController{
       } else if(commonResponse.failModel != null){
 
         if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.[422]");
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
         } else {
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.[${commonResponse.statusCode}]");
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
         }
 
       }
@@ -183,7 +183,7 @@ class DecorateFrameController extends GetxController{
     } catch (e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
-      Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
     } finally {
       LoadingOverlay.hide();
     }
@@ -207,18 +207,18 @@ class DecorateFrameController extends GetxController{
 
         RequestPrintResponseModel response = RequestPrintResponseModel.fromJson(commonResponse.successModel!.content);
 
-        LoadingOverlay.show("인쇄 요청중...", 1);
+        LoadingOverlay.show("loading.overlay05".tr, 1);
         await Future.delayed(const Duration(seconds: 3));
         showCompletedDialog(response.wait_count);
 
       } else if(commonResponse.failModel != null){
 
         if(commonResponse.statusCode == 409){
-          Fluttertoast.showToast(msg: "이미 프린트 중입니다.");
+          Fluttertoast.showToast(msg: "decorate_frame.toast.already_printing".tr);
         } else if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.[422]");
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
         } else {
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.[${commonResponse.statusCode}]");
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
         }
 
       }
@@ -226,7 +226,7 @@ class DecorateFrameController extends GetxController{
     } catch (e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
-      Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
     } finally {
       LoadingOverlay.hide();
     }
@@ -241,12 +241,12 @@ class DecorateFrameController extends GetxController{
       barrierDismissible: false,
       builder: (context) {
         return CommonDialog(
-          title: "등록이 완료 되었습니다!\n대기번호 : ${waitCount}",
-          button01text: "내역 확인하기",
+          title: "decorate_frame_complete_dialog.title".trParams({'waitCount':waitCount.toString()}),
+          button01text: "decorate_frame_complete_dialog.button01".tr,
           onButton01Click: () async {
             Get.offNamed(AppRouter.report);
           },
-          button02text: "이벤트 페이지로 가기",
+          button02text: "decorate_frame_complete_dialog.button02".tr,
           onButton02Click: () async {
             Get.until((route) => Get.currentRoute == AppRouter.event_detail);
           },

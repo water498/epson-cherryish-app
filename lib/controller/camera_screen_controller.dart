@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
@@ -26,6 +28,15 @@ class CameraScreenController extends GetxController{
   // camera
   CameraController? cameraController;
   late List<CameraDescription> descriptions;
+
+  // timer
+  var timerCarouselController = CarouselSliderController();
+  var isTimerIconAnimating = false;
+  var isTimerCounting = false.obs;
+  var timerSecondList = [0,5,10]; // 0,3,10
+  var timerSecondIndex = 1;
+  RxInt countdown = 0.obs;
+  Timer? timer;
 
   // state
   var isInitialized = false.obs;
@@ -70,6 +81,7 @@ class CameraScreenController extends GetxController{
     if(galleryListener != null){
       PhotoManager.removeChangeCallback(galleryListener!);
     }
+    stopTimer();
     pageController.removeListener(pageListener);
     pageController.dispose();
     cameraController?.dispose();
@@ -77,6 +89,9 @@ class CameraScreenController extends GetxController{
     latestPhoto.value = null;
     super.onClose();
   }
+
+
+
 
 
   Future<void> initWithAwait() async {
@@ -105,7 +120,31 @@ class CameraScreenController extends GetxController{
     });
   }
 
+  void startTimer() {
+    countdown.value = timerSecondList[timerSecondIndex];
+    timer?.cancel();
+    isTimerCounting(true); // 타이머 텍스트 활성
 
+    if (countdown.value == 0) {
+      isTimerCounting(false);
+      takePicture(currentPage.value);
+    } else {
+      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (countdown.value > 1) {
+          countdown.value--;
+        } else {
+          stopTimer();
+          takePicture(currentPage.value); // 타이머 종료 후 사진 찍기 함수 호출
+        }
+      });
+    }
+  }
+
+  void stopTimer() {
+    timer?.cancel();
+    timer = null;
+    isTimerCounting(false);
+  }
 
 
 
@@ -114,7 +153,7 @@ class CameraScreenController extends GetxController{
 
     PermissionStatus cameraPermissionStatus = await Permission.camera.request();
     if(cameraPermissionStatus.isDenied){
-      Fluttertoast.showToast(msg: "권한을 허용해 주세요.");
+      Fluttertoast.showToast(msg: "camera.toast.allow_permission".tr);
       Get.back();
       return;
     }
@@ -150,14 +189,14 @@ class CameraScreenController extends GetxController{
       // Camera initialization error
       if (e is CameraException) {
         if(e.code.contains("CameraAccessDenied")){
-          Fluttertoast.showToast(msg: "카메라 권한을 허용해주세요.");
+          Fluttertoast.showToast(msg: "camera.toast.allow_permission".tr);
           await Future.delayed(const Duration(milliseconds: 600));
           openAppSettings();
         }else {
-          Fluttertoast.showToast(msg: "카메라를 초기화하는 중 오류가 발생했습니다.");
+          Fluttertoast.showToast(msg: "camera.toast.init_error".tr);
         }
       }else {
-        Fluttertoast.showToast(msg: "카메라를 초기화하는 중 오류가 발생했습니다. ($e)");
+        Fluttertoast.showToast(msg: "camera.toast.init_error".tr);
       }
 
     }
@@ -241,7 +280,7 @@ class CameraScreenController extends GetxController{
       var ratio = SeeyaFrameConfigs.filterHeight / SeeyaFrameConfigs.filterWidth;
 
       // fit & rotate
-      LoadingOverlay.show("이미지를 올바르게 회전 중입니다.");
+      LoadingOverlay.show("loading.overlay01".tr);
       bool isFront = cameraController!.description.lensDirection == CameraLensDirection.front;
       await ImageUtils().fixRotateAndFlipImage(isFront, tempFile.path);
 
@@ -256,14 +295,14 @@ class CameraScreenController extends GetxController{
       int offsetX = 0;
       int offsetY = (height - targetHeight) ~/ 2;
 
-      LoadingOverlay.show("이미지 사이즈를 조절중입니다.");
+      LoadingOverlay.show("loading.overlay02".tr);
       final croppedUserImageFile = await FlutterNativeImage.cropImage(tempFile.path, offsetX, offsetY, width, (width*(ratio)).toInt());
       await croppedUserImageFile.copy(tempFile.path);
       FileUtils.deleteFile(croppedUserImageFile.path);
 
 
       if(filter.image_filepath != null){
-        LoadingOverlay.show("이미지를 합치는 중입니다.");
+        LoadingOverlay.show("loading.overlay03".tr);
         final overlayImage = await FileUtils.findFileFromUrl("${AppSecret.s3url}${filter.image_filepath}");
         await ImageUtils().overlayImages(width, (width*(ratio)).toInt(), tempFile, overlayImage);
       }

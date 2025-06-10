@@ -78,7 +78,7 @@ class SearchScreen extends GetView<SearchScreenController> {
 
                                 await controller.searchComplete(value);
                               },
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 counterText:'',
                                 enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide.none
@@ -87,7 +87,7 @@ class SearchScreen extends GetView<SearchScreenController> {
                                     borderSide: BorderSide.none
                                 ),
                                 contentPadding: EdgeInsets.only(left: 16,top: 0,bottom: 0,right: 0),
-                                hintText: "장소명, 이벤트명으로 찾아보세요.",
+                                hintText: "search.bar_hint".tr,
                               ),
                               cursorColor: AppColors.primary400,
                               cursorWidth: 2,
@@ -134,14 +134,14 @@ class SearchScreen extends GetView<SearchScreenController> {
                         padding: const EdgeInsets.symmetric(vertical: 6),
                         child: Row(
                           children: [
-                            Text("최근 검색", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey000),),
+                            Text("search.recent".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey000),),
                             const Expanded(child: SizedBox()),
                             BouncingButton(
                               onTap: () async {
                                 await controller.historyManager.clearSearchHistory();
                                 await controller.setSearchHistoryData();
                               },
-                              child: Text("전체 지우기", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
+                              child: Text("search.clear".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                             ),
                           ],
                         ),

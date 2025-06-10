@@ -58,7 +58,7 @@ class ImageCropController extends GetxController{
 
     if(imageWidth == 0.0 || imageHeight == 0.0){
       Get.back();
-      Fluttertoast.showToast(msg: "이미지 크기를 가져오는 중 에러가 발생했습니다.");
+      Fluttertoast.showToast(msg: "image_crop.toast.size_error".tr);
       return;
     }
     isInitialized(true);

@@ -1,3 +1,4 @@
+import 'package:flutter_libphonenumber/flutter_libphonenumber.dart';
 import 'package:intl/intl.dart';
 
 abstract class FormatUtils {
@@ -73,6 +74,27 @@ abstract class FormatUtils {
     return "$year.$month.$day";
   }
 
+
+
+
+  static Future<String?> getFormattedPhoneNumber({
+    required String rawPhoneNumber,   // 예: 01012345678
+    required String isoCode,          // 예: KR
+  }) async {
+    try {
+      final parsed = await parse(
+        rawPhoneNumber,
+        region: isoCode,
+      );
+
+      print(parsed); // 디버깅용
+
+      return parsed['international']; // 예: +82 10-1234-5678
+    } catch (e) {
+      print('Phone number parsing failed: $e');
+      return null;
+    }
+  }
 
 
 }

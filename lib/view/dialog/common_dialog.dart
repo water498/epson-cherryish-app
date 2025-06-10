@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:seeya/constants/app_themes.dart';
 
 import '../../constants/app_colors.dart';
@@ -105,7 +106,7 @@ class CommonDialog extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 34,),
-                    if(needWarning) Text("잠깐!", style: AppThemes.headline04.copyWith(color: AppColors.error),),
+                    if(needWarning) Text("decorate_frame_confirm_dialog.warning".tr, style: AppThemes.headline04.copyWith(color: AppColors.error),),
                     Text(title ?? "", style: AppThemes.headline04.copyWith(color: AppColors.blueGrey000),textAlign: TextAlign.center,),
                     if(description != null && description!.isNotEmpty) const SizedBox(height: 4,),
                     if(description != null && description!.isNotEmpty)

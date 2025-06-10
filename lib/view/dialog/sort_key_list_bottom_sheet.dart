@@ -46,7 +46,7 @@ class _SortKeyListBottomSheetState extends State<SortKeyListBottomSheet> {
                 const SizedBox(height: 4,),
                 Row(
                   children: [
-                    Text("정렬", style: AppThemes.headline04.copyWith(color: AppColors.blueGrey000),),
+                    Text("map_sort.title".tr, style: AppThemes.headline04.copyWith(color: AppColors.blueGrey000),),
                     const Expanded(child: SizedBox()),
                     GestureDetector(
                         onTap: () {

@@ -31,7 +31,7 @@ class SeeyaGuideScreen extends GetView<SeeyaGuideController> {
           ],
         ),
         centerTitle: false,
-        title: Text("Seeya 안내", style: AppThemes.headline04.copyWith(color: Colors.black,height: 0),),
+        title: Text("seeya_guide.title".tr, style: AppThemes.headline04.copyWith(color: Colors.black,height: 0),),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 20),
@@ -45,10 +45,10 @@ class SeeyaGuideScreen extends GetView<SeeyaGuideController> {
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
                     children: [
-                      Text("내 손 안의 포토부스, 시야", style: AppThemes.headline04.copyWith(color: Colors.black),),
-                      const SeeyaGuideItem(step: "step 1", title: "찾고", description: "특별했던 장소의 프레임을\n'시야'에서 찾아보세요!", imgUrl: "assets/image/seeya_guide01.png",),
-                      const SeeyaGuideItem(step: "step 2", title: "찍고", description: "선택한 프레임에 기억하고 싶은 순간들을\n넣어보세요!", imgUrl: "assets/image/seeya_guide02.png",),
-                      const SeeyaGuideItem(step: "step 3", title: "뽑고", description: "결제를 마치고 조금만 기다리면\n한장에 담기는 소중한 오늘이 당신 손안에!", imgUrl: "assets/image/seeya_guide03.png",),
+                      Text("seeya_guide.description".tr, style: AppThemes.headline04.copyWith(color: Colors.black),),
+                      SeeyaGuideItem(step: "step 1", title: "seeya_guide.step1_title".tr, description: "seeya_guide.step1_description".tr, imgUrl: "assets/image/seeya_guide01.png",),
+                      SeeyaGuideItem(step: "step 2", title: "seeya_guide.step2_title".tr, description: "seeya_guide.step2_description".tr, imgUrl: "assets/image/seeya_guide02.png",),
+                      SeeyaGuideItem(step: "step 3", title: "seeya_guide.step3_title".tr, description: "seeya_guide.step3_description".tr, imgUrl: "assets/image/seeya_guide03.png",),
                       const SizedBox(height: 100,),
                     ],
                   ),

@@ -8,6 +8,7 @@ import 'package:logger/logger.dart';
 import 'package:seeya/constants/app_router.dart';
 import 'package:seeya/data/repository/repositories.dart';
 import 'package:seeya/service/services.dart';
+import 'package:seeya/utils/utils.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
 import '../data/model/models.dart';
@@ -30,7 +31,8 @@ class PhoneVerificationController extends GetxController{
   var showVerifyCodeWidget = false.obs;
   var isPhoneEmpty = true.obs;
 
-  String countryCode = "+82";
+  // String countryCode = "+82";
+  String isoCode = "KR"; // 국가 코드
   String latestPhoneNumber = "";
   String _verificationId = '';
   Timer? timer;
@@ -95,7 +97,11 @@ class PhoneVerificationController extends GetxController{
     phoneFocusNode.unfocus();
     stopTimer();
     showVerifyCodeWidget(false);
-    String fullPhoneNumber = "$countryCode${int.parse(phoneNumber).toString()}";
+    String? fullPhoneNumber = await FormatUtils.getFormattedPhoneNumber(isoCode: isoCode,rawPhoneNumber: phoneNumber);
+    if(fullPhoneNumber == null){
+      Fluttertoast.showToast(msg: "phone_verification.toast.invalid_phone".tr);
+      return;
+    }
     latestPhoneNumber = fullPhoneNumber;
 
     Logger().d("fullPhoneNumber ::: ${fullPhoneNumber}");
@@ -117,15 +123,15 @@ class PhoneVerificationController extends GetxController{
         stopTimer();
         Logger().e("verificationFailed!!! check auth : error : ${e.code} ${e.message} ${e.stackTrace}");
         if (e.code.contains("captcha-check-failed")) {
-          Fluttertoast.showToast(msg: "reCAPTCHA 인증에 실패하였습니다.",gravity: ToastGravity.TOP);
+          Fluttertoast.showToast(msg: "phone_verification.toast.recaptcha".tr,gravity: ToastGravity.TOP);
         } else if(e.code.contains("invalid-phone-number")) {
-          Fluttertoast.showToast(msg: "잘못된 전화번호입니다.",gravity: ToastGravity.TOP);
+          Fluttertoast.showToast(msg: "phone_verification.toast.invalid_phone".tr,gravity: ToastGravity.TOP);
         } else if(e.code.contains("quota-exceeded")){
-          Fluttertoast.showToast(msg: "오늘의 인증 요청 제한을 초과했습니다. 나중에 다시 시도해주세요.",gravity: ToastGravity.TOP);
+          Fluttertoast.showToast(msg: "phone_verification.toast.quota".tr,gravity: ToastGravity.TOP);
         } else if(e.code.contains("web-context-cancelled")){
 
         } else {
-          Fluttertoast.showToast(msg: "인증에 실패했습니다. 오류 코드 : ${e.code}",gravity: ToastGravity.TOP);
+          Fluttertoast.showToast(msg: "phone_verification.toast.error".tr,gravity: ToastGravity.TOP);
         }
 
       },
@@ -179,29 +185,29 @@ class PhoneVerificationController extends GetxController{
       if (e is FirebaseAuthException) {
         switch (e.code) {
           case 'invalid-verification-code':
-            Fluttertoast.showToast(msg: "인증번호를 다시 확인해주세요.",gravity: ToastGravity.TOP);
+            Fluttertoast.showToast(msg: "phone_verification.toast.invalid_code".tr,gravity: ToastGravity.TOP);
             break;
           case 'session-expired':
-            Fluttertoast.showToast(msg: "인증번호 입력 시간이 만료되었습니다.",gravity: ToastGravity.TOP);
+            Fluttertoast.showToast(msg: "phone_verification.toast.code_expired".tr,gravity: ToastGravity.TOP);
             break;
           case 'quota-exceeded':
-            Fluttertoast.showToast(msg: "오늘의 인증 요청 제한을 초과했습니다. 나중에 다시 시도해주세요.",gravity: ToastGravity.TOP);
+            Fluttertoast.showToast(msg: "phone_verification.toast.quota_exceeded".tr,gravity: ToastGravity.TOP);
             break;
           case 'too-many-requests':
-            Fluttertoast.showToast(msg: "너무 많은 요청을 보냈습니다. 잠시 후 다시 시도해주세요.",gravity: ToastGravity.TOP);
+            Fluttertoast.showToast(msg: "phone_verification.toast.too_many".tr,gravity: ToastGravity.TOP);
             break;
           case 'network-request-failed':
-            Fluttertoast.showToast(msg: "네트워크 연결에 문제가 발생했습니다.",gravity: ToastGravity.TOP);
+            Fluttertoast.showToast(msg: "phone_verification.toast.network".tr,gravity: ToastGravity.TOP);
             break;
           case 'invalid-phone-number':
-            Fluttertoast.showToast(msg: "잘못된 전화번호 형식입니다.",gravity: ToastGravity.TOP);
+            Fluttertoast.showToast(msg: "phone_verification.toast.invalid_phone".tr,gravity: ToastGravity.TOP);
             break;
           default:
-            Fluttertoast.showToast(msg: "인증에 실패했습니다. 오류 코드 : ${e.code}",gravity: ToastGravity.TOP);
+            Fluttertoast.showToast(msg: "phone_verification.toast.error".tr,gravity: ToastGravity.TOP);
         }
       } else {
         Logger().e("signInWithCredential fail error ::: [${e.toString()}]");
-        Fluttertoast.showToast(msg: "알 수 없는 오류가 발생했습니다. 다시 시도해주세요.",gravity: ToastGravity.TOP);
+        Fluttertoast.showToast(msg: "toast.unknown_error".tr,gravity: ToastGravity.TOP);
       }
     } finally {
       LoadingOverlay.hide();
@@ -219,7 +225,7 @@ class PhoneVerificationController extends GetxController{
     }else {
       // 다음
       if(codeTextController.value.text.length != 6){
-        Fluttertoast.showToast(msg: "인증 번호 6자리를 모두 입력해주세요.",gravity: ToastGravity.TOP);
+        Fluttertoast.showToast(msg: "phone_verification.toast.code_short".tr,gravity: ToastGravity.TOP);
         return;
       }
       verifySMSCode(codeTextController.value.text);
@@ -258,7 +264,7 @@ class PhoneVerificationController extends GetxController{
   void reset(bool showToast){
     isTimeExpired.value = true;
     stopTimer();
-    if(showToast) Fluttertoast.showToast(msg: "인증 시간이 만료되었습니다. 다시 시도해주세요.",gravity: ToastGravity.TOP);
+    if(showToast) Fluttertoast.showToast(msg: "phone_verification.toast.code_expired_retry",gravity: ToastGravity.TOP);
     showVerifyCodeWidget(false);
   }
 
@@ -285,7 +291,7 @@ class PhoneVerificationController extends GetxController{
       } else if(commonResponse.failModel != null) {
 
         if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
           Logger().e("phoneVerificationApi request parameter error");
         }
 

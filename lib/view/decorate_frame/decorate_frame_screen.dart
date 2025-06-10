@@ -56,7 +56,7 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
               ),
             ],
           ),
-          title: Text("프레임 내부 꾸미기", style: AppThemes.headline04.copyWith(height: 0),),
+          title: Text("decorate_frame.title".tr, style: AppThemes.headline04.copyWith(height: 0),),
           centerTitle: true,
         ),
 
@@ -80,7 +80,7 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
                           color: allPhotosCaptured ? AppColors.primary400.withOpacity(0.8) : AppColors.blueGrey600,
                       )
                   ),
-                  child: Text("프린트 하기", style: AppThemes.headline05.copyWith(color: allPhotosCaptured ? Colors.white : AppColors.blueGrey500),textAlign: TextAlign.center,),
+                  child: Text("decorate_frame.button".tr, style: AppThemes.headline05.copyWith(color: allPhotosCaptured ? Colors.white : AppColors.blueGrey500),textAlign: TextAlign.center,),
                 );
               },),
             )
@@ -220,9 +220,9 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
       showDialog(context: context, builder: (context) {
         return CommonDialog(
           needWarning: true,
-          title: "프레임을 삭제하시겠어요?",
-          description: "지금 돌아가면 변경 사항이 삭제됩니다.",
-          button01text: "삭제하기",
+          title: "decorate_frame_back_dialog.title".tr,
+          description: "decorate_frame_back_dialog.description".tr,
+          button01text: "decorate_frame_back_dialog.button01".tr,
           onButton01Click: () async {
             controller.mergedPhotoList.forEach((key, value) async {
               if(value != null){
@@ -231,7 +231,7 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
             },);
             Get.back();
           },
-          button02text: "계속 제작하기",
+          button02text: "decorate_frame_back_dialog.button02".tr,
           onButton02Click: () {},
         );
       },);

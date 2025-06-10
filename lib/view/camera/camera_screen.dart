@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,9 @@ class CameraScreen extends GetView<CameraScreenController> {
 
   @override
   Widget build(BuildContext context) {
+
+    final shortestSide = MediaQuery.of(context).size.shortestSide;
+    final isTablet = shortestSide > 600;
 
     const filterWidth = SeeyaFrameConfigs.filterWidth;
     const filterHeight = SeeyaFrameConfigs.filterHeight;
@@ -53,8 +57,58 @@ class CameraScreen extends GetView<CameraScreenController> {
         },),
         actions: [
           Obx(() {
+            var mergedPhoto = controller.frameController.mergedPhotoList[controller.currentPage.value];
+
+            return Visibility(
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
+              visible: mergedPhoto == null && !controller.isTimerCounting.value,
+              child: SizedBox(
+                width: 40,
+                height: 40,
+                child: CarouselSlider(
+                    carouselController: controller.timerCarouselController,
+                    items: controller.timerSecondList.map((e) {
+                      return Builder(
+                        builder: (context) {
+                          return GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () async {
+                              if(controller.isTimerIconAnimating) return;
+                              controller.isTimerIconAnimating = true;
+                              await controller.timerCarouselController.nextPage(duration: const Duration(milliseconds: 100));
+                              controller.isTimerIconAnimating = false;
+                            },
+                            child: e == 0 ? Text("0s",style: TextStyle(fontSize:20,color: Colors.white),textAlign: TextAlign.center,)
+                                : e == 5 ? Text("5s",style: TextStyle(fontSize:20,color: Colors.white),textAlign: TextAlign.center,)
+                                : Text("10s",style: TextStyle(fontSize:20,color: Colors.white),textAlign: TextAlign.center,)
+                            // child: e == 0 ? Icon(Icons.timer_off_outlined, color: Colors.white,) : e == 5 ? Icon(Icons.timer_3, color: Colors.white,) : Icon(Icons.timer_10, color: Colors.white,),
+                          );
+                        },
+                      );
+                    },).toList(),
+                    options: CarouselOptions(
+                      initialPage: controller.timerSecondIndex,
+                      scrollDirection: Axis.vertical,
+                      scrollPhysics: const NeverScrollableScrollPhysics(), // 드래그 방지
+                      viewportFraction: 1, // 각 아이템의 차지하는 뷰포트 비율
+                      onPageChanged: (index, reason) {
+                        controller.timerSecondIndex = index;
+                      },
+                    )
+                ),
+              ),
+            );
+
+          },),
+          Obx(() {
 
             var mergedPhoto = controller.frameController.mergedPhotoList[controller.currentPage.value];
+
+            if(controller.isTimerCounting.value) {
+              return const SizedBox();
+            }
 
             return GestureDetector(
                 onTap: () {
@@ -148,98 +202,123 @@ class CameraScreen extends GetView<CameraScreenController> {
                         )
                       ),
                     );
-                  },)
+                  },),
 
 
+                  // Timer Second
+                  Obx(() {
+                    if(!controller.isTimerCounting.value) return const SizedBox();
 
+                    return Text("${controller.countdown.value}", style: TextStyle(fontSize: isTablet ? 240 : 150, color: Colors.white.withOpacity(0.6)),);
+                  },),
 
 
                 ],
               ),
             ),
           ),
-          SizedBox(
-            height: 40,
-            child: PageView.builder (
-              controller: controller.pageController,
-              itemCount: 4,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => Obx((){
-                return Center(
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      controller.pageController.animateToPage(index, duration: const Duration(milliseconds: 200), curve: Curves.linear);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      child: Text("${index+1}", style: AppThemes.headline03.copyWith(color: controller.currentPage.value == index ? Colors.white : AppColors.blueGrey300),),
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ),
+          Obx(() {
+            return SizedBox(
+              height: 40,
+              child: Visibility(
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                visible: !controller.isTimerCounting.value,
+                child: PageView.builder (
+                  controller: controller.pageController,
+                  itemCount: 4,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => Obx((){
+                    return Center(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          controller.pageController.animateToPage(index, duration: const Duration(milliseconds: 200), curve: Curves.linear);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          child: Text("${index+1}", style: AppThemes.headline03.copyWith(color: controller.currentPage.value == index ? Colors.white : AppColors.blueGrey300),),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+            );
+          },),
           const SizedBox(height: 16,),
           SafeArea(
             child: Obx(() {
 
               var mergedPhoto = controller.frameController.mergedPhotoList[controller.currentPage.value];
+              var isCounting = controller.isTimerCounting.value;
 
               if(mergedPhoto == null){
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        const SizedBox(width: 30,),
-                        GestureDetector(
-                          onTap: () async {
+                    Visibility(
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      visible: !isCounting,
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 30,),
+                          GestureDetector(
+                            onTap: () async {
 
-                            var xFile = await controller.pickImage();
-                            if(xFile != null){
-                              var result = await Get.toNamed(AppRouter.image_crop, arguments: {
-                                "selected_image":xFile,
-                                "filter":controller.currentFilter
-                              });
+                              var xFile = await controller.pickImage();
+                              if(xFile != null){
+                                var result = await Get.toNamed(AppRouter.image_crop, arguments: {
+                                  "selected_image":xFile,
+                                  "filter":controller.currentFilter
+                                });
 
-                              if (result != null && result is File){
-                                var model = CameraResultModel(filter_uid: controller.currentFilter.uid, file: result);
-                                Logger().d("controller.currentPage.value ::: ${controller.currentPage.value}");
-                                controller.frameController.mergedPhotoList[controller.currentPage.value] = model;
+                                if (result != null && result is File){
+                                  var model = CameraResultModel(filter_uid: controller.currentFilter.uid, file: result);
+                                  Logger().d("controller.currentPage.value ::: ${controller.currentPage.value}");
+                                  controller.frameController.mergedPhotoList[controller.currentPage.value] = model;
+                                }
                               }
-                            }
 
 
-                          },
-                          child: SizedBox(
-                            width: 48,
-                            height: 48,
-                            child: Obx(() {
-                              var latestPhoto = controller.latestPhoto.value;
+                            },
+                            child: SizedBox(
+                              width: 48,
+                              height: 48,
+                              child: Obx(() {
+                                var latestPhoto = controller.latestPhoto.value;
 
-                              if(latestPhoto != null){
-                                return Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Colors.white,
-                                          width: 2
-                                      )
-                                  ),
-                                  child: Image.memory(controller.latestPhoto.value!, fit: BoxFit.cover,),
-                                );
-                              }else {
-                                return SvgPicture.asset("assets/image/ic_album.svg");
-                              }
-                            },),
+                                if(latestPhoto != null){
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.white,
+                                            width: 2
+                                        )
+                                    ),
+                                    child: Image.memory(controller.latestPhoto.value!, fit: BoxFit.cover,),
+                                  );
+                                }else {
+                                  return SvgPicture.asset("assets/image/ic_album.svg");
+                                }
+                              },),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     BouncingButton(
                         onTap: () {
-                          var clickedIndex = controller.currentPage.value;
-                          controller.takePicture(clickedIndex);
+                          if(controller.isTimerCounting.value){
+                            controller.stopTimer();
+                          }else {
+                            controller.startTimer();
+                          }
+                          // var clickedIndex = controller.currentPage.value;
+                          // controller.takePicture(clickedIndex);
                         },
                         child: Container(
                           width: 84,
@@ -301,7 +380,7 @@ class CameraScreen extends GetView<CameraScreenController> {
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(10),
-                                child: Text("삭제", style: AppThemes.headline05.copyWith(color: AppColors.primary400),textAlign: TextAlign.center,),
+                                child: Text("camera.delete".tr, style: AppThemes.headline05.copyWith(color: AppColors.primary400),textAlign: TextAlign.center,),
                               ),
                             ),
                           ),
@@ -322,7 +401,7 @@ class CameraScreen extends GetView<CameraScreenController> {
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(10),
-                                child: Text("완료", style: AppThemes.headline05.copyWith(color: Colors.white),textAlign: TextAlign.center,),
+                                child: Text("camera.complete".tr, style: AppThemes.headline05.copyWith(color: Colors.white),textAlign: TextAlign.center,),
                               ),
                             ),
                           ),

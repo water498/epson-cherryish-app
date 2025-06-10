@@ -23,7 +23,7 @@ class ErrorReportScreen extends GetView<ErrorReportController> {
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: const EdgeInsets.only(left: 24),
-            child: Text("에러 리포트", style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
+            child: Text("error_report.title".tr, style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
           ),
         ),
         actions: [
@@ -54,7 +54,7 @@ class ErrorReportScreen extends GetView<ErrorReportController> {
                             color: AppColors.blueGrey600
                         )
                     ),
-                    child: Text("취소", style: AppThemes.headline05.copyWith(color: AppColors.blueGrey200),textAlign: TextAlign.center,),
+                    child: Text("error_report.cancel".tr, style: AppThemes.headline05.copyWith(color: AppColors.blueGrey200),textAlign: TextAlign.center,),
                   ),
                 ),
               ),
@@ -83,7 +83,7 @@ class ErrorReportScreen extends GetView<ErrorReportController> {
                               color: controller.selectedImage.value == null ? AppColors.blueGrey600 : AppColors.primary400.withOpacity(0.8)
                           )
                       ),
-                      child: Text("등록", style: AppThemes.headline05.copyWith(color: controller.selectedImage.value == null ? AppColors.blueGrey500 : Colors.white),textAlign: TextAlign.center,),
+                      child: Text("error_report.register".tr, style: AppThemes.headline05.copyWith(color: controller.selectedImage.value == null ? AppColors.blueGrey500 : Colors.white),textAlign: TextAlign.center,),
                     );
                   },),
                 ),
@@ -102,7 +102,7 @@ class ErrorReportScreen extends GetView<ErrorReportController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("에러가 발생한 상황이나\n프레임의 사진을 첨부해주세요.", style: AppThemes.headline05.copyWith(color: AppColors.blueGrey200),textAlign: TextAlign.start,),
+                  Text("error_report.error_reason_title".tr, style: AppThemes.headline05.copyWith(color: AppColors.blueGrey200),textAlign: TextAlign.start,),
                   const SizedBox(height: 20,),
                   Obx(() {
                     if(controller.selectedImage.value == null){
@@ -122,7 +122,7 @@ class ErrorReportScreen extends GetView<ErrorReportController> {
                               child: Row(
                                 children: [
                                   SvgPicture.asset("assets/image/ic_image.svg"),
-                                  Text("사진 첨부하기",style: AppThemes.headline04.copyWith(color: AppColors.blueGrey200),),
+                                  Text("error_report.upload_photo".tr,style: AppThemes.headline04.copyWith(color: AppColors.blueGrey200),),
                                 ],
                               ),
                             ),

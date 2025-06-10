@@ -68,7 +68,7 @@ class ImageCropScreen extends GetView<ImageCropController> {
                           color: AppColors.primary400.withOpacity(0.8)
                       )
                   ),
-                  child: Text("자르기", style: AppThemes.headline05.copyWith(color: Colors.white),textAlign: TextAlign.center,),
+                  child: Text("image_crop.button".tr, style: AppThemes.headline05.copyWith(color: Colors.white),textAlign: TextAlign.center,),
                 ),
               );
             },),

@@ -27,7 +27,7 @@ class WithdrawalScreen extends GetView<WithdrawalController> {
           ],
         ),
         centerTitle: false,
-        title: Text("회원 탈퇴", style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
+        title: Text("withdrawal.title".tr, style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -45,7 +45,7 @@ class WithdrawalScreen extends GetView<WithdrawalController> {
                       const SizedBox(height: 40,),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Text("회원 탈퇴 주의사항", style: AppThemes.headline04.copyWith(color: AppColors.blueGrey100),),
+                        child: Text("withdrawal.sub_title".tr, style: AppThemes.headline04.copyWith(color: AppColors.blueGrey100),),
                       ),
                       const SizedBox(height: 20,),
                       const Divider(height: 1, color: AppColors.blueGrey800),
@@ -56,7 +56,7 @@ class WithdrawalScreen extends GetView<WithdrawalController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(width: 25, height : 25,child: Icon(Icons.circle, size: 5,color: AppColors.blueGrey300,)),
-                            Expanded(child: Text("진행중 혹은 예약 완료된 이벤트가 있을 경우, 탈퇴가 가능하지 않습니다.", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)),
+                            Expanded(child: Text("withdrawal.description01".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)),
                           ],
                         ),
                       ),
@@ -66,7 +66,7 @@ class WithdrawalScreen extends GetView<WithdrawalController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(width: 25, height : 25,child: Icon(Icons.circle, size: 5,color: AppColors.blueGrey300,)),
-                            Expanded(child: Text("구매 내역, 프린트 히스토리, 문의 내역 등 서비스 이용 관련 데이터가 영구 삭제 되고, 복구가 불가합니다.", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)),
+                            Expanded(child: Text("withdrawal.description02".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)),
                           ],
                         ),
                       ),
@@ -76,7 +76,7 @@ class WithdrawalScreen extends GetView<WithdrawalController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(width: 25, height : 25,child: Icon(Icons.circle, size: 5,color: AppColors.blueGrey300,)),
-                            Expanded(child: Text("삭제된 데이터는 재가입 시에도 연동이 불가합니다.", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)),
+                            Expanded(child: Text("withdrawal.description03".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)),
                           ],
                         ),
                       ),
@@ -86,7 +86,7 @@ class WithdrawalScreen extends GetView<WithdrawalController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(width: 25, height : 25,child: Icon(Icons.circle, size: 5,color: AppColors.blueGrey300,)),
-                            Expanded(child: Text("완료되지 않은 환불 요청건은  집행이 불가합니다.", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)),
+                            Expanded(child: Text("withdrawal.description04".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)),
                           ],
                         ),
                       ),
@@ -119,7 +119,7 @@ class WithdrawalScreen extends GetView<WithdrawalController> {
                               ),
                               child: controller.isAgree.value ? SvgPicture.asset("assets/image/ic_check_small.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey100, BlendMode.srcIn),) : const SizedBox(width: 24, height: 24,),
                             ),
-                            Text("위의 내용을 모두 확인하였습니다.", style: AppThemes.headline05.copyWith(color: AppColors.blueGrey100),),
+                            Text("withdrawal.confirm".tr, style: AppThemes.headline05.copyWith(color: AppColors.blueGrey100),),
                           ],
                         ),
                       ),
@@ -139,7 +139,7 @@ class WithdrawalScreen extends GetView<WithdrawalController> {
                                   color: !controller.isAgree.value ? AppColors.blueGrey600 : AppColors.primary400.withOpacity(0.8)
                               )
                           ),
-                          child: Text("탈퇴하기", style: AppThemes.headline05.copyWith(color: !controller.isAgree.value ? AppColors.blueGrey500 : Colors.white),textAlign: TextAlign.center,),
+                          child: Text("withdrawal.button".tr, style: AppThemes.headline05.copyWith(color: !controller.isAgree.value ? AppColors.blueGrey500 : Colors.white),textAlign: TextAlign.center,),
                         ),
                       ),
                     ],

@@ -66,15 +66,15 @@ class PaymentController extends GetxController{
       if (printQueueId != null) {
         Get.back(result: int.tryParse(printQueueId) ?? -1);
       } else {
-        Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+        Fluttertoast.showToast(msg: "toast.unknown_error".tr);
       }
     } else if(uri.toString() == "seeya-app://pay/print-payment?result=cancel") {
       Get.back();
     } else if(uri.toString() == "seeya-app://pay/print-payment?result=not_enable") {
-      Fluttertoast.showToast(msg: "현재 이용할 수 없습니다. 관리자에게 문의해주세요.");
+      Fluttertoast.showToast(msg: "payment.toast.not_enable".tr);
       Get.back();
     } else if(uri.toString() == "seeya-app://pay/print-payment?result=error"){
-      Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
       Get.back();
     }
 

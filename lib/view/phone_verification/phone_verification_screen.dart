@@ -1,7 +1,11 @@
+
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/utils/utils.dart';
 import 'package:seeya/view/common/common_widget.dart';
@@ -53,7 +57,7 @@ class PhoneVerificationScreen extends GetView<PhoneVerificationController> {
                           color: isPhoneEmpty ? AppColors.blueGrey600 : AppColors.primary400.withOpacity(0.8),
                         )
                     ),
-                    child: Obx(() => Text(controller.showVerifyCodeWidget.value ? "다음" :"인증번호 받기", style: AppThemes.headline05.copyWith(color: isPhoneEmpty ? AppColors.blueGrey500 : Colors.white),textAlign: TextAlign.center,),),
+                    child: Obx(() => Text(controller.showVerifyCodeWidget.value ? "phone_verification.bottom_button_next".tr :"phone_verification.bottom_button_get_code".tr, style: AppThemes.headline05.copyWith(color: isPhoneEmpty ? AppColors.blueGrey500 : Colors.white),textAlign: TextAlign.center,),),
                   );
                 },),
               )
@@ -66,15 +70,15 @@ class PhoneVerificationScreen extends GetView<PhoneVerificationController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("본인 인증", style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),),
+                Text("phone_verification.title".tr, style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),),
                 addH(8),
-                Text("원활한 서비스 이용을 위해,\n휴대폰 번호를 입력해주세요.", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),),
+                Text("phone_verification.sub_title".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),),
                 addH(40),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("휴대폰 번호", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),
+                      Text("phone_verification.phone".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),
                       addH(4),
                       Obx(() {
                         return TextField(
@@ -95,7 +99,7 @@ class PhoneVerificationScreen extends GetView<PhoneVerificationController> {
                           controller: controller.phoneTextController,
                           decoration: InputDecoration(
                             counterText:'',
-                            hintText: "-를 제외하고 입력해주세요.",
+                            hintText: "phone_verification.phone_hint".tr,
                             enabledBorder: const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.zero),
                                 borderSide: BorderSide(
@@ -110,14 +114,31 @@ class PhoneVerificationScreen extends GetView<PhoneVerificationController> {
                                   width: 2,
                                 )
                             ),
-                            // prefixIcon: Row(
-                            //   mainAxisSize: MainAxisSize.min,
-                            //   children: [
-                            //     TextButton(onPressed: () async {
-                            //       Fluttertoast.showToast(msg: "country code ::: ${DeviceInfoUtils.getDeviceCountry()}");
-                            //     }, child: Text("+82")),
-                            //   ],
-                            // )
+                            prefixIcon: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CountryCodePicker(
+                                  showFlagMain: false,
+                                  hideHeaderText: true,
+                                  hideSearch: false,
+                                  flagWidth: 25,
+                                  padding: const EdgeInsets.only(left: 5),
+                                  onChanged: (value) {
+                                    if(value.code != null){
+                                      controller.isoCode = value.code!;
+                                    }
+                                  },
+                                  initialSelection: 'KR', // 기본 선택 국가
+                                  // favorite: ['+82', 'KR'], // 즐겨찾기 항목
+                                  // countryFilter: ['KR', 'US', 'JP'], // ✨ 여기서 필터링!
+                                  showCountryOnly: false,
+                                  showOnlyCountryWhenClosed: false,
+                                  alignLeft: false,
+                                ),
+                                SvgPicture.asset("assets/image/ic_arrow_down.svg",width: 15,),
+                                const SizedBox(width: 10,),
+                              ],
+                            )
                           ),
                         );
                       },),
@@ -134,7 +155,7 @@ class PhoneVerificationScreen extends GetView<PhoneVerificationController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("인증 번호", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),
+                          Text("phone_verification.code".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),
                           addH(4),
                           TextField(
                             maxLength: 6,
@@ -150,7 +171,7 @@ class PhoneVerificationScreen extends GetView<PhoneVerificationController> {
                             controller: controller.codeTextController,
                             decoration: InputDecoration(
                               counterText:'',
-                              hintText: "인증 번호 6자리",
+                              hintText: "phone_verification.code_hint".tr,
                               enabledBorder: const OutlineInputBorder(
                                   borderRadius: BorderRadius.all(Radius.zero),
                                   borderSide: BorderSide(
@@ -190,7 +211,7 @@ class PhoneVerificationScreen extends GetView<PhoneVerificationController> {
                               onTap: () {
                                 controller.reset(false);
                               },
-                              child: Text("인증 번호 재전송",style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300, decoration: TextDecoration.underline), )
+                              child: Text("phone_verification.code_resend".tr,style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300, decoration: TextDecoration.underline), )
                             )
                           )
                         ],

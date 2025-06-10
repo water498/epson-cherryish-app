@@ -67,17 +67,17 @@ class RootScreen extends GetView<RootController> {
                   BottomNavigationBarItem(
                       icon: SvgPicture.asset("assets/image/ic_home.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey500, BlendMode.srcIn),),
                       activeIcon: SvgPicture.asset("assets/image/ic_home.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey200, BlendMode.srcIn),),
-                      label: '홈'
+                      label: 'bottom_nav.home'.tr
                   ),
                   BottomNavigationBarItem(
                       icon: SvgPicture.asset("assets/image/ic_map.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey500, BlendMode.srcIn),),
                       activeIcon: SvgPicture.asset("assets/image/ic_map.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey200, BlendMode.srcIn),),
-                      label: '지도'
+                      label: 'bottom_nav.map'.tr
                   ),
                   BottomNavigationBarItem(
                       icon: SvgPicture.asset("assets/image/ic_my_page.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey500, BlendMode.srcIn),),
                       activeIcon: SvgPicture.asset("assets/image/ic_my_page.svg", colorFilter: const ColorFilter.mode(AppColors.blueGrey200, BlendMode.srcIn),),
-                      label: '마이페이지'
+                      label: 'bottom_nav.my_page'.tr
                   ),
                 ],
               ),

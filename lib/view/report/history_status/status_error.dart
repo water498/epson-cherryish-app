@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_themes.dart';
 
@@ -11,7 +11,7 @@ class StatusError extends StatelessWidget {
     return Container(
       color: const Color(0xffFFDDDD),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Text("에러", style: AppThemes.bodySmall.copyWith(color: AppColors.error),),
+      child: Text("report.item_status_error".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.error),),
     );
   }
 }

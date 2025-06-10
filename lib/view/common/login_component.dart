@@ -34,7 +34,7 @@ class LoginComponent extends GetView<LoginComponentController> {
         child : Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("간편 로그인/회원가입", style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),),
+            Text("login.title".tr, style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),),
 
             const SizedBox(height: 40,),
 

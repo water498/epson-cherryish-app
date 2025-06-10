@@ -25,7 +25,7 @@ class SettingScreen extends GetView<SettingController> {
     double maxLabelWidth = 0.0;
 
     final textPainter = TextPainter(
-      text: TextSpan(text: "이메일", style: AppThemes.bodyMedium.copyWith(fontFamily: "DungGeunMo"),),
+      text: TextSpan(text: "setting.user_info_email".tr, style: AppThemes.bodyMedium.copyWith(fontFamily: "DungGeunMo"),),
       maxLines: 1,
       textDirection: TextDirection.ltr,
     )..layout();
@@ -47,7 +47,7 @@ class SettingScreen extends GetView<SettingController> {
           ],
         ),
         centerTitle: false,
-        title: Text("설정", style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
+        title: Text("setting.title".tr, style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -61,7 +61,7 @@ class SettingScreen extends GetView<SettingController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("기본 회원 정보", style: AppThemes.headline04.copyWith(color: AppColors.blueGrey100),),
+                    Text("setting.user_info_title".tr, style: AppThemes.headline04.copyWith(color: AppColors.blueGrey100),),
                     const SizedBox(height: 20,),
                     const Divider(height: 1, color: AppColors.blueGrey800),
                     const SizedBox(height: 20,),
@@ -69,7 +69,7 @@ class SettingScreen extends GetView<SettingController> {
                       children: [
                         SizedBox(
                             width: maxLabelWidth,
-                            child: Text("이름", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
+                            child: Text("setting.user_info_name".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                         ),
                         Expanded(child: Obx(() => Text("${UserService.instance.userPublicInfo.value?.name ?? "시야 손님 ${UserService.instance.userPublicInfo.value?.id ?? ""}"}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
                       ],
@@ -79,7 +79,7 @@ class SettingScreen extends GetView<SettingController> {
                       children: [
                         SizedBox(
                             width: maxLabelWidth,
-                            child: Text("연락처", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
+                            child: Text("setting.user_info_phone".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                         ),
                         Obx(() {
                           if(UserService.instance.userPrivateInfo.value == null){
@@ -95,7 +95,7 @@ class SettingScreen extends GetView<SettingController> {
                                         width: 1
                                     )
                                 ),
-                                child: Text("휴대폰 인증", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100,fontFamily: "Inter"),),
+                                child: Text("setting.user_info_phone_verify".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100,fontFamily: "Inter"),),
                               ),
                             );
                           }else {
@@ -111,7 +111,7 @@ class SettingScreen extends GetView<SettingController> {
                       children: [
                         SizedBox(
                             width: maxLabelWidth,
-                            child: Text("이메일", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
+                            child: Text("setting.user_info_email".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                         ),
                         Expanded(child: Obx(() => Text("${UserService.instance.userPublicInfo.value?.email ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
                       ],
@@ -125,7 +125,7 @@ class SettingScreen extends GetView<SettingController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("SNS 연결", style: AppThemes.headline04.copyWith(color: AppColors.blueGrey100),),
+                    Text("setting.sns_title".tr, style: AppThemes.headline04.copyWith(color: AppColors.blueGrey100),),
                     const SizedBox(height: 20,),
                     const Divider(height: 1,thickness: 1,color: AppColors.blueGrey800,),
                     const SizedBox(height: 20,),
@@ -134,13 +134,13 @@ class SettingScreen extends GetView<SettingController> {
                 ),
               ),
               const Divider(height: 2, color: AppColors.blueGrey300),
-              MyPageMenuButton(title: "서비스 이용약관", onTap : () async {
+              MyPageMenuButton(title: "setting.terms_service".tr, onTap : () async {
                 final url = Uri.parse("https://www.seeya-printer.com/terms/service");
                 if(await canLaunchUrl(url)){
                   launchUrl(url);
                 }
               },),
-              MyPageMenuButton(title: "개인정보 처리방침", onTap : () async {
+              MyPageMenuButton(title: "setting.terms_privacy".tr, onTap : () async {
                 final url = Uri.parse("https://www.seeya-printer.com/terms/privacy");
                 if(await canLaunchUrl(url)){
                   launchUrl(url);
@@ -157,7 +157,7 @@ class SettingScreen extends GetView<SettingController> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                        child: Text("회원 탈퇴", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey200),),
+                        child: Text("setting.withdrawal".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey200),),
                       )
                   );
                 },),

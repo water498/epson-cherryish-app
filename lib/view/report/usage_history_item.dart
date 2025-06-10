@@ -98,7 +98,7 @@ class UsageHistoryItem extends StatelessWidget {
                                   width: 2
                                 )
                               ),
-                              child: Text("에러 리포트하기", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey200),)
+                              child: Text("usage_history.report".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey200),)
                             )
                           ),
                           addW(8),
@@ -114,7 +114,7 @@ class UsageHistoryItem extends StatelessWidget {
                                       width: 2
                                   )
                               ),
-                              child: Text("재출력", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey200),)
+                              child: Text("usage_history.reprint".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey200),)
                             ),
                           ),
                         ],

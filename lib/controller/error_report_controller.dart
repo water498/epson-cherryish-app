@@ -89,9 +89,9 @@ class ErrorReportController extends GetxController{
       } else if(commonResponse.failModel != null) {
 
         if(commonResponse.statusCode == 409){
-          Fluttertoast.showToast(msg: "이미 문의가 등록되었습니다.");
+          Fluttertoast.showToast(msg: "error_report.toast.already_post".tr);
         }else if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
           Logger().e("Validation Error");
         }
 
@@ -142,7 +142,7 @@ class ErrorReportController extends GetxController{
       } else if(commonResponse.failModel != null) {
 
         if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
           Logger().e("Validation Error");
         }
 

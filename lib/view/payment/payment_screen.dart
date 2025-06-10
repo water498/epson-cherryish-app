@@ -73,7 +73,7 @@ class PaymentScreen extends GetView<PaymentController> {
               children: [
                 Image.asset("assets/image/loading02.gif"),
                 addH(30),
-                Text("결제가 진행중입니다.\n웹에서 결제를 완료해주세요!", textAlign: TextAlign.center,),
+                Text("payment.title".tr, textAlign: TextAlign.center,),
               ],
             ),
           ),

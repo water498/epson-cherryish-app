@@ -41,7 +41,7 @@ class InquiryDetailScreen extends GetView<InquiryDetailController> {
           ],
         ),
         centerTitle: false,
-        title: Text("문의 내역", style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
+        title: Text("inquiry_detail.title".tr, style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
       ),
       body: Obx(() {
         if(controller.isLoading.value) return const SizedBox();
@@ -151,8 +151,8 @@ class InquiryDetailScreen extends GetView<InquiryDetailController> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("에러 접수", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey200),),
-                            Text("진행중", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey200),),
+                            Text("inquiry_detail.error_reception".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey200),),
+                            Text("inquiry_detail.in_progress".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey200),),
                             _buildStatusTextWidget(),
                           ],
                         )
@@ -175,7 +175,7 @@ class InquiryDetailScreen extends GetView<InquiryDetailController> {
                       children: [
                         Row(
                           children: [
-                            Text("진행 상태", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey200),),
+                            Text("inquiry_detail.status".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey200),),
                             const Expanded(child: SizedBox()),
                             InquiryStatuses(inquiryItem: controller.inquiryItem!),
                           ],
@@ -208,9 +208,9 @@ class InquiryDetailScreen extends GetView<InquiryDetailController> {
   String _getAnswer() {
     switch (_getInquiryStatus(controller.inquiryItem!.report_status)) {
       case InquiryStatus.pending:
-        return "진행중입니다. 조금만 기다려주시면 빠르게 진행 도와드리겠습니다.";
+        return "inquiry_detail.answer_pending".tr;
       case InquiryStatus.accepted:
-        return "${FormatUtils.formatDateTimeToYYYYMMDDHHMM(controller.inquiryItem?.report_completed_date)}\n환불처리 완료되었습니다.";
+        return "inquiry_detail.answer_accepted".trParams({'date':FormatUtils.formatDateTimeToYYYYMMDDHHMM(controller.inquiryItem?.report_completed_date)});
       case InquiryStatus.denied:
         return "${controller.inquiryItem?.report_answer ?? ""}";
     }
@@ -220,11 +220,11 @@ class InquiryDetailScreen extends GetView<InquiryDetailController> {
   Widget _buildStatusTextWidget() {
     switch (_getInquiryStatus(controller.inquiryItem!.report_status)) {
       case InquiryStatus.pending:
-        return Text("환불 완료", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey200),);
+        return Text("inquiry_detail.status_pending".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey200),);
       case InquiryStatus.accepted:
-        return Text("환불 완료", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey200),);
+        return Text("inquiry_detail.status_accepted".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey200),);
       case InquiryStatus.denied:
-        return Text("환불 반려", style: AppThemes.bodySmall.copyWith(color: AppColors.error),);
+        return Text("inquiry_detail.status_denied".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.error),);
     }
   }
 

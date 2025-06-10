@@ -76,7 +76,7 @@ class InquiryHistoryItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("${FormatUtils.formatDateTimeToYYYYMMDDHHMM(inquiryItem.printing_date)} 인쇄 완료", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey400),),
+                        Text("inquiry_history.print_complete".trParams({'date':FormatUtils.formatDateTimeToYYYYMMDDHHMM(inquiryItem.printing_date)}), style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey400),),
                         Text(inquiryItem.event_name, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100), maxLines: 2, overflow: TextOverflow.ellipsis,textAlign: TextAlign.start,),
                       ],
                     ),

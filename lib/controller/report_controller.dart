@@ -86,15 +86,15 @@ class ReportController extends GetxController{
           await requestPrintApi(response.print_queue_id!, printHistory);
 
         } else if (response.result == "already"){
-          Fluttertoast.showToast(msg: "재출력 횟수를 모두 소진하셨습니다.");
+          Fluttertoast.showToast(msg: "report.toast.all_consumed".tr);
         } else {
-          Fluttertoast.showToast(msg: "현재 이용할 수 없는 상황입니다. 잠시 후에 다시 시도해주세요.");
+          Fluttertoast.showToast(msg: "report.toast.cant_use".tr);
         }
 
       } else if(commonResponse.failModel != null){
 
         if(commonResponse.statusCode == 409){
-          Fluttertoast.showToast(msg: "이미 종료된 이벤트입니다.");
+          Fluttertoast.showToast(msg: "report.toast.already_finish".tr);
         }
 
       }
@@ -125,14 +125,14 @@ class ReportController extends GetxController{
 
         RequestPrintResponseModel response = RequestPrintResponseModel.fromJson(commonResponse.successModel!.content);
 
-        LoadingOverlay.show("인쇄 요청중...", 1);
+        LoadingOverlay.show("loading.overlay05".tr, 1);
         await Future.delayed(const Duration(seconds: 3));
         showCompletedDialog(response.wait_count);
 
       } else if(commonResponse.failModel != null){
 
         if(commonResponse.statusCode == 409){
-          Fluttertoast.showToast(msg: "이미 프린트 중입니다.");
+          Fluttertoast.showToast(msg: "report.toast.already_printing".tr);
         }
 
       }
@@ -175,19 +175,19 @@ class ReportController extends GetxController{
         return CommonDialog(
           showLine: true,
           needAppBar: true,
-          appBarText: "재출력",
+          appBarText: "report_reprint_dialog.title".tr,
           showAppbarClose: true,
-          title: "재출력은 1회까지만 가능합니다.",
-          button01text: "취소",
+          title: "report_reprint_dialog.sub_title".tr,
+          button01text: "report_reprint_dialog.button01".tr,
           onButton01Click: () async {
 
           },
-          button02text: "프린트 하기",
+          button02text: "report_reprint_dialog.button02".tr,
           onButton02Click: () async {
 
             if(printHistory.merchant_uid != "none"){
               if(UserService.instance.userPublicInfo.value == null){
-                Fluttertoast.showToast(msg: "사용자 정보를 불러올 수 없습니다.");
+                Fluttertoast.showToast(msg: "report.toast.fail_load_user".tr);
                 return;
               }
 
@@ -220,8 +220,8 @@ class ReportController extends GetxController{
       context: Get.context!,
       builder: (context) {
         return CommonDialog(
-          title: "등록이 완료 되었습니다!\n대기번호 : ${waitCount}",
-          button01text: "확인",
+          title: "report_complete_dialog.title".trParams({'waitCount':waitCount.toString()}),
+          button01text: "report_complete_dialog.button01".tr,
           onButton01Click: () async {
 
           },

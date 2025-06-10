@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class BlockScreen extends StatelessWidget {
   const BlockScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text("관리자에 의해 차단되었습니다."),
+        child: Text("block.title".tr),
       ),
     );
   }

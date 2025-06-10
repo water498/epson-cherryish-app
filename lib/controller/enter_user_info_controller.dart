@@ -151,7 +151,7 @@ class EnterUserInfoController extends GetxController{
         }
 
       } else {
-        Fluttertoast.showToast(msg: "Failed to fetch login api   [status code ${response.statusCode}]", gravity: ToastGravity.TOP);
+        Fluttertoast.showToast(msg: "toast.unknown_error".tr, gravity: ToastGravity.TOP);
       }
     } finally {
       isLoading.value = false;

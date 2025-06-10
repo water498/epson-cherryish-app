@@ -62,7 +62,7 @@ class HomeDetailDialog extends StatelessWidget {
                       color: AppColors.primary400.withOpacity(0.8)
                   )
               ),
-              child: Text("이벤트 내용 보러가기", style: AppThemes.headline05.copyWith(color: Colors.white),textAlign: TextAlign.center,),
+              child: Text("home.detail_dialog_button".tr, style: AppThemes.headline05.copyWith(color: Colors.white),textAlign: TextAlign.center,),
             ),
           )
         ],

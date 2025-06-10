@@ -50,7 +50,8 @@ class QrShareScreen extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () async {
-                Share.share(controller.eventModel.web_link);
+                // Share.share(controller.eventModel.web_link);
+                Share.share("https://www.seeya-printer.com/event/${controller.eventModel.id}");
               },
               child: Container(
                 width: double.infinity,
@@ -63,7 +64,7 @@ class QrShareScreen extends StatelessWidget {
                       color: AppColors.primary400.withOpacity(0.8),
                     )
                 ),
-                child: Text("링크 공유하기", style: AppThemes.headline05.copyWith(color: Colors.white),textAlign: TextAlign.center,),
+                child: Text("share.button".tr, style: AppThemes.headline05.copyWith(color: Colors.white),textAlign: TextAlign.center,),
               ),
             ),
           ],

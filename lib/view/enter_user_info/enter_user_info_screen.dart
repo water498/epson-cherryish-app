@@ -55,7 +55,7 @@ class EnterUserInfoScreen extends GetView<EnterUserInfoController> {
                             color: !controller.canPass.value ? AppColors.blueGrey600 : AppColors.primary400.withOpacity(0.8)
                         )
                     ),
-                    child: Text("완료", style: AppThemes.headline05.copyWith(color: !controller.canPass.value ? AppColors.blueGrey500 : Colors.white),textAlign: TextAlign.center,),
+                    child: Text("enter_user_info.bottom_button".tr, style: AppThemes.headline05.copyWith(color: !controller.canPass.value ? AppColors.blueGrey500 : Colors.white),textAlign: TextAlign.center,),
                   ),
                 );
               },)
@@ -71,9 +71,9 @@ class EnterUserInfoScreen extends GetView<EnterUserInfoController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("필수 정보 입력", style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),),
+                Text("enter_user_info.title".tr, style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),),
                 const SizedBox(height: 40,),
-                Text("이름", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),
+                Text("enter_user_info.name".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),
                 const SizedBox(height: 4,),
                 TextField(
                   maxLength: 10,
@@ -83,17 +83,17 @@ class EnterUserInfoScreen extends GetView<EnterUserInfoController> {
                     FocusScope.of(context).requestFocus(controller.emailFocusNode);
                   },
                   controller: controller.nameTextController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     counterText:'',
-                    hintText: "이름 입력",
-                    enabledBorder: OutlineInputBorder(
+                    hintText: "enter_user_info.name_hint".tr,
+                    enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.zero),
                       borderSide: BorderSide(
                         color: AppColors.blueGrey600,
                         width: 2,
                       )
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.zero),
                         borderSide: BorderSide(
                           color: AppColors.blueGrey100,
@@ -103,7 +103,7 @@ class EnterUserInfoScreen extends GetView<EnterUserInfoController> {
                   ),
                 ),
                 const SizedBox(height: 24,),
-                Text("이메일", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),
+                Text("enter_user_info.email".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),
                 const SizedBox(height: 4,),
                 Obx(() {
 
@@ -120,7 +120,7 @@ class EnterUserInfoScreen extends GetView<EnterUserInfoController> {
                     style: AppThemes.bodyMedium.copyWith(fontFamily: "Inter"),
                     decoration: InputDecoration(
                         counterText:'',
-                        hintText: "이메일 주소",
+                        hintText: "enter_user_info.email_hint".tr,
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.zero),
                             borderSide: BorderSide(
@@ -142,7 +142,7 @@ class EnterUserInfoScreen extends GetView<EnterUserInfoController> {
 
                             var email = controller.emailTextController.text;
                             if(!FormatUtils.isEmailValid(email)){
-                              Fluttertoast.showToast(msg: "유효하지 않는 이메일 입니다.", gravity: ToastGravity.TOP);
+                              Fluttertoast.showToast(msg: "enter_user_info.toast.invalid_email".tr, gravity: ToastGravity.TOP);
                               return;
                             }
 
@@ -151,7 +151,7 @@ class EnterUserInfoScreen extends GetView<EnterUserInfoController> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 8),
                             child: Obx(() {
-                              return Text("중복확인", style: AppThemes.bodyMedium.copyWith(color: controller.isEmailEmpty.value ? AppColors.blueGrey400 : AppColors.primary400),);
+                              return Text("enter_user_info.email_check".tr, style: AppThemes.bodyMedium.copyWith(color: controller.isEmailEmpty.value ? AppColors.blueGrey400 : AppColors.primary400),);
                             },),
                           ),
                         )
@@ -173,7 +173,7 @@ class EnterUserInfoScreen extends GetView<EnterUserInfoController> {
                         const SizedBox(width: 2,),
                         SvgPicture.asset(fail ? "assets/image/ic_warning_small.svg" : success ? "assets/image/ic_check_small.svg" : ""),
                         Text(
-                          fail ? "이미 사용중인 이메일입니다." : success ? "사용 가능한 이메일입니다." : "",
+                          fail ? "enter_user_info.email_check_already".tr : success ? "enter_user_info.email_check_okay".tr : "",
                           style: AppThemes.bodySmall.copyWith(color: fail ? Colors.white : success ? AppColors.primary400 : Colors.white),
                         ),
                         const SizedBox(width: 8,),

@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 enum EventSortKeyEnum {
   popular,  // 인기 순
   distance, // 거리 순
@@ -9,13 +11,13 @@ class EventSortKeyHelper {
   static String getSortOptionString(EventSortKeyEnum option) {
     switch (option) {
       case EventSortKeyEnum.popular:
-        return "인기 순";
+        return "map_sort.popular".tr;
       case EventSortKeyEnum.distance:
-        return "거리 순";
+        return "map_sort.distance".tr;
       // case EventSortKeyEnum.relevance:
       //   return "관련도 순";
       default:
-        return "알 수 없음";
+        return "map_sort.unknown".tr;
     }
   }
 
@@ -29,13 +31,13 @@ extension EventSortKeyExtension on EventSortKeyEnum {
   String toDisplayString() {
     switch (this) {
       case EventSortKeyEnum.popular:
-        return "인기 순";
+        return "map_sort.popular".tr;
       case EventSortKeyEnum.distance:
-        return "거리 순";
+        return "map_sort.distance".tr;
       // case EventSortKeyEnum.relevance:
       //   return "관련도 순";
       default:
-        return "알 수 없음";
+        return "map_sort.unknown".tr;
     }
   }
 

@@ -27,7 +27,7 @@ class QnaScreen extends GetView<QnaController> {
           ],
         ),
         centerTitle: false,
-        title: Text("자주 묻는 질문", style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
+        title: Text("qna.title".tr, style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
       ),
       body: Column(
         children: [
@@ -130,7 +130,7 @@ class QnaScreen extends GetView<QnaController> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                    child: SelectableText("이외의 문의는\n고객센터 이메일(info@seeya-printer.com)으로\n문의 바랍니다.", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300, fontFamily: "Inter"),textAlign: TextAlign.center,),
+                    child: SelectableText("qna.footer".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300, fontFamily: "Inter"),textAlign: TextAlign.center,),
                   ),
                 ],
               ),

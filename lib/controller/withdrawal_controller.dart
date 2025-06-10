@@ -44,7 +44,7 @@ class WithdrawalController extends GetxController{
         if(isSuccess) {
           signOut();
         } else {
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
         }
 
       }

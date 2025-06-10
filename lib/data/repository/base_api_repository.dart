@@ -65,10 +65,10 @@ class BaseApiRepository extends GetxService {
         Get.toNamed(AppRouter.login);
       },
       404: () {
-        Fluttertoast.showToast(msg: '요청하신 리소스를 찾을 수 없습니다.');
+        Fluttertoast.showToast(msg: 'toast.error404'.tr);
       },
       500: () {
-        Fluttertoast.showToast(msg: '처리중 알 수 없는 에러가 발생하였습니다.');
+        Fluttertoast.showToast(msg: 'toast.error500'.tr);
       },
       503: () {
         Get.offAllNamed(AppRouter.server_maintenance);

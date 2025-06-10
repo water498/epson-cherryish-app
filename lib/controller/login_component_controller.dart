@@ -70,18 +70,18 @@ class LoginComponentController extends GetxController{
       } else if(commonResponse.failModel != null) {
 
         if(commonResponse.statusCode == 409){
-          Fluttertoast.showToast(msg: "이미 가입되어 있는 이메일 주소입니다.");
+          Fluttertoast.showToast(msg: "login.toast.exist_email".tr);
         } else if(commonResponse.statusCode == 410) {
-          Fluttertoast.showToast(msg: "계정이 탈퇴 처리되었습니다. 재가입은 3개월 후에 가능합니다.");
+          Fluttertoast.showToast(msg: "login.toast.withdrawal".tr);
         } else if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
           Logger().e("첫 로그인(가입)시에 이메일 정보가 request에 담겨있지 않음");
         }
 
       }
 
     } catch (e, stackTrace) {
-      Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
       Logger().d("Error: $e");
       Logger().d("stackTrace: $stackTrace");
     } finally {
@@ -113,7 +113,7 @@ class LoginComponentController extends GetxController{
         } else if(e is PlatformException && e.message != null && e.message!.contains("canceled") ) {
           return;
         } else {
-          Fluttertoast.showToast(msg :"카카오톡 로그인 중 에러 발생하였습니다. [$e]");
+          Fluttertoast.showToast(msg :"login.toast.kakao_error01".tr);
           return;
         }
       }
@@ -123,7 +123,7 @@ class LoginComponentController extends GetxController{
       var kakaoAccount = user.kakaoAccount;
 
       if(kakaoAccount == null){
-        Fluttertoast.showToast(msg: "카카오 계정 정보를 불러올 수 없습니다.");
+        Fluttertoast.showToast(msg: "login.toast.kakao_error02".tr);
         return;
       }
 

@@ -131,7 +131,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                           double maxLabelWidth = 0.0;
 
                           final textPainter = TextPainter(
-                            text: TextSpan(text: "인화 금액", style: AppThemes.bodyMedium.copyWith(fontFamily: "DungGeunMo"),),
+                            text: TextSpan(text: "event_detail.price".tr, style: AppThemes.bodyMedium.copyWith(fontFamily: "DungGeunMo"),),
                             maxLines: 1,
                             textDirection: TextDirection.ltr,
                           )..layout();
@@ -148,7 +148,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                 children: [
                                   SizedBox(
                                       width: maxLabelWidth,
-                                      child: Text("인화 금액", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
+                                      child: Text("event_detail.price".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                                   ),
                                   Expanded(child: Text("${event?.need_using_fee == true ? 0: FormatUtils.formatWithComma(3000)}원", style: AppThemes.headline02.copyWith(color: AppColors.primary400),)),
                                 ],
@@ -158,7 +158,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                 children: [
                                   SizedBox(
                                     width: maxLabelWidth,
-                                    child: Text("기간", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
+                                    child: Text("event_detail.period".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                                   ),
                                   Expanded(
                                     child: Text(
@@ -174,7 +174,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                 children: [
                                   SizedBox(
                                       width: maxLabelWidth,
-                                      child: Text("주소", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
+                                      child: Text("event_detail.address".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                                   ),
                                   Expanded(
                                     child: Column(
@@ -185,9 +185,9 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                             behavior: HitTestBehavior.translucent,
                                             onTap: () {
                                               Clipboard.setData(ClipboardData(text: "${event?.address ?? ""} ${event?.address_detail ?? ""}"));
-                                              Fluttertoast.showToast(msg: "복사되었습니다.");
+                                              Fluttertoast.showToast(msg: "event_detail.toast.copied".tr);
                                             },
-                                            child: Text("주소 복사", style: AppThemes.bodySmall.copyWith(color: AppColors.primary400),)
+                                            child: Text("event_detail.address_copy".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.primary400),)
                                         ),
                                       ],
                                     ),
@@ -215,7 +215,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
 
                           return Container(
                             margin: const EdgeInsets.only(left: 24, right: 24, top: 20 ,bottom: 16),
-                            child: Text(isFinishedEvent ? "종료된 이벤트입니다." : "프레임을 선택해주세요.", style: AppThemes.bodyMedium.copyWith(color: isFinishedEvent ? AppColors.blueGrey400 : AppColors.blueGrey100),),
+                            child: Text(isFinishedEvent ? "event_detail.frame_list_empty".tr : "event_detail.frame_list_title".tr, style: AppThemes.bodyMedium.copyWith(color: isFinishedEvent ? AppColors.blueGrey400 : AppColors.blueGrey100),),
                           );
                         },),
                         SizedBox(
@@ -240,7 +240,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                     }
 
                                     if(isFinishedEvent) {
-                                      Fluttertoast.showToast(msg: "종료된 이벤트입니다.");
+                                      Fluttertoast.showToast(msg: "event_detail.frame_list_empty".tr);
                                       return;
                                     }
 

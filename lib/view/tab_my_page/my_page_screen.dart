@@ -82,8 +82,15 @@ class MyPageScreen extends GetView<MyPageController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Obx(() => Text("[${UserService.instance.userPublicInfo.value?.name ?? "시야 손님 ${UserService.instance.userPublicInfo.value?.id ?? ""}"}]", style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),),),
-                          Obx(() => Text("${UserService.instance.userPublicInfo.value?.social_type}로 로그인", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),),
+                          Obx(() {
+                            var userInfo = UserService.instance.userPublicInfo.value;
+                            if(userInfo?.name == null || userInfo == null){
+                              return Text("my_page.no_name_user".trParams({'user_id': (userInfo?.id ?? 0).toString()}), style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),);
+                            } else {
+                              return Text("my_page.seeya_user".trParams({'name':userInfo.name!}), style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),);
+                            }
+                          },),
+                          Obx(() => Text("my_page.login_from".trParams({'platform': UserService.instance.userPublicInfo.value?.social_type ?? ""}), style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),),
                         ],
                       )
                     ],
@@ -110,27 +117,27 @@ class MyPageScreen extends GetView<MyPageController> {
               child: Column(
                 children: [
                   const Divider(height: 2, color: AppColors.blueGrey300),
-                  MyPageMenuButton(title: "Seeya 안내", onTap : () async {
+                  MyPageMenuButton(title: "my_page.seeya_guide_menu".tr, onTap : () async {
                     Get.toNamed(AppRouter.seeya_guide);
                   },),
                   Obx(() {
                     if(!UserService.instance.isLoginUser.value) return const SizedBox();
-                    return MyPageMenuButton(title: "프린트 히스토리", onTap : () async {
+                    return MyPageMenuButton(title: "my_page.print_history".tr, onTap : () async {
                       Get.toNamed(AppRouter.print_history);
                     },);
                   },),
                   Obx(() {
                     if(!UserService.instance.isLoginUser.value) return const SizedBox();
-                    return MyPageMenuButton(title: "에러 리포트", onTap : () async {
+                    return MyPageMenuButton(title: "my_page.report".tr, onTap : () async {
                       Get.toNamed(AppRouter.report);
                     },);
                   },),
-                  MyPageMenuButton(title: "자주 묻는 질문", onTap : () async {
+                  MyPageMenuButton(title: "my_page.qna_menu".tr, onTap : () async {
                     Get.toNamed(AppRouter.qna);
                   }),
                   Obx(() {
                     if(!UserService.instance.isLoginUser.value) return const SizedBox();
-                    return MyPageMenuButton(title: "설정", onTap : () async {
+                    return MyPageMenuButton(title: "my_page.setting".tr, onTap : () async {
                       Get.toNamed(AppRouter.setting);
                     },showDivider: false,);
                   },),
@@ -144,7 +151,7 @@ class MyPageScreen extends GetView<MyPageController> {
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                          child: Text("로그아웃", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey200),),
+                          child: Text("my_page.logout".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey200),),
                         )
                     );
                   },),

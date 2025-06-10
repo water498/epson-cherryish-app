@@ -82,7 +82,7 @@ class MapTabScreen extends GetView<MapTabController> {
                             child: Row(
                               children: [
                                 const SizedBox(width: 16,),
-                                Expanded(child: Obx(() => Text(controller.searchResult.value.isEmpty ? "장소명, 이벤트명으로 찾아보세요." : controller.searchResult.value, style: AppThemes.bodyMedium.copyWith(color: controller.searchResult.value.isEmpty ? AppColors.blueGrey600 : AppColors.blueGrey100, height: 1), overflow: TextOverflow.ellipsis, maxLines: 1,),)),
+                                Expanded(child: Obx(() => Text(controller.searchResult.value.isEmpty ? "map.search_hint".tr : controller.searchResult.value, style: AppThemes.bodyMedium.copyWith(color: controller.searchResult.value.isEmpty ? AppColors.blueGrey600 : AppColors.blueGrey100, height: 1), overflow: TextOverflow.ellipsis, maxLines: 1,),)),
                                 GestureDetector(
                                   onTap: () {
                                     if(controller.searchResult.value.isNotEmpty){
@@ -203,7 +203,7 @@ class MapTabScreen extends GetView<MapTabController> {
                                             children: [
                                               Obx(() {
                                                 if(controller.searchResult.value.isNotEmpty) return const SizedBox();
-                                                return const Text("추천 이벤트", style: AppThemes.headline05,);
+                                                return Text("map.event_list_title".tr, style: AppThemes.headline05,);
                                               },),
                                               Obx(() {
                                                 if(controller.searchResult.value.isNotEmpty) return const SizedBox();
@@ -216,8 +216,8 @@ class MapTabScreen extends GetView<MapTabController> {
                                                   return Expanded(
                                                     child: Container(
                                                       margin: const EdgeInsets.only(top: 30),
-                                                      child: const Center(
-                                                        child: Text("진행중인 이벤트가 없습니다.")
+                                                      child: Center(
+                                                        child: Text("map.event_list_empty".tr)
                                                       ),
                                                     ),
                                                   );
@@ -233,7 +233,7 @@ class MapTabScreen extends GetView<MapTabController> {
                                                               bool noError = await controller.getCurrentLocation();
                                                               if(!noError) {
                                                                 controller.searchSortKey.value = EventSortKeyEnum.popular;
-                                                                Fluttertoast.showToast(msg: "위치를 불러올 수 없습니다. 위치 권한을 확인해 주세요.");
+                                                                Fluttertoast.showToast(msg: "map.toast.location_error".tr);
                                                                 return;
                                                               }
                                                             }
@@ -316,7 +316,7 @@ class MapTabScreen extends GetView<MapTabController> {
                                                                   Text(event.event_name, style: AppThemes.headline05.copyWith(color: AppColors.blueGrey100), overflow: TextOverflow.ellipsis, maxLines: 1,),
                                                                   Text(event.place_name, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300), overflow: TextOverflow.ellipsis, maxLines: 2,),
                                                                   const Expanded(child: SizedBox()),
-                                                                  Text("기간 ${FormatUtils.formatDate01(event.start_date)} - ${FormatUtils.formatDate01(event.end_date)}", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300)),
+                                                                  Text("map.event_list_item_period".trParams({'start_date':FormatUtils.formatDate01(event.start_date) ?? "", 'end_date':FormatUtils.formatDate01(event.end_date) ?? ""}), style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300)),
                                                                 ],
                                                               ),
                                                             )

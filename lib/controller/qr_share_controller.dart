@@ -11,7 +11,7 @@ class QrShareController extends GetxController{
   void onInit() {
     if(Get.arguments == null || Get.arguments is! EventModel) {
       Get.back();
-      Fluttertoast.showToast(msg: "이벤트 정보를 불러오지 못 했습니다.");
+      Fluttertoast.showToast(msg: "share.toast.event_not_found".tr);
       return;
     }
     eventModel = Get.arguments;

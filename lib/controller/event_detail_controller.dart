@@ -39,7 +39,7 @@ class EventDetailController extends GetxController{
     }
 
     if (eventId == -1){
-      Fluttertoast.showToast(msg: "이벤트 정보를 불러오지 못했습니다.");
+      Fluttertoast.showToast(msg: "event_detail.toast.load_fail".tr);
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         fetchEventDetail(eventId);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:seeya/constants/app_colors.dart';
 import 'package:seeya/constants/app_themes.dart';
 import 'package:seeya/data/enum/enums.dart';
@@ -32,14 +33,14 @@ class SnsLoginButton extends StatelessWidget {
         buttonColor = const Color(0xccFFEB00);
         strokeColor = const Color(0xffFFEB00);
         iconPath = "assets/image/ic_logo_kakao.svg";
-        platformText = "카카오";
+        platformText = "Kakao";
         break;
       }
       case LoginPlatform.naver : {
         buttonColor = const Color(0xcc04C75B);
         strokeColor = const Color(0xff04C75B);
         iconPath = "assets/image/ic_logo_naver.svg";
-        platformText = "네이버";
+        platformText = "Naver";
         break;
       }
       case LoginPlatform.google : {
@@ -78,7 +79,7 @@ class SnsLoginButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SvgPicture.asset(iconPath),
-            Text("$platformText로 시작하기", style: AppThemes.bodyMedium.copyWith(color: textColor),),
+            Text("login.button".trParams({"platform": platformText}), style: AppThemes.bodyMedium.copyWith(color: textColor),),
             Visibility(
               maintainSize: true,
               maintainAnimation: true,

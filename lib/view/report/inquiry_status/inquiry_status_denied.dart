@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_themes.dart';
@@ -11,7 +12,7 @@ class InquiryStatusDenied extends StatelessWidget {
     return Container(
       color: const Color(0xffFFDDDD),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Text("환불 반려", style: AppThemes.bodySmall.copyWith(color: AppColors.error),),
+      child: Text("inquiry_detail.status_denied".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.error),),
     );
   }
 }

@@ -47,7 +47,7 @@ class InquiryDetailController extends GetxController{
       } else if(commonResponse.failModel != null) {
 
         if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다. 다시 시도해주세요.");
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
           Logger().e("Validation Error");
         }
 

@@ -31,14 +31,14 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
           ],
         ),
         centerTitle: false,
-        title: Text("프린트 히스토리", style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
+        title: Text("print_history.title".tr, style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
       ),
       body: Obx(() {
         if(!controller.isLoadFinish.value) return const SizedBox();
 
         if(controller.historyList.isEmpty){
           return Center(
-            child: Text("히스토리가 존재하지 않습니다.")
+            child: Text("print_history.empty".tr)
           );
         }else {
           return Column(

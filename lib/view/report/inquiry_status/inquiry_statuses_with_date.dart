@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/utils/utils.dart';
 import 'package:seeya/view/report/inquiry_status/inquiry_status_accepted.dart';
@@ -63,13 +64,13 @@ class InquiryStatusesWithDate extends StatelessWidget {
   String _datetimeFromStatus(){
     switch(inquiryItem.report_status){
       case "pending":
-        return "${FormatUtils.formatDateTimeToYYYYMMDD(inquiryItem.created_date)} 환불 요청 완료";
+        return "inquiry_detail.status_pending_with_date".trParams({'date':FormatUtils.formatDateTimeToYYYYMMDD(inquiryItem.created_date)});
       case "accepted":
-        return "${FormatUtils.formatDateTimeToYYYYMMDD(inquiryItem.report_completed_date)} 환불 반려됨";
+        return "inquiry_detail.status_accepted_with_date".trParams({'date':FormatUtils.formatDateTimeToYYYYMMDD(inquiryItem.report_completed_date)});
       case "denied":
-        return "${FormatUtils.formatDateTimeToYYYYMMDD(inquiryItem.report_completed_date)} 환불 완료";
+        return "inquiry_detail.status_denied_with_date".trParams({'date':FormatUtils.formatDateTimeToYYYYMMDD(inquiryItem.report_completed_date)});
       default:
-        return "${FormatUtils.formatDateTimeToYYYYMMDD(inquiryItem.created_date)} 환불 요청 완료";
+        return "inquiry_detail.status_pending_with_date".trParams({'date':FormatUtils.formatDateTimeToYYYYMMDD(inquiryItem.created_date)});
     }
   }
 

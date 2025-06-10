@@ -33,7 +33,7 @@ class ReportScreen extends GetView<ReportController> {
           ],
         ),
         centerTitle: false,
-        title: Text("에러 리포트", style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
+        title: Text("report.title".tr, style: AppThemes.headline04.copyWith(color: Colors.black, height: 0),),
       ),
       body: Column(
         children: [
@@ -48,7 +48,7 @@ class ReportScreen extends GetView<ReportController> {
                     return Container(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       color: controller.selectedTabIndex.value == 0 ? Colors.white : Colors.transparent,
-                      child: Center(child: Text("이용 내역", style: AppThemes.headline05.copyWith(color: controller.selectedTabIndex.value == 0 ? AppColors.blueGrey100 : AppColors.blueGrey400),)),
+                      child: Center(child: Text("report.tab_bar_menu1".tr, style: AppThemes.headline05.copyWith(color: controller.selectedTabIndex.value == 0 ? AppColors.blueGrey100 : AppColors.blueGrey400),)),
                     );
                   },),
                 ),
@@ -62,7 +62,7 @@ class ReportScreen extends GetView<ReportController> {
                     return Container(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       color: controller.selectedTabIndex.value == 0 ? Colors.transparent : Colors.white,
-                      child: Center(child: Text("문의 내역", style: AppThemes.headline05.copyWith(color: controller.selectedTabIndex.value == 0 ? AppColors.blueGrey400 : AppColors.blueGrey100),)),
+                      child: Center(child: Text("report.tab_bar_menu2".tr, style: AppThemes.headline05.copyWith(color: controller.selectedTabIndex.value == 0 ? AppColors.blueGrey400 : AppColors.blueGrey100),)),
                     );
                   },),
                 ),

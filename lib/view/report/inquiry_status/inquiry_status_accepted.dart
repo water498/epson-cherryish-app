@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_themes.dart';
@@ -11,7 +12,7 @@ class InquiryStatusAccepted extends StatelessWidget {
     return Container(
       color: AppColors.blueGrey700,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Text("환불 완료", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),
+      child: Text("inquiry_detail.status_accepted".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),
     );
   }
 }
