@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_naver_login_plus/flutter_naver_login_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -156,32 +155,32 @@ class LoginComponentController extends GetxController{
   // Naver
   void signInWithNaver() async {
 
-    try{
-      final NaverLoginResult result = await FlutterNaverLoginPlus.logIn();
-      NaverAccessToken res = await FlutterNaverLoginPlus.currentAccessToken;
-
-      if (result.status == NaverLoginStatus.loggedIn) {
-
-        LoginRequestModel loginRequest = LoginRequestModel(
-          name : result.account.name,
-          email : result.account.email,
-          // phone: result.account.mobile,
-          profile_url: result.account.profileImage,
-          social_type: LoginPlatform.naver.toDisplayString(),
-          social_id: result.account.id,
-          fcm_token : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
-          os_name: Platform.isIOS ? "ios" : "aos",
-          os_version: Platform.isIOS ?  await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
-        );
-
-        fetchUserData(loginRequest);
-        AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.naver.toDisplayString());
-
-      }
-
-    }catch(e){
-      Logger().e("naver login error ::: $e");
-    }
+    // try{
+    //   final NaverLoginResult result = await FlutterNaverLoginPlus.logIn();
+    //   NaverAccessToken res = await FlutterNaverLoginPlus.currentAccessToken;
+    //
+    //   if (result.status == NaverLoginStatus.loggedIn) {
+    //
+    //     LoginRequestModel loginRequest = LoginRequestModel(
+    //       name : result.account.name,
+    //       email : result.account.email,
+    //       // phone: result.account.mobile,
+    //       profile_url: result.account.profileImage,
+    //       social_type: LoginPlatform.naver.toDisplayString(),
+    //       social_id: result.account.id,
+    //       fcm_token : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
+    //       os_name: Platform.isIOS ? "ios" : "aos",
+    //       os_version: Platform.isIOS ?  await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
+    //     );
+    //
+    //     fetchUserData(loginRequest);
+    //     AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.naver.toDisplayString());
+    //
+    //   }
+    //
+    // }catch(e){
+    //   Logger().e("naver login error ::: $e");
+    // }
 
   }
 

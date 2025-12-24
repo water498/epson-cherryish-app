@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image/image.dart' as img;
 import 'dart:ui' as ui;

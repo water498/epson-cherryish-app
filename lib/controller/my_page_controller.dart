@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_login_plus/flutter_naver_login_plus.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
@@ -85,7 +84,7 @@ class MyPageController extends GetxController {
           }
           break;
         case 'naver':
-          await FlutterNaverLoginPlus.logOut();
+          // await FlutterNaverLoginPlus.logOut();
           break;
         case 'apple':
         case 'none':

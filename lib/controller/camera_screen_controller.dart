@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:image/image.dart' as img;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:camera/camera.dart';
@@ -285,10 +285,14 @@ class CameraScreenController extends GetxController{
       await ImageUtils().fixRotateAndFlipImage(isFront, tempFile.path);
 
       // picture image properties
-      ImageProperties properties = await FlutterNativeImage.getImageProperties(tempFile.path);
-      var width = properties.width!;
-      var height = properties.height!;
-      Logger().d("temp file 즉 원본이미지 - orientation ::: ${properties.orientation} width ::: ${width} height :::: ${height}");
+      final imageBytes = await tempFile.readAsBytes();
+      final decodedImage = img.decodeImage(imageBytes);
+      if (decodedImage == null) {
+        throw Exception("Failed to decode image");
+      }
+      var width = decodedImage.width;
+      var height = decodedImage.height;
+      Logger().d("temp file 즉 원본이미지 - width ::: ${width} height :::: ${height}");
 
 
       double targetHeight = width * (ratio);
@@ -296,9 +300,9 @@ class CameraScreenController extends GetxController{
       int offsetY = (height - targetHeight) ~/ 2;
 
       LoadingOverlay.show("loading.overlay02".tr);
-      final croppedUserImageFile = await FlutterNativeImage.cropImage(tempFile.path, offsetX, offsetY, width, (width*(ratio)).toInt());
-      await croppedUserImageFile.copy(tempFile.path);
-      FileUtils.deleteFile(croppedUserImageFile.path);
+      final croppedImage = img.copyCrop(decodedImage, x: offsetX, y: offsetY, width: width, height: (width*(ratio)).toInt());
+      final croppedBytes = img.encodePng(croppedImage);
+      await tempFile.writeAsBytes(croppedBytes);
 
 
       if(filter.image_filepath != null){

@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_naver_login_plus/flutter_naver_login_plus.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -88,7 +87,7 @@ class WithdrawalController extends GetxController{
           }
           break;
         case 'naver':
-          await FlutterNaverLoginPlus.logOut();
+          // await FlutterNaverLoginPlus.logOut();
           break;
         case 'apple':
         case 'none':

@@ -59,7 +59,7 @@ abstract class AppThemes {
       counterStyle: const TextStyle(color: AppColors.backgroundReverse), // 글자수 제한(?) 색
   );
 
-  static const dialogTheme = DialogTheme(
+  static const dialogTheme = DialogThemeData(
       backgroundColor: Colors.white,
       shadowColor: Colors.transparent,
       surfaceTintColor: Colors.transparent

@@ -67,6 +67,7 @@ class BaseApiRepository extends GetxService {
       404: () {
         Fluttertoast.showToast(msg: 'toast.error404'.tr);
       },
+      // TODO 403, 409 통일
       500: () {
         Fluttertoast.showToast(msg: 'toast.error500'.tr);
       },
