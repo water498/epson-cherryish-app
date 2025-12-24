@@ -77,6 +77,10 @@
         </activity>
 
 
+        <!-- 구글 맵 -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBQ6PPTKT5UTIAywAhIXo6ED2_hFAWiK14" />
 
 
 
