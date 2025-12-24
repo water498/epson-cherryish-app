@@ -140,15 +140,12 @@ PODS:
     - Flutter
   - flutter_native_splash (0.0.1):
     - Flutter
-  - flutter_naver_map (1.3.1):
-    - Flutter
-    - NMapsMap (= 3.21.0)
   - fluttertoast (0.0.2):
     - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
-  - Google-Maps-iOS-Utils (6.1.0):
-    - GoogleMaps (~> 9.0)
+  - Google-Maps-iOS-Utils (5.0.0):
+    - GoogleMaps (~> 8.0)
   - google_maps_flutter_ios (0.0.1):
     - Flutter
     - Google-Maps-iOS-Utils (< 7.0, >= 5.0)
@@ -182,9 +179,11 @@ PODS:
   - GoogleDataTransport (10.1.0):
     - nanopb (~> 3.30910.0)
     - PromisesObjC (~> 2.4)
-  - GoogleMaps (9.4.0):
-    - GoogleMaps/Maps (= 9.4.0)
-  - GoogleMaps/Maps (9.4.0)
+  - GoogleMaps (8.4.0):
+    - GoogleMaps/Maps (= 8.4.0)
+  - GoogleMaps/Base (8.4.0)
+  - GoogleMaps/Maps (8.4.0):
+    - GoogleMaps/Base
   - GoogleSignIn (8.0.0):
     - AppAuth (< 2.0, >= 1.7.3)
     - AppCheckCore (~> 11.0)
@@ -253,9 +252,6 @@ PODS:
   - nanopb/encode (3.30910.0)
   - native_exif (0.0.1):
     - Flutter
-  - NMapsGeometry (1.0.2)
-  - NMapsMap (3.21.0):
-    - NMapsGeometry
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -310,7 +306,6 @@ DEPENDENCIES:
   - flutter_libphonenumber_ios (from `.symlinks/plugins/flutter_libphonenumber_ios/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
-  - flutter_naver_map (from `.symlinks/plugins/flutter_naver_map/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
@@ -358,8 +353,6 @@ SPEC REPOS:
     - libwebp
     - Mantle
     - nanopb
-    - NMapsGeometry
-    - NMapsMap
     - PhoneNumberKit
     - PromisesObjC
     - PromisesSwift
@@ -400,8 +393,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_native_splash:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
-  flutter_naver_map:
-    :path: ".symlinks/plugins/flutter_naver_map/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   geolocator_apple:
@@ -471,15 +462,14 @@ SPEC CHECKSUMS:
   flutter_libphonenumber_ios: 6bd2fac9dfb8f37c5732451fb7c9a992f1088d86
   flutter_local_notifications: ad39620c743ea4c15127860f4b5641649a988100
   flutter_native_splash: 35ddbc7228eafcb3969dcc5f1fbbe27c1145a4f0
-  flutter_naver_map: dafe40026d3b4739fdff4ae32953021b1b52b0c2
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
   geolocator_apple: 1560c3c875af2a412242c7a923e15d0d401966ff
-  Google-Maps-iOS-Utils: 0a484b05ed21d88c9f9ebbacb007956edd508a96
+  Google-Maps-iOS-Utils: 66d6de12be1ce6d3742a54661e7a79cb317a9321
   google_maps_flutter_ios: 0291eb2aa252298a769b04d075e4a9d747ff7264
   google_sign_in_ios: b48bb9af78576358a168361173155596c845f0b9
   GoogleAppMeasurement: 36684bfb3ee034e2b42b4321eb19da3a1b81e65d
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
-  GoogleMaps: 0608099d4870cac8754bdba9b6953db543432438
+  GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
   GoogleSignIn: ce8c89bb9b37fb624b92e7514cc67335d1e277e4
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
@@ -491,8 +481,6 @@ SPEC CHECKSUMS:
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   native_exif: 0eb73d3d5b3ca892719228df8d2d1b13d1ae396c
-  NMapsGeometry: 4e02554fa9880ef02ed96b075dc84355d6352479
-  NMapsMap: 8e7e35c2446e7c4a88d6dd0d64aa0d1de903e4f0
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
@@ -510,6 +498,6 @@ SPEC CHECKSUMS:
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
   webview_flutter_wkwebview: 1821ceac936eba6f7984d89a9f3bcb4dea99ebb2
 
-PODFILE CHECKSUM: ffe78631aadcba9b0c2dde1be2c6b508c0bd16e6
+PODFILE CHECKSUM: 1959d098c91d8a792531a723c4a9d7e9f6a01e38
 
 COCOAPODS: 1.16.2
