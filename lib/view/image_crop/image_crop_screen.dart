@@ -88,9 +88,31 @@ class ImageCropScreen extends GetView<ImageCropController> {
 
           if(scaleChange != 0 && details.pointerCount == 2){
             var velocity = isTablet ? 5 : 10;
-            controller.scale.value = (controller.scale.value + (scaleChange/velocity)).clamp(controller.initialScale, 10.0); // set min max scale
 
-            // TODO scale anchor => center 보정식
+            // 현재 scale 저장
+            final double oldScale = controller.scale.value;
+
+            // 새로운 scale 계산
+            final double newScale = (controller.scale.value + (scaleChange/velocity)).clamp(controller.initialScale, 10.0);
+
+            // Crop 영역의 중심점
+            final double cropCenterX = controller.cropRectWidth / 2;
+            final double cropCenterY = controller.cropRectHeight / 2;
+
+            // 현재 중심점에 해당하는 이미지 상의 좌표 (scale 변경 전)
+            final double imageCenterX = (cropCenterX - controller.x.value) / oldScale;
+            final double imageCenterY = (cropCenterY - controller.y.value) / oldScale;
+
+            // Scale 적용
+            controller.scale.value = newScale;
+
+            // 같은 이미지 지점이 중심에 오도록 x, y 재계산
+            controller.x.value = cropCenterX - (imageCenterX * newScale);
+            controller.y.value = cropCenterY - (imageCenterY * newScale);
+
+            // 중심 기준 줌 적용 후 imageX/imageY 동기화
+            imageX = controller.x.value;
+            imageY = controller.y.value;
           }
 
           if (imageX > 0) {
