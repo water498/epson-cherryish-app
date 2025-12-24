@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -34,23 +34,32 @@ class MapTabScreen extends GetView<MapTabController> {
         children: [
 
           Obx(() {
-            if(controller.isMapInitialized.value && controller.isEventListFetched.value){
-              return NaverMap(
-                forceGesture: true,
-                options: const NaverMapViewOptions(
-                  logoAlign: NLogoAlign.leftTop,
-                  logoMargin: EdgeInsets.only(left: 20,top: kToolbarHeight + 35),
-                  logoClickEnable: false,
-                  scaleBarEnable: false,
-                ),
-                onMapReady: (controller) {
-                  this.controller.naverMapController = controller;
-                  this.controller.setMapData(context);
-                },
-              );
-            }else {
-              return const SizedBox();
-            }
+            // Google Map always renders, but markers update reactively
+            return GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: controller.curEventList.isNotEmpty
+                    ? LatLng(controller.curEventList[0].latitude, controller.curEventList[0].longitude)
+                    : const LatLng(37.5665, 126.9780), // Seoul default
+                zoom: controller.zoomLevel ?? 15.0,
+              ),
+              onMapCreated: (mapController) {
+                controller.onMapCreated(mapController);
+                // setMapData는 fetchEventList 완료 후 자동 호출됨
+              },
+              markers: controller.markers,
+              myLocationEnabled: true, // Google's default blue dot with pulsing animation
+              myLocationButtonEnabled: false, // Using custom location button
+              zoomControlsEnabled: false,
+              mapToolbarEnabled: false,
+              compassEnabled: false,
+              onTap: (LatLng position) {
+                // Deselect marker when tapping on map
+                if (controller.selectedClusterMarker.isNotEmpty) {
+                  controller.selectedClusterMarker.value = [];
+                  controller.updateMarker();
+                }
+              },
+            );
           },),
 
 
