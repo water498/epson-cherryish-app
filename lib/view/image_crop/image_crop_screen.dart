@@ -75,6 +75,10 @@ class ImageCropScreen extends GetView<ImageCropController> {
           )
       ),
       body: GestureDetector(
+        onScaleStart: (details) {
+          // 제스처 시작 시 previousScale 리셋
+          controller.previousScale = 1.0;
+        },
         onScaleUpdate: (details) {
           double imageX = (controller.x.value + details.focalPointDelta.dx);
           double imageY = controller.y.value + details.focalPointDelta.dy;
@@ -87,7 +91,7 @@ class ImageCropScreen extends GetView<ImageCropController> {
           if(controller.scale.value == 0.0 || controller.cropRectWidth == 0.0 || controller.cropRectHeight == 0.0) return;
 
           if(scaleChange != 0 && details.pointerCount == 2){
-            var velocity = isTablet ? 5 : 10;
+            var velocity = 2;
 
             // 현재 scale 저장
             final double oldScale = controller.scale.value;
@@ -129,6 +133,10 @@ class ImageCropScreen extends GetView<ImageCropController> {
 
           controller.x.value = imageX;
           controller.y.value = imageY;
+        },
+        onScaleEnd: (details) {
+          // 제스처 종료 시 previousScale 리셋
+          controller.previousScale = 1.0;
         },
         child: ClipRect(
           child: Container(
