@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,6 +7,7 @@ import 'package:seeya/constants/app_colors.dart';
 import 'package:seeya/constants/seeya_frame_configs.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/view/image_crop/image_crop_overlay.dart';
+import 'package:seeya/view/common/seeya_cached_image.dart';
 
 import '../../constants/app_secret.dart';
 import '../../constants/app_themes.dart';
@@ -201,7 +201,7 @@ class ImageCropScreen extends GetView<ImageCropController> {
                                     // filter image
                                     if(controller.filter.image_filepath != null)
                                       IgnorePointer(
-                                        child: CachedNetworkImage(
+                                        child: SeeyaCachedImage(
                                           imageUrl: Uri.encodeFull("${AppSecret.s3url}${controller.filter.image_filepath}"),
                                           fit: BoxFit.fill,
                                         ),

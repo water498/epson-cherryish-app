@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,6 +12,7 @@ import 'package:seeya/constants/app_themes.dart';
 import 'package:seeya/constants/seeya_frame_configs.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/service/services.dart';
+import 'package:seeya/view/common/seeya_cached_image.dart';
 import 'package:seeya/utils/format_utils.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -87,10 +87,9 @@ class EventDetailScreen extends GetView<EventDetailController> {
                         children: [
 
                           if(event != null)
-                          CachedNetworkImage(
+                          SeeyaCachedImage(
                             imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnail_image_filepath}"),
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
                           ),
 
                           Container(
@@ -144,16 +143,16 @@ class EventDetailScreen extends GetView<EventDetailController> {
                               Text(event?.event_name ?? "", style: AppThemes.headline03.copyWith(color: AppColors.blueGrey100),),
                               Text(event?.place_name ?? "", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),),
                               const SizedBox(height: 24,),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                      width: maxLabelWidth,
-                                      child: Text("event_detail.price".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
-                                  ),
-                                  Expanded(child: Text("${event?.need_using_fee == true ? 0: FormatUtils.formatWithComma(3000)}원", style: AppThemes.headline02.copyWith(color: AppColors.primary400),)),
-                                ],
-                              ),
-                              const SizedBox(height: 4,),
+                              // Row(
+                              //   children: [
+                              //     SizedBox(
+                              //         width: maxLabelWidth,
+                              //         child: Text("event_detail.price".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
+                              //     ),
+                              //     Expanded(child: Text("${event?.need_using_fee == true ? 0: FormatUtils.formatWithComma(3000)}원", style: AppThemes.headline02.copyWith(color: AppColors.primary400),)),
+                              //   ],
+                              // ),
+                              // const SizedBox(height: 4,),
                               Row(
                                 children: [
                                   SizedBox(
@@ -268,10 +267,9 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                               width: 2
                                           )
                                       ),
-                                      child: CachedNetworkImage(
+                                      child: SeeyaCachedImage(
                                         imageUrl: Uri.encodeFull("${AppSecret.s3url}${frame.preview_image_filepath}"),
                                         fit: BoxFit.cover,
-                                        placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
                                       ),
                                     ),
                                   ),

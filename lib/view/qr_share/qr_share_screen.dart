@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:seeya/controller/controllers.dart';
+import 'package:seeya/view/common/seeya_cached_image.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../constants/app_colors.dart';
@@ -40,12 +40,11 @@ class QrShareScreen extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: CachedNetworkImage(
+              child: SeeyaCachedImage(
                 imageUrl : Uri.encodeFull("${AppSecret.s3url}${controller.eventModel.qr_image_filepath}"),
                 fit: BoxFit.contain,
                 width: size,
                 height: size,
-                placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
               ),
             ),
             GestureDetector(

@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/constants/app_colors.dart';
+import 'package:seeya/view/common/seeya_cached_image.dart';
 
 class ImageViewerScreen extends GetView<ImageViewerController> {
 
@@ -39,9 +39,8 @@ class ImageViewerScreen extends GetView<ImageViewerController> {
           constrained: true,
           child: Hero(
             tag: controller.heroTag,
-            child: CachedNetworkImage(
+            child: SeeyaCachedImage(
               imageUrl: Uri.encodeFull(controller.imagePath),
-              placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
             ),
           ),
         ),

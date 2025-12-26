@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,6 +6,7 @@ import 'package:seeya/constants/app_colors.dart';
 import 'package:seeya/constants/app_router.dart';
 import 'package:seeya/constants/app_secret.dart';
 import 'package:seeya/controller/controllers.dart';
+import 'package:seeya/view/common/seeya_cached_image.dart';
 import 'package:seeya/view/dialog/home_detail_dialog.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -85,11 +85,9 @@ class HomeScreen extends GetView<HomeController> {
                         },
                         child: Transform.scale(
                           scale: scaleValue,
-                          child: CachedNetworkImage(
+                          child: SeeyaCachedImage(
                             imageUrl: Uri.encodeFull("${AppSecret.s3url}${controller.homeList[index].flipped_image_filepath}"),
                             fit: BoxFit.contain,
-                            placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
-                            errorWidget: (context, url, error) => Image.asset("assets/image/loading02.gif"),
                           ),
                         ),
                       );

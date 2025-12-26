@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:seeya/constants/app_secret.dart';
 import 'package:seeya/data/model/models.dart';
 import 'package:seeya/utils/format_utils.dart';
+import 'package:seeya/view/common/seeya_cached_image.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/app_router.dart';
@@ -58,10 +58,9 @@ class InquiryHistoryItem extends StatelessWidget {
                         color: AppColors.blueGrey800,
                         child: Hero(
                           tag: "inquiry_image_viewer$index",
-                          child: CachedNetworkImage(
+                          child: SeeyaCachedImage(
                             imageUrl: Uri.encodeFull("${AppSecret.s3url}${inquiryItem.report_filepath}"),
                             fit: BoxFit.contain,
-                            placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
                           ),
                         ),
                       ),

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,6 +11,7 @@ import 'package:seeya/view/common/vertical_slider.dart';
 import 'package:seeya/view/dialog/common_dialog.dart';
 import 'package:seeya/view/common/sns_login_button.dart';
 import 'package:seeya/view/common/login_component.dart';
+import 'package:seeya/view/common/seeya_cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/app_router.dart';
@@ -67,7 +67,7 @@ class MyPageScreen extends GetView<MyPageController> {
                           height: 73,
                           child: Obx(() {
                             if(UserService.instance.userPublicInfo.value?.profile_url != null){
-                              return CachedNetworkImage(
+                              return SeeyaCachedImage(
                                 imageUrl: Uri.encodeFull("${UserService.instance.userPublicInfo.value!.profile_url!}"),
                                 fit: BoxFit.cover,
                               );

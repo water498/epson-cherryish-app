@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,6 +13,7 @@ import 'package:seeya/data/model/models.dart';
 import 'package:seeya/utils/file_utils.dart';
 import 'package:seeya/utils/image_utils.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
+import 'package:seeya/view/common/seeya_cached_image.dart';
 
 import '../dialog/dialogs.dart';
 
@@ -155,7 +155,7 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
                                             // filter
                                             Obx(() {
                                               if(controller.mergedPhotoList[index] == null && filter.image_filepath != null){
-                                                return CachedNetworkImage(
+                                                return SeeyaCachedImage(
                                                   imageUrl: Uri.encodeFull("${AppSecret.s3url}${filter.image_filepath}"),
                                                   fit: BoxFit.fill,
                                                 );
@@ -184,7 +184,7 @@ class DecorateFrameScreen extends GetView<DecorateFrameController> {
 
                                   // original frame
                                   IgnorePointer(
-                                    child: CachedNetworkImage(
+                                    child: SeeyaCachedImage(
                                       imageUrl: Uri.encodeFull("${AppSecret.s3url}${controller.eventFrame.original_image_filepath}"),
                                       fit: BoxFit.fill,
                                     ),

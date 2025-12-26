@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import '../core/cache/seeya_cache_managers.dart';
 
 class DownloadUtils {
   DownloadUtils._();
 
   static Future<File> loadImageFromUrl(String url) async {
-    var file = await DefaultCacheManager().getSingleFile(url);
+    var file = await SeeyaCacheManagers.instance.getSingleFile(url);
     return file;
   }
 

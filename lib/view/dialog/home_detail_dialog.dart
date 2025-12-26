@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -9,6 +8,7 @@ import 'package:seeya/data/model/models.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/app_themes.dart';
+import '../common/seeya_cached_image.dart';
 
 class HomeDetailDialog extends StatelessWidget {
 
@@ -36,10 +36,9 @@ class HomeDetailDialog extends StatelessWidget {
           ),
           Expanded(
             child: Center(
-              child: CachedNetworkImage(
+              child: SeeyaCachedImage(
                 imageUrl: Uri.encodeFull("${AppSecret.s3url}${selectedItem.preview_image_filepath}"),
                 fit: BoxFit.contain,
-                placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
               ),
             )
           ),

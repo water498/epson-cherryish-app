@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -6,6 +5,7 @@ import 'package:seeya/constants/app_colors.dart';
 import 'package:seeya/constants/app_router.dart';
 import 'package:seeya/constants/app_secret.dart';
 import 'package:seeya/controller/controllers.dart';
+import 'package:seeya/view/common/seeya_cached_image.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../constants/app_themes.dart';
@@ -55,6 +55,9 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
                         onTap: () {
+
+                          if(history.print_filepath == null) return;
+
                           Get.toNamed(
                               AppRouter.image_viewer,
                               arguments: {
@@ -65,9 +68,8 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                         },
                         child: Hero(
                           tag: "print_history_viewer$index",
-                          child: CachedNetworkImage(
+                          child: SeeyaCachedImage(
                             imageUrl: Uri.encodeFull("${AppSecret.s3url}${history.print_filepath}"),
-                            placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
                           ),
                         ),
                       ),

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:seeya/constants/app_colors.dart';
@@ -7,6 +6,7 @@ import 'package:seeya/constants/app_themes.dart';
 import 'package:seeya/data/model/models.dart';
 import 'package:seeya/utils/format_utils.dart';
 import 'package:seeya/view/common/common_widget.dart';
+import 'package:seeya/view/common/seeya_cached_image.dart';
 import 'package:seeya/view/report/history_status/history_statuses.dart';
 
 import '../../constants/app_router.dart';
@@ -63,10 +63,9 @@ class UsageHistoryItem extends StatelessWidget {
                       color: AppColors.blueGrey800,
                       child: Hero(
                         tag: "usage_history_viewer$index",
-                        child: CachedNetworkImage(
+                        child: SeeyaCachedImage(
                           imageUrl: Uri.encodeFull("${AppSecret.s3url}${printHistory.print_filepath}"),
                           fit: BoxFit.contain,
-                          placeholder: (context, url) => Image.asset("assets/image/loading02.gif"),
                         ),
                       ),
                     ),

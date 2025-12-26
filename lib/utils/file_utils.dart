@@ -47,8 +47,10 @@ class FileUtils {
     final List<FileSystemEntity> entities = await tempDir.list().toList();
 
     for (FileSystemEntity entity in entities) {
-      // libCachedImage 폴더는 건너뛰기
-      if (entity.path.contains('libCachedImage') || entity.path.contains("google-sdks-events")) {
+      // libCachedImage, google-sdks-events, seeya_image_cache 폴더는 건너뛰기
+      if (entity.path.contains('libCachedImage') ||
+          entity.path.contains("google-sdks-events") ||
+          entity.path.contains('seeya_image_cache')) {
         continue;
       }
       try {

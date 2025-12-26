@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,6 +10,7 @@ import 'package:seeya/constants/app_secret.dart';
 import 'package:seeya/data/enum/event_sort_key_enum.dart';
 import 'package:seeya/data/model/models.dart';
 import 'package:seeya/view/common/bouncing_button.dart';
+import 'package:seeya/view/common/seeya_cached_image.dart';
 import '../../constants/app_colors.dart';
 import '../../constants/app_themes.dart';
 import '../../controller/controllers.dart';
@@ -311,7 +311,7 @@ class MapTabScreen extends GetView<MapTabController> {
                                                               ),
                                                               child: AspectRatio(
                                                                   aspectRatio: 1,
-                                                                  child: CachedNetworkImage(
+                                                                  child: SeeyaCachedImage(
                                                                     imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnail_image_filepath}"),
                                                                     fit: BoxFit.cover,
                                                                   )
@@ -402,7 +402,7 @@ class MapTabScreen extends GetView<MapTabController> {
                                                       Expanded(
                                                         child: AspectRatio(
                                                           aspectRatio: 1,
-                                                          child: CachedNetworkImage(imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnail_image_filepath}"),fit: BoxFit.cover,),
+                                                          child: SeeyaCachedImage(imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnail_image_filepath}"),fit: BoxFit.cover,),
                                                         ),
                                                       ),
                                                       const SizedBox(height: 12,),

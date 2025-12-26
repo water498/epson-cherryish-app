@@ -77,6 +77,9 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Image cache 최적화
+  PaintingBinding.instance.imageCache.maximumSize = 500;  // 최대 500개 이미지
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 150 << 20;  // 150MB
 
   // app orientation
   await SystemChrome.setPreferredOrientations([

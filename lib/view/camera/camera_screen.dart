@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,7 @@ import 'package:seeya/constants/app_themes.dart';
 import 'package:seeya/constants/seeya_frame_configs.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/view/common/bouncing_button.dart';
+import 'package:seeya/view/common/seeya_cached_image.dart';
 
 import '../../constants/app_router.dart';
 import '../../data/model/models.dart';
@@ -165,7 +165,7 @@ class CameraScreen extends GetView<CameraScreenController> {
 
                       return AspectRatio(
                         aspectRatio: filterWidth / filterHeight,
-                        child: CachedNetworkImage(
+                        child: SeeyaCachedImage(
                           imageUrl: Uri.encodeFull("${AppSecret.s3url}${curFilter.image_filepath}"),
                           fit: BoxFit.fill
                         ),
