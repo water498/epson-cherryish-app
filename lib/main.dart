@@ -14,6 +14,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:logger/logger.dart';
+import 'package:naver_login_sdk/naver_login_sdk.dart';
 import 'package:seeya/constants/app_router.dart';
 import 'package:seeya/service/services.dart';
 import 'package:seeya/utils/utils.dart';
@@ -134,6 +135,13 @@ void main() async {
   // init kakaoSdk
   KakaoSdk.init(nativeAppKey: AppSecret.kakaoNativeAppKey);
 
+  // init naver login sdk
+  NaverLoginSDK.initialize(
+    urlScheme: 'seeyanaverlogin',
+    clientId: 'E1yxVG4Lk8q7jXbgWLGv',
+    clientSecret: 'JwkZ2DJ32r',
+    clientName: '시야'
+  );
 
   // init GetXServices
   UserService.initialize();

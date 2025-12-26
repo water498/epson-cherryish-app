@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:logger/logger.dart';
+import 'package:naver_login_sdk/naver_login_sdk.dart';
 import 'package:seeya/data/repository/repositories.dart';
 
 import '../constants/app_prefs_keys.dart';
@@ -87,7 +88,11 @@ class WithdrawalController extends GetxController{
           }
           break;
         case 'naver':
-          // await FlutterNaverLoginPlus.logOut();
+          try {
+            await NaverLoginSDK.release();
+          } catch (e) {
+            Logger().e("naver logout error ::: $e");
+          }
           break;
         case 'apple':
         case 'none':

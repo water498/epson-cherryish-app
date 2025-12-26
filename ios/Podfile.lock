@@ -1,4 +1,5 @@
 PODS:
+  - Alamofire (5.10.2)
   - app_links (0.0.2):
     - Flutter
   - AppAuth (1.7.6):
@@ -252,6 +253,11 @@ PODS:
   - nanopb/encode (3.30910.0)
   - native_exif (0.0.1):
     - Flutter
+  - naver_login_sdk (0.0.1):
+    - Alamofire (~> 5.10.1)
+    - Flutter
+    - naveridlogin-sdk-ios (~> 4.2.3)
+  - naveridlogin-sdk-ios (4.2.3)
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -314,6 +320,7 @@ DEPENDENCIES:
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - kakao_flutter_sdk_common (from `.symlinks/plugins/kakao_flutter_sdk_common/ios`)
   - native_exif (from `.symlinks/plugins/native_exif/ios`)
+  - naver_login_sdk (from `.symlinks/plugins/naver_login_sdk/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -327,6 +334,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Alamofire
     - AppAuth
     - AppCheckCore
     - Firebase
@@ -353,6 +361,7 @@ SPEC REPOS:
     - libwebp
     - Mantle
     - nanopb
+    - naveridlogin-sdk-ios
     - PhoneNumberKit
     - PromisesObjC
     - PromisesSwift
@@ -409,6 +418,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/kakao_flutter_sdk_common/ios"
   native_exif:
     :path: ".symlinks/plugins/native_exif/ios"
+  naver_login_sdk:
+    :path: ".symlinks/plugins/naver_login_sdk/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -431,6 +442,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
+  Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
   app_links: 76b66b60cc809390ca1ad69bfd66b998d2387ac7
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
@@ -481,6 +493,8 @@ SPEC CHECKSUMS:
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   native_exif: 0eb73d3d5b3ca892719228df8d2d1b13d1ae396c
+  naver_login_sdk: a13c3bf251ec87a0b86206e49850d7bff84de6a8
+  naveridlogin-sdk-ios: d9d46d02119d303023d7000cd5963864d5bb89e5
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d

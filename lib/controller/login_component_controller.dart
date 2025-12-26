@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:logger/logger.dart';
+import 'package:naver_login_sdk/naver_login_sdk.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -154,34 +155,52 @@ class LoginComponentController extends GetxController{
 
   // Naver
   void signInWithNaver() async {
+    try {
+      NaverLoginSDK.authenticate(callback: OAuthLoginCallback(
+        onSuccess: () {
+          // 로그인 성공 → 프로필 정보 가져오기
+          NaverLoginSDK.profile(callback: ProfileCallback(
+            onSuccess: (resultCode, message, response) async {
+              final profile = NaverLoginProfile.fromJson(response: response);
 
-    // try{
-    //   final NaverLoginResult result = await FlutterNaverLoginPlus.logIn();
-    //   NaverAccessToken res = await FlutterNaverLoginPlus.currentAccessToken;
-    //
-    //   if (result.status == NaverLoginStatus.loggedIn) {
-    //
-    //     LoginRequestModel loginRequest = LoginRequestModel(
-    //       name : result.account.name,
-    //       email : result.account.email,
-    //       // phone: result.account.mobile,
-    //       profile_url: result.account.profileImage,
-    //       social_type: LoginPlatform.naver.toDisplayString(),
-    //       social_id: result.account.id,
-    //       fcm_token : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
-    //       os_name: Platform.isIOS ? "ios" : "aos",
-    //       os_version: Platform.isIOS ?  await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
-    //     );
-    //
-    //     fetchUserData(loginRequest);
-    //     AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.naver.toDisplayString());
-    //
-    //   }
-    //
-    // }catch(e){
-    //   Logger().e("naver login error ::: $e");
-    // }
+              if (profile.id == null) {
+                Logger().e("naver profile id is null");
+                return;
+              }
 
+              LoginRequestModel loginRequest = LoginRequestModel(
+                name: profile.name,
+                email: profile.email,
+                // phone: profile.mobile,
+                profile_url: profile.profileImage,
+                social_type: LoginPlatform.naver.toDisplayString(),
+                social_id: profile.id!,
+                fcm_token: AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
+                os_name: Platform.isIOS ? "ios" : "aos",
+                os_version: Platform.isIOS ? await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
+              );
+
+              fetchUserData(loginRequest);
+              AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.naver.toDisplayString());
+            },
+            onFailure: (httpStatus, message) {
+              Logger().e("naver profile failure ::: $httpStatus, $message");
+            },
+            onError: (errorCode, message) {
+              Logger().e("naver profile error ::: $errorCode, $message");
+            },
+          ));
+        },
+        onFailure: (httpStatus, message) {
+          Logger().e("naver login failure ::: $httpStatus, $message");
+        },
+        onError: (errorCode, message) {
+          Logger().e("naver login error ::: $errorCode, $message");
+        },
+      ));
+    } catch (e) {
+      Logger().e("naver login exception ::: $e");
+    }
   }
 
 
