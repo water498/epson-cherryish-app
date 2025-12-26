@@ -65,6 +65,12 @@ class LoginComponentController extends GetxController{
           if(phoneVerificationResult != "success"){
             return;
           }
+        } else {
+          // 전화번호 인증이 필요 없는 경우 로그인 화면 닫기
+          LoadingOverlay.hide();
+          if(Get.currentRoute == AppRouter.login) {
+            Get.back();
+          }
         }
 
       } else if(commonResponse.failModel != null) {
