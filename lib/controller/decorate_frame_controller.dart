@@ -207,7 +207,7 @@ class DecorateFrameController extends GetxController{
       for(int i = 0; i < mergedPhotoList.length; i++) {
         var photo = mergedPhotoList[i];
         if(photo != null && photo.file != null) {
-          LoadingOverlay.show("Uploading image ${i + 1}/${mergedPhotoList.length}...");
+          LoadingOverlay.show("loading.image_upload_progress".trParams({'current': '${i + 1}', 'total': '${mergedPhotoList.length}'}));
           var response = await fileRepository.uploadImage(photo.file);
 
           // Map index to filter type based on eventFilterList
@@ -220,7 +220,7 @@ class DecorateFrameController extends GetxController{
 
       // Ensure all 4 filters have filepaths
       if(uploadedFilepaths.length != 4) {
-        Fluttertoast.showToast(msg: "All 4 images must be uploaded");
+        Fluttertoast.showToast(msg: "decorate_frame.toast.all_images_required".tr);
         return;
       }
 
@@ -234,7 +234,7 @@ class DecorateFrameController extends GetxController{
         filterRbFilepath: uploadedFilepaths['rb']!,
       );
 
-      LoadingOverlay.show("Creating print queue...");
+      LoadingOverlay.show("loading.creating_print_queue".tr);
       await printRepository.createPrintQueue(request);
 
       LoadingOverlay.show("loading.overlay05".tr, 1);

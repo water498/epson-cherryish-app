@@ -107,11 +107,16 @@ class Languages extends Translations {
       'decorate_frame_complete_dialog.button01':'내역 확인하기',
       'decorate_frame_complete_dialog.button02':'이벤트 페이지로 가기',
 
+      'decorate_frame.toast.all_images_required':'4개의 이미지가 모두 업로드되어야 합니다.',
+      'decorate_frame.toast.already_printing':'이미 인쇄가 진행 중입니다.',
+
       'loading.overlay01':'이미지를 올바르게 회전 중입니다.',
       'loading.overlay02':'이미지 사이즈를 조절중입니다.',
       'loading.overlay03':'이미지를 합치는 중입니다.',
       'loading.overlay04':'모든 이미지를 병합중입니다..',
       'loading.overlay05':'인쇄 요청중...',
+      'loading.image_upload_progress':'이미지 업로드 중 @current/@total...',
+      'loading.creating_print_queue':'프린트 대기열 생성 중...',
 
       'share.button':'링크 공유하기',
       'share.toast.event_not_found':'이벤트 정보를 불러오지 못 했습니다.',
@@ -318,11 +323,16 @@ class Languages extends Translations {
       "decorate_frame_complete_dialog.title": "Registration Complete!\nQueue Number: @waitCount",
       "decorate_frame_complete_dialog.button01": "View History",
       "decorate_frame_complete_dialog.button02": "Go to Event Page",
+
+      "decorate_frame.toast.all_images_required": "All 4 images must be uploaded.",
+
       "loading.overlay01": "Rotating image properly...",
       "loading.overlay02": "Resizing image...",
       "loading.overlay03": "Merging image...",
       "loading.overlay04": "Merging all images...",
       "loading.overlay05": "Sending print request...",
+      "loading.image_upload_progress": "Uploading image @current/@total...",
+      "loading.creating_print_queue": "Creating print queue...",
       "share.button": "Share Link",
       "share.toast.event_not_found": "Failed to load event information.",
       "login.title": "Quick Login / Sign Up",
@@ -511,11 +521,16 @@ class Languages extends Translations {
       "decorate_frame_complete_dialog.title": "登録が完了しました！\n受付番号：@waitCount",
       "decorate_frame_complete_dialog.button01": "マイプリントを見る",
       "decorate_frame_complete_dialog.button02": "イベントページへ",
+
+      "decorate_frame.toast.all_images_required": "4つの画像すべてがアップロードされている必要があります。",
+
       "loading.overlay01": "画像を回転中...",
       "loading.overlay02": "画像をリサイズ中...",
       "loading.overlay03": "画像を結合中...",
       "loading.overlay04": "すべての画像を結合中...",
       "loading.overlay05": "印刷リクエストを送信中...",
+      "loading.image_upload_progress": "画像をアップロード中 @current/@total...",
+      "loading.creating_print_queue": "プリントキューを作成中...",
       "share.button": "リンクを共有",
       "share.toast.event_not_found": "イベント情報の読み込みに失敗しました。",
       "login.title": "簡単ログイン / 会員登録",
