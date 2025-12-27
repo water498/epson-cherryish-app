@@ -54,7 +54,7 @@ class SearchScreenController extends GetxController{
 
       // 내 검색 기록 필터링
       searchMatchingHistories.value = searchHistories
-          .where((item) => item.keyword.contains(textController.text))
+          .where((item) => item.keyword.isNotEmpty && item.keyword.contains(textController.text))
           .toList();
     }, time: const Duration(milliseconds: 50));
 

@@ -76,6 +76,7 @@ class SearchScreen extends GetView<SearchScreenController> {
                                   )
                                 );
 
+                                await controller.setSearchHistoryData();
                                 await controller.searchComplete(value);
                               },
                               decoration: InputDecoration(
@@ -241,7 +242,7 @@ class SearchScreen extends GetView<SearchScreenController> {
                               onTap: () async {
                                 await controller.historyManager.addSearchItem(
                                     SearchHistoryModel(
-                                      keyword: "",
+                                      keyword: searchResponseEvent.eventName ?? "",
                                       isEvent: true,
                                       id: Uuid().v4(),
                                       event_id: searchResponseEvent.id,
@@ -249,6 +250,7 @@ class SearchScreen extends GetView<SearchScreenController> {
                                       place_name: searchResponseEvent.placeName,
                                     )
                                 );
+                                await controller.setSearchHistoryData();
                                 Get.toNamed(AppRouter.event_detail, arguments: searchResponseEvent.id);
                               },
                               onDelete: () {},

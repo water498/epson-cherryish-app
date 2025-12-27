@@ -26,6 +26,11 @@ class SearchHistoryManager {
 
   // 검색 기록 업데이트 (추가)
   Future<void> addSearchItem(SearchHistoryModel item) async {
+    // 키워드 검색어만 저장 (빈 keyword 검증)
+    if (!item.isEvent && item.keyword.trim().isEmpty) {
+      return; // 빈 키워드는 저장하지 않음
+    }
+
     List<SearchHistoryModel> searchHistory = await loadSearchHistory();
 
     // check duplicate
