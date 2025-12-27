@@ -10,8 +10,7 @@ LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
     LoginResponse(
       accessToken: json['access_token'] as String,
       tokenType: json['token_type'] as String,
-      userInfo:
-          UserDetail.fromJson(json['user_info'] as Map<String, dynamic>),
+      userInfo: UserDetail.fromJson(json['user_info'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
