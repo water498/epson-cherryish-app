@@ -4,17 +4,18 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/core/config/app_router.dart';
+import 'package:seeya/core/data/model/auth/user_detail.dart';
+import 'package:seeya/core/data/repository/auth_repository.dart';
 import '../core/config/app_prefs_keys.dart';
 import '../core/services/preference_service.dart';
 import '../data/model/models.dart';
-import '../data/repository/repositories.dart';
+// v1 (deprecated)
+// import '../data/repository/repositories.dart';
 import '../core/services/services.dart';
 
 class CustomSplashController extends GetxController{
 
-  final CustomSplashRepository customSplashRepository;
-
-  CustomSplashController({required this.customSplashRepository});
+  final authRepository = AuthRepository();
 
 
   @override
@@ -64,22 +65,29 @@ class CustomSplashController extends GetxController{
 
   Future<void> validateToken() async {
     try {
-      CommonResponseModel commonResponse = await customSplashRepository.validateTokenApi();
+      // v2 API
+      UserDetail userDetail = await authRepository.getMe();
 
-      if(commonResponse.successModel != null){
-        ValidateTokenResponseModel response = ValidateTokenResponseModel.fromJson(commonResponse.successModel!.content);
+      // Convert UserDetail to UserPublicModel for compatibility
+      UserPublicModel userPublic = UserPublicModel(
+        id: userDetail.userId,
+        name: userDetail.name,
+        email: userDetail.email,
+        profile_url: userDetail.profileUrl,
+        fcm_token: userDetail.fcmToken,
+        os_name: userDetail.osName,
+        os_version: userDetail.osVersion,
+        created_date: userDetail.createdDate ?? DateTime.now(),
+        last_login_date: userDetail.lastLoginDate ?? DateTime.now(),
+        deleted_date: userDetail.deletedDate,
+        social_type: userDetail.socialType?.value ?? 'unknown',
+      );
 
-        if(response.success){
-          UserService.instance.userPublicInfo.value = response.user;
-        }
-
-      }
+      UserService.instance.userPublicInfo.value = userPublic;
 
     } catch (e, stackTrace) {
       Logger().d("Error: $e");
       Logger().d("stackTrace: $stackTrace");
-    } finally {
-
     }
   }
 
