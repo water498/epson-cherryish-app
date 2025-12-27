@@ -6,18 +6,22 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:seeya/data/repository/repositories.dart';
+import 'package:seeya/core/data/repository/file_repository.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
+// v1 (deprecated)
+// import 'package:seeya/data/repository/repositories.dart';
+
 import '../data/model/models.dart';
+import '../data/provider/providers.dart'; // ReportApi still needed
+import '../data/repository/repositories.dart'; // ErrorReportRepository still needed for reportError
 import '../view/dialog/dialogs.dart';
 import 'controllers.dart';
 
 class ErrorReportController extends GetxController{
 
-  final ErrorReportRepository errorReportRepository;
-
-  ErrorReportController({required this.errorReportRepository});
+  final fileRepository = FileRepository();
+  final errorReportRepository = ErrorReportRepository(reportApi: ReportApi());
 
 
 
@@ -76,30 +80,24 @@ class ErrorReportController extends GetxController{
     try {
       LoadingOverlay.show();
 
-      CommonResponseModel commonResponse = await errorReportRepository.uploadReportImage(
-          printHistory.event_id,
-          File(selectedImage.value!.path)
-      );
+      // v2 API
+      var response = await fileRepository.uploadImage(File(selectedImage.value!.path));
 
-      if(commonResponse.successModel != null){
-
-        String filepath = commonResponse.successModel!.content["filepath"];
-        onSuccess(filepath);
-
-      } else if(commonResponse.failModel != null) {
-
-        if(commonResponse.statusCode == 409){
-          Fluttertoast.showToast(msg: "error_report.toast.already_post".tr);
-        }else if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
-          Logger().e("Validation Error");
-        }
-
-      }
+      // Use resized filepath for error report (smaller size)
+      onSuccess(response.resizedFilepath);
 
     } catch (e,stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
+
+      // Handle specific errors if needed
+      if (e.toString().contains('409')) {
+        Fluttertoast.showToast(msg: "error_report.toast.already_post".tr);
+      } else if (e.toString().contains('422')) {
+        Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+      } else {
+        Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+      }
     } finally {
       LoadingOverlay.hide();
     }
