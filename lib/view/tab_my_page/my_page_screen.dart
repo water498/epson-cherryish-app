@@ -3,10 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_colors.dart';
-import 'package:seeya/constants/app_themes.dart';
+import 'package:seeya/core/config/app_colors.dart';
+import 'package:seeya/core/config/app_themes.dart';
 import 'package:seeya/data/enum/enums.dart';
-import 'package:seeya/service/services.dart';
+import 'package:seeya/core/services/services.dart';
 import 'package:seeya/view/common/vertical_slider.dart';
 import 'package:seeya/view/dialog/common_dialog.dart';
 import 'package:seeya/view/common/sns_login_button.dart';
@@ -14,9 +14,8 @@ import 'package:seeya/view/common/login_component.dart';
 import 'package:seeya/view/common/seeya_cached_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../constants/app_router.dart';
+import '../../core/config/app_router.dart';
 import '../../controller/controllers.dart';
-import '../../utils/package_info_utils.dart';
 import 'my_page_menu_button.dart';
 
 class MyPageScreen extends GetView<MyPageController> {

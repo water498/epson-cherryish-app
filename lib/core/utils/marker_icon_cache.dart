@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/utils/file_utils.dart';
+import 'package:seeya/core/utils/file_utils.dart';
 
 /// Cache for converting S3 images to Google Maps BitmapDescriptor
 /// Supports multiple sizes (50x50 normal, 80x80 selected)

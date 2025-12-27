@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_secret.dart';
+import 'package:seeya/core/config/app_secret.dart';
 
-import '../../constants/app_prefs_keys.dart';
-import '../../service/services.dart';
+import '../../core/config/app_prefs_keys.dart';
+import '../../core/services/preference_service.dart';
+import '../../core/services/services.dart';
 
 class BaseApi extends GetConnect {
 

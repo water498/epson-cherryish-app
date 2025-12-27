@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:seeya/binding/bindings.dart';
 import 'package:seeya/view/test/test_screen.dart';
 
-import '../view/screens.dart';
+import '../../view/screens.dart';
 
 abstract class AppRouter {
   AppRouter._();

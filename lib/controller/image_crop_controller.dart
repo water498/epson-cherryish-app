@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:seeya/data/model/models.dart';
-import 'package:seeya/utils/utils.dart';
+import 'package:seeya/core/utils/utils.dart';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/v4.dart';
 

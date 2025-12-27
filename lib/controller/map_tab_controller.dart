@@ -5,12 +5,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_router.dart';
+import 'package:seeya/core/config/app_router.dart';
 import 'package:seeya/data/repository/repositories.dart';
-import 'package:seeya/utils/utils.dart';
-import 'package:seeya/utils/marker_icon_cache.dart';
+import 'package:seeya/core/utils/utils.dart';
+import 'package:seeya/core/utils/marker_icon_cache.dart';
 
-import '../constants/app_secret.dart';
+import '../core/config/app_secret.dart';
+import '../core/utils/geo_utils.dart';
 import '../data/enum/enums.dart';
 import '../data/model/models.dart';
 import '../view/common/loading_overlay.dart';

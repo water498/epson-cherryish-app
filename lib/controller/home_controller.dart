@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
-import '../constants/app_secret.dart';
+import '../core/config/app_secret.dart';
 import '../data/model/models.dart';
 import '../data/repository/repositories.dart';
 

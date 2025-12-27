@@ -6,15 +6,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_router.dart';
+import 'package:seeya/core/config/app_router.dart';
 import 'package:seeya/data/model/models.dart';
 import 'package:seeya/data/repository/repositories.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
-import '../constants/app_prefs_keys.dart';
-import '../constants/app_secret.dart';
-import '../service/services.dart';
-import '../utils/utils.dart';
+import '../core/config/app_prefs_keys.dart';
+import '../core/config/app_secret.dart';
+import '../core/services/services.dart';
+import '../core/utils/utils.dart';
 import '../view/dialog/dialogs.dart';
 
 class DecorateFrameController extends GetxController{

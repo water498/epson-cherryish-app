@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/app_themes.dart';
+import '../../core/config/app_colors.dart';
+import '../../core/config/app_themes.dart';
 import '../../controller/controllers.dart';
 
 class SearchListItem extends GetView<SearchScreenController> {

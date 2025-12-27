@@ -5,15 +5,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:seeya/constants/app_colors.dart';
-import 'package:seeya/constants/app_router.dart';
-import 'package:seeya/constants/app_secret.dart';
-import 'package:seeya/constants/app_themes.dart';
-import 'package:seeya/constants/seeya_frame_configs.dart';
+import 'package:seeya/core/config/app_colors.dart';
+import 'package:seeya/core/config/app_router.dart';
+import 'package:seeya/core/config/app_secret.dart';
+import 'package:seeya/core/config/app_themes.dart';
+import 'package:seeya/core/config/seeya_frame_configs.dart';
 import 'package:seeya/controller/controllers.dart';
-import 'package:seeya/service/services.dart';
+import 'package:seeya/core/services/services.dart';
 import 'package:seeya/view/common/seeya_cached_image.dart';
-import 'package:seeya/utils/format_utils.dart';
+import 'package:seeya/core/utils/format_utils.dart';
 import 'package:share_plus/share_plus.dart';
 
 class EventDetailScreen extends GetView<EventDetailController> {

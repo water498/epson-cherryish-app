@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:seeya/constants/app_router.dart';
+import 'package:seeya/core/config/app_router.dart';
 import 'package:seeya/controller/controllers.dart';
-import 'package:seeya/utils/format_utils.dart';
+import 'package:seeya/core/utils/format_utils.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/app_themes.dart';
+import '../../core/config/app_colors.dart';
+import '../../core/config/app_themes.dart';
 
 class EnterUserInfoScreen extends GetView<EnterUserInfoController> {
   const EnterUserInfoScreen({super.key});

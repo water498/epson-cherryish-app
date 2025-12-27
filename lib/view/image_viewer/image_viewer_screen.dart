@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_colors.dart';
+import 'package:seeya/core/config/app_colors.dart';
 import 'package:seeya/view/common/seeya_cached_image.dart';
 
 class ImageViewerScreen extends GetView<ImageViewerController> {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:seeya/constants/app_colors.dart';
+import 'package:seeya/core/config/app_colors.dart';
 import 'package:seeya/controller/controllers.dart';
 
-import '../../constants/app_themes.dart';
+import '../../core/config/app_themes.dart';
 
 class QnaScreen extends GetView<QnaController> {
   const QnaScreen({super.key});

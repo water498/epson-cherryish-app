@@ -46,7 +46,7 @@ app.*.map.json
 
 # cherryish secrets
 /android/keystore
-/lib/constants/app_secret.dart
+/lib/core/config/app_secret.dart
 /lib/firebase_options.dart
 /android/app/google-service.json
 /android/app/google-services.json

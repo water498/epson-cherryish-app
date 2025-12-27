@@ -3,11 +3,12 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_router.dart';
-import '../constants/app_prefs_keys.dart';
+import 'package:seeya/core/config/app_router.dart';
+import '../core/config/app_prefs_keys.dart';
+import '../core/services/preference_service.dart';
 import '../data/model/models.dart';
 import '../data/repository/repositories.dart';
-import '../service/services.dart';
+import '../core/services/services.dart';
 
 class CustomSplashController extends GetxController{
 

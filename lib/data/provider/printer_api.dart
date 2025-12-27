@@ -4,8 +4,9 @@ import 'package:get/get_connect/http/src/response/response.dart' as GetResponse;
 import 'package:get/get.dart' hide MultipartFile, FormData;
 import 'package:path/path.dart';
 
-import '../../constants/app_prefs_keys.dart';
-import '../../service/services.dart';
+import '../../core/config/app_prefs_keys.dart';
+import '../../core/services/preference_service.dart';
+import '../../core/services/services.dart';
 import 'base_api.dart';
 
 class PrinterApi extends BaseApi {

@@ -5,10 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_router.dart';
+import 'package:seeya/core/config/app_router.dart';
 
-import '../../constants/app_prefs_keys.dart';
-import '../../service/services.dart';
+import '../../core/config/app_prefs_keys.dart';
+import '../../core/services/preference_service.dart';
+import '../../core/services/services.dart';
 import '../model/models.dart';
 
 class BaseApiRepository extends GetxService {

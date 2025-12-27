@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:seeya/constants/app_colors.dart';
+import 'package:seeya/core/config/app_colors.dart';
 import 'package:seeya/controller/inquiry_detail_controller.dart';
 import 'package:seeya/view/report/inquiry_status/inquiry_statuses.dart';
 
-import '../../../constants/app_themes.dart';
-import '../../../utils/utils.dart';
+import '../../../core/config/app_themes.dart';
+import '../../../core/utils/utils.dart';
 
 
 enum InquiryStatus { pending, accepted, denied }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_colors.dart';
-import 'package:seeya/constants/app_themes.dart';
+import 'package:seeya/core/config/app_colors.dart';
+import 'package:seeya/core/config/app_themes.dart';
 import 'package:seeya/data/enum/enums.dart';
-import 'package:seeya/service/services.dart';
+import 'package:seeya/core/services/services.dart';
 
 class SettingSnsIcons extends StatelessWidget {
 

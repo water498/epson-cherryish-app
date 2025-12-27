@@ -5,16 +5,16 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:seeya/constants/app_router.dart';
-import 'package:seeya/constants/app_secret.dart';
+import 'package:seeya/core/config/app_router.dart';
+import 'package:seeya/core/config/app_secret.dart';
 import 'package:seeya/data/enum/event_sort_key_enum.dart';
 import 'package:seeya/data/model/models.dart';
 import 'package:seeya/view/common/bouncing_button.dart';
 import 'package:seeya/view/common/seeya_cached_image.dart';
-import '../../constants/app_colors.dart';
-import '../../constants/app_themes.dart';
+import '../../core/config/app_colors.dart';
+import '../../core/config/app_themes.dart';
 import '../../controller/controllers.dart';
-import '../../utils/format_utils.dart';
+import '../../core/utils/format_utils.dart';
 import '../dialog/dialogs.dart';
 
 class MapTabScreen extends GetView<MapTabController> {

@@ -4,7 +4,7 @@ import 'package:logger/logger.dart';
 
 import '../data/model/models.dart';
 import '../data/repository/repositories.dart';
-import '../service/services.dart';
+import '../core/services/services.dart';
 import '../view/common/loading_overlay.dart';
 
 class SettingController extends GetxController{

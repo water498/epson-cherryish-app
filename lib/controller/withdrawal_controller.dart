@@ -5,20 +5,20 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:logger/logger.dart';
 import 'package:naver_login_sdk/naver_login_sdk.dart';
+import 'package:seeya/core/data/repository/auth_repository.dart';
 import 'package:seeya/data/repository/repositories.dart';
 
-import '../constants/app_prefs_keys.dart';
-import '../constants/app_router.dart';
+import '../core/config/app_prefs_keys.dart';
+import '../core/config/app_router.dart';
+import '../core/services/preference_service.dart';
 import '../data/enum/enums.dart';
 import '../data/model/models.dart';
-import '../service/services.dart';
+import '../core/services/services.dart';
 import '../view/common/loading_overlay.dart';
 
 class WithdrawalController extends GetxController{
 
-  final WithdrawalRepository withdrawalRepository;
-
-  WithdrawalController({required this.withdrawalRepository});
+  final authRepository = AuthRepository();
 
 
 
@@ -35,23 +35,15 @@ class WithdrawalController extends GetxController{
     try {
       LoadingOverlay.show();
 
-      CommonResponseModel commonResponse = await withdrawalRepository.withdrawalApi();
+      await authRepository.withdraw();
 
-      if(commonResponse.successModel != null){
-
-        bool isSuccess = commonResponse.successModel!.content["success"];
-
-        if(isSuccess) {
-          signOut();
-        } else {
-          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
-        }
-
-      }
+      // 회원탈퇴 성공
+      signOut();
 
     } catch (e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
+      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
     } finally {
       LoadingOverlay.hide();
     }

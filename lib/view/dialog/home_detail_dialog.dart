@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_router.dart';
-import 'package:seeya/constants/app_secret.dart';
+import 'package:seeya/core/config/app_router.dart';
+import 'package:seeya/core/config/app_secret.dart';
 import 'package:seeya/data/model/models.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/app_themes.dart';
+import '../../core/config/app_colors.dart';
+import '../../core/config/app_themes.dart';
 import '../common/seeya_cached_image.dart';
 
 class HomeDetailDialog extends StatelessWidget {

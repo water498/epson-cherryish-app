@@ -5,9 +5,9 @@ import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/view/common/seeya_cached_image.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/app_secret.dart';
-import '../../constants/app_themes.dart';
+import '../../core/config/app_colors.dart';
+import '../../core/config/app_secret.dart';
+import '../../core/config/app_themes.dart';
 
 class QrShareScreen extends StatelessWidget {
 

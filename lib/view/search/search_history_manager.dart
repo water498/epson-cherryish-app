@@ -1,5 +1,5 @@
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_prefs_keys.dart';
+import 'package:seeya/core/config/app_prefs_keys.dart';
 import 'package:seeya/data/model/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';

@@ -5,19 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_router.dart';
+import 'package:seeya/core/config/app_router.dart';
+import 'package:seeya/core/data/model/auth/auth_models.dart';
+import 'package:seeya/core/data/repository/auth_repository.dart';
 import 'package:seeya/data/repository/repositories.dart';
-import 'package:seeya/service/services.dart';
-import 'package:seeya/utils/utils.dart';
+import 'package:seeya/core/services/services.dart';
+import 'package:seeya/core/utils/utils.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
 import '../data/model/models.dart';
 
 class PhoneVerificationController extends GetxController{
 
-  final PhoneVerificationRepository phoneVerificationRepository;
-
-  PhoneVerificationController({required this.phoneVerificationRepository});
+  final authRepository = AuthRepository();
 
 
 
@@ -273,37 +273,38 @@ class PhoneVerificationController extends GetxController{
   Future<void> updateUserPhoneVerification(String fullPhoneNumber) async {
     try {
 
-      Map<String, dynamic> request = {
-        "phone_number" : fullPhoneNumber
-      };
+      PhoneVerifyRequest request = PhoneVerifyRequest(phoneNumber: fullPhoneNumber);
 
-      CommonResponseModel commonResponse = await phoneVerificationRepository.phoneVerificationApi(request);
+      UserDetail response = await authRepository.verifyPhone(request);
 
-      if(commonResponse.successModel != null){
+      // UserPrivateModel로 변환 (임시 - 기존 코드와 호환성 유지)
+      UserPublicModel userPublic = UserPublicModel(
+        id: response.userId,
+        email: response.email,
+        name: response.name,
+        profile_url: response.profileUrl,
+        social_type: response.socialType?.value.toLowerCase() ?? "",
+        created_date: DateTime.now(),
+        last_login_date: response.lastLoginDate ?? DateTime.now(),
+      );
 
-        UserPrivateModel response = UserPrivateModel.fromJson(commonResponse.successModel!.content['item']);
-        UserService.instance.userPublicInfo.value = response.userPublicModel;
-        UserService.instance.userPrivateInfo.value = response;
+      UserPrivateModel userPrivate = UserPrivateModel(
+        userPublicModel: userPublic,
+        phone_number: response.phoneNumber ?? "",
+        phone_number_verification_date: response.phoneNumberVerificationDate ?? DateTime.now(),
+        social_id: "",
+      );
 
-        stopTimer();
-        Get.back(result: "success");
+      UserService.instance.userPublicInfo.value = userPublic;
+      UserService.instance.userPrivateInfo.value = userPrivate;
 
-      } else if(commonResponse.failModel != null) {
-
-        if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
-          Logger().e("phoneVerificationApi request parameter error");
-        }
-
-      }
-
-
-
+      stopTimer();
+      Get.back(result: "success");
 
     } catch (e, stackTrace) {
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
-      rethrow;
+      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
     } finally {
 
     }

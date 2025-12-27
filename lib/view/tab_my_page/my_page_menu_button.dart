@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:seeya/constants/app_themes.dart';
+import 'package:seeya/core/config/app_themes.dart';
 
-import '../../constants/app_colors.dart';
+import '../../core/config/app_colors.dart';
 
 class MyPageMenuButton extends StatelessWidget {
 

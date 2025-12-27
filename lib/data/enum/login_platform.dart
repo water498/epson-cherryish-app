@@ -1,3 +1,5 @@
+import 'package:seeya/core/data/enum/enums.dart';
+
 enum LoginPlatform{
   apple,
   google,
@@ -36,6 +38,22 @@ extension LoginPlatformExtension on LoginPlatform {
         return 'naver';
       case LoginPlatform.none:
         return 'none';
+    }
+  }
+
+  /// LoginPlatform → SocialLoginType 변환 (API 요청용)
+  SocialLoginType toSocialLoginType() {
+    switch (this) {
+      case LoginPlatform.apple:
+        return SocialLoginType.apple;
+      case LoginPlatform.google:
+        return SocialLoginType.google;
+      case LoginPlatform.kakao:
+        return SocialLoginType.kakao;
+      case LoginPlatform.naver:
+        return SocialLoginType.naver;
+      case LoginPlatform.none:
+        throw ArgumentError('LoginPlatform.none cannot be converted to SocialLoginType');
     }
   }
 

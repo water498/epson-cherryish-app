@@ -9,11 +9,12 @@ import 'package:seeya/data/repository/repositories.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-import '../constants/app_prefs_keys.dart';
-import '../constants/app_router.dart';
+import '../core/config/app_prefs_keys.dart';
+import '../core/config/app_router.dart';
+import '../core/services/preference_service.dart';
 import '../data/enum/enums.dart';
 import '../data/model/models.dart';
-import '../service/services.dart';
+import '../core/services/services.dart';
 
 class MyPageController extends GetxController {
 

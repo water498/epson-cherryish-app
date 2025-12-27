@@ -7,11 +7,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/controller/controllers.dart';
-import 'package:seeya/utils/utils.dart';
+import 'package:seeya/core/utils/utils.dart';
 import 'package:seeya/view/common/common_widget.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/app_themes.dart';
+import '../../core/config/app_colors.dart';
+import '../../core/config/app_themes.dart';
 
 class PhoneVerificationScreen extends GetView<PhoneVerificationController> {
   const PhoneVerificationScreen({super.key});

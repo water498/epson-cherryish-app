@@ -1,5 +1,5 @@
 import 'dart:io';
-import '../core/cache/seeya_cache_managers.dart';
+import '../cache/seeya_cache_managers.dart';
 
 class DownloadUtils {
   DownloadUtils._();

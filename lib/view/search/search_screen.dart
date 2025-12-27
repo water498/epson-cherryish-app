@@ -3,15 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:seeya/constants/app_router.dart';
-import 'package:seeya/constants/app_themes.dart';
+import 'package:seeya/core/config/app_router.dart';
+import 'package:seeya/core/config/app_themes.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/data/model/models.dart';
 import 'package:seeya/view/common/bouncing_button.dart';
 import 'package:seeya/view/search/search_list_item.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../constants/app_colors.dart';
+import '../../core/config/app_colors.dart';
 
 class SearchScreen extends GetView<SearchScreenController> {
   const SearchScreen({super.key});

@@ -13,12 +13,12 @@ import 'package:image_editor/image_editor.dart';
 import 'package:logger/logger.dart';
 import 'package:native_exif/native_exif.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:seeya/constants/app_secret.dart';
-import 'package:seeya/constants/seeya_frame_configs.dart';
+import 'package:seeya/core/config/app_secret.dart';
+import 'package:seeya/core/config/seeya_frame_configs.dart';
 import 'package:seeya/data/model/models.dart';
-import 'package:seeya/utils/utils.dart';
+import 'package:seeya/core/utils/utils.dart';
 
-import '../constants/app_colors.dart';
+import '../config/app_colors.dart';
 
 
 class ImageUtils {

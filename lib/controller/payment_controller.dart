@@ -4,11 +4,11 @@ import 'package:app_links/app_links.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_secret.dart';
+import 'package:seeya/core/config/app_secret.dart';
 import 'package:seeya/data/model/models.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../constants/app_router.dart';
+import '../core/config/app_router.dart';
 
 class PaymentController extends GetxController{
 

@@ -6,11 +6,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
-import '../constants/app_prefs_keys.dart';
-import '../constants/app_secret.dart';
+import '../core/config/app_prefs_keys.dart';
+import '../core/config/app_secret.dart';
+import '../core/services/preference_service.dart';
 import '../data/model/models.dart';
-import '../service/services.dart';
-import '../utils/utils.dart';
+import '../core/services/services.dart';
+import '../core/utils/utils.dart';
 
 class EnterUserInfoController extends GetxController{
 

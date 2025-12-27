@@ -15,15 +15,17 @@ import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:logger/logger.dart';
 import 'package:naver_login_sdk/naver_login_sdk.dart';
-import 'package:seeya/constants/app_router.dart';
-import 'package:seeya/service/services.dart';
-import 'package:seeya/utils/utils.dart';
+import 'package:seeya/core/services/dio_service.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
-import 'constants/app_colors.dart';
-import 'constants/app_prefs_keys.dart';
-import 'constants/app_secret.dart';
-import 'constants/app_themes.dart';
+import 'core/config/app_colors.dart';
+import 'core/config/app_router.dart';
+import 'core/config/app_secret.dart';
+import 'core/config/app_themes.dart';
+import 'core/services/notification_service.dart';
+import 'core/services/preference_service.dart';
+import 'core/services/user_service.dart';
+import 'core/utils/file_utils.dart';
 import 'firebase_options.dart';
 import 'languages.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -152,8 +154,12 @@ void main() async {
   // init libphonenumber
   await init();
 
-  // init preferences
+  // init preferences (must be before DioService)
   await AppPreferences().init();
+
+  // init DioService
+  await Get.putAsync(() => DioService().init());
+
   // ********** Delay 때문에 Custom Splash 로 이동 **********
   // AppPreferences().prefs?.setString(AppPrefsKeys.fcmToken, fcmToken ?? ""); // fcmToken 삽입
 

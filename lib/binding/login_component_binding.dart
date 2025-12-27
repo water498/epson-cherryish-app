@@ -8,10 +8,12 @@ class LoginComponentBinding implements Bindings {
 
   @override
   void dependencies() {
-    Get.lazyPut<AuthApi>(() => AuthApi());
-    Get.lazyPut<LoginRepository>(() => LoginRepository(authApi: Get.find()));
-    Get.lazyPut<LoginComponentController>(() => LoginComponentController(loginRepository: Get.find()));
-    Get.put<LoginComponentController>(LoginComponentController(loginRepository: Get.find()));
+    // v1 (deprecated)
+    // Get.lazyPut<AuthApi>(() => AuthApi());
+    // Get.lazyPut<LoginRepository>(() => LoginRepository(authApi: Get.find()));
+
+    // v2
+    Get.put<LoginComponentController>(LoginComponentController());
   }
 
 }

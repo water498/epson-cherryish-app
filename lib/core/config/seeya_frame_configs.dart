@@ -1,4 +1,4 @@
-import '../data/model/models.dart';
+import '../../data/model/models.dart';
 
 abstract class SeeyaFrameConfigs {
   SeeyaFrameConfigs._();

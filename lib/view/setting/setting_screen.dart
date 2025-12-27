@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:seeya/constants/app_router.dart';
+import 'package:seeya/core/config/app_router.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/data/enum/enums.dart';
 import 'package:seeya/view/common/bouncing_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/app_themes.dart';
-import '../../service/services.dart';
-import '../../utils/utils.dart';
+import '../../core/config/app_colors.dart';
+import '../../core/config/app_themes.dart';
+import '../../core/services/services.dart';
+import '../../core/utils/utils.dart';
 import '../tab_my_page/my_page_menu_button.dart';
 import 'setting_sns_icon.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../constants/app_colors.dart';
-import '../../../constants/app_themes.dart';
+import '../../../core/config/app_colors.dart';
+import '../../../core/config/app_themes.dart';
 
 class StatusPending extends StatelessWidget {
   const StatusPending({super.key});

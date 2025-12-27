@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:seeya/constants/app_themes.dart';
+import 'package:seeya/core/config/app_themes.dart';
 
-import '../../constants/app_colors.dart';
+import '../../core/config/app_colors.dart';
 
 class CommonDialog extends StatelessWidget {
 

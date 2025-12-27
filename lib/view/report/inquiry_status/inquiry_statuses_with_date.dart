@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/utils/utils.dart';
+import 'package:seeya/core/utils/utils.dart';
 import 'package:seeya/view/report/inquiry_status/inquiry_status_accepted.dart';
 
-import '../../../constants/app_colors.dart';
-import '../../../constants/app_themes.dart';
+import '../../../core/config/app_colors.dart';
+import '../../../core/config/app_themes.dart';
 import '../../../data/model/models.dart';
 import 'inquiry_status_denied.dart';
 import 'inquiry_status_pending.dart';

@@ -8,7 +8,7 @@ import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/view/common/bouncing_button.dart';
 import 'package:seeya/view/common/login_component.dart';
 
-import '../../constants/app_router.dart';
+import '../../core/config/app_router.dart';
 
 class LoginScreen extends GetView<LoginController> {
   const LoginScreen({super.key});

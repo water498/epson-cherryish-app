@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_colors.dart';
-import 'package:seeya/constants/seeya_frame_configs.dart';
+import 'package:seeya/core/config/app_colors.dart';
+import 'package:seeya/core/config/seeya_frame_configs.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/view/image_crop/image_crop_overlay.dart';
 import 'package:seeya/view/common/seeya_cached_image.dart';
 
-import '../../constants/app_secret.dart';
-import '../../constants/app_themes.dart';
+import '../../core/config/app_secret.dart';
+import '../../core/config/app_themes.dart';
 
 class ImageCropScreen extends GetView<ImageCropController> {
   const ImageCropScreen({super.key});

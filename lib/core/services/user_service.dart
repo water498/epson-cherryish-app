@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import '../constants/app_prefs_keys.dart';
-import '../data/model/models.dart';
+import 'package:seeya/core/services/preference_service.dart';
+import '../config/app_prefs_keys.dart';
+import '../../data/model/models.dart';
 import 'services.dart';
 
 class UserService extends GetxService{

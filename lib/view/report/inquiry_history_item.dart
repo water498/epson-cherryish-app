@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:seeya/constants/app_secret.dart';
+import 'package:seeya/core/config/app_secret.dart';
 import 'package:seeya/data/model/models.dart';
-import 'package:seeya/utils/format_utils.dart';
+import 'package:seeya/core/utils/format_utils.dart';
 import 'package:seeya/view/common/seeya_cached_image.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/app_router.dart';
-import '../../constants/app_themes.dart';
+import '../../core/config/app_colors.dart';
+import '../../core/config/app_router.dart';
+import '../../core/config/app_themes.dart';
 import 'inquiry_status/inquiry_statuses_with_date.dart';
 
 class InquiryHistoryItem extends StatelessWidget {

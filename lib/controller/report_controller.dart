@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/data/repository/report_repository.dart';
 
-import '../constants/app_router.dart';
+import '../core/config/app_router.dart';
 import '../data/model/models.dart';
-import '../service/services.dart';
+import '../core/services/services.dart';
 import '../view/common/loading_overlay.dart';
 import '../view/dialog/dialogs.dart';
 

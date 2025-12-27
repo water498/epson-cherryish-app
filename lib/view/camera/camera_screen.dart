@@ -7,15 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/constants/app_colors.dart';
-import 'package:seeya/constants/app_secret.dart';
-import 'package:seeya/constants/app_themes.dart';
-import 'package:seeya/constants/seeya_frame_configs.dart';
+import 'package:seeya/core/config/app_colors.dart';
+import 'package:seeya/core/config/app_secret.dart';
+import 'package:seeya/core/config/app_themes.dart';
+import 'package:seeya/core/config/seeya_frame_configs.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/view/common/bouncing_button.dart';
 import 'package:seeya/view/common/seeya_cached_image.dart';
 
-import '../../constants/app_router.dart';
+import '../../core/config/app_router.dart';
 import '../../data/model/models.dart';
 
 class CameraScreen extends GetView<CameraScreenController> {

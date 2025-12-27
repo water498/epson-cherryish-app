@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/data/repository/login_repository.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/app_themes.dart';
+import '../../core/config/app_colors.dart';
+import '../../core/config/app_themes.dart';
 import '../../data/enum/enums.dart';
 import '../../data/provider/providers.dart';
 import 'sns_login_button.dart';
@@ -23,9 +23,8 @@ class LoginComponent extends GetView<LoginComponentController> {
       Get.delete<LoginComponentController>();
     }
 
-    final authApi = Get.put(AuthApi());
-    final loginRepository = Get.put(LoginRepository(authApi: authApi));
-    final controller = Get.put(LoginComponentController(loginRepository: loginRepository));
+    // v2
+    final controller = Get.put(LoginComponentController());
 
 
 

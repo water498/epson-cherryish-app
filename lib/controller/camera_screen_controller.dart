@@ -14,14 +14,14 @@ import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:seeya/constants/app_secret.dart';
-import 'package:seeya/constants/seeya_frame_configs.dart';
+import 'package:seeya/core/config/app_secret.dart';
+import 'package:seeya/core/config/seeya_frame_configs.dart';
 import 'package:seeya/controller/controllers.dart';
 import 'package:seeya/data/model/models.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
-import '../utils/file_utils.dart';
-import '../utils/image_utils.dart';
+import '../core/utils/file_utils.dart';
+import '../core/utils/image_utils.dart';
 
 class CameraScreenController extends GetxController{
 

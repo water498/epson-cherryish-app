@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constants/app_colors.dart';
+import '../../core/config/app_colors.dart';
 import 'bouncing_button.dart';
 
 class MapButton extends StatelessWidget {

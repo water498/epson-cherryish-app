@@ -12,21 +12,20 @@ import 'package:naver_login_sdk/naver_login_sdk.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-import '../constants/app_prefs_keys.dart';
-import '../constants/app_router.dart';
+import '../core/config/app_prefs_keys.dart';
+import '../core/config/app_router.dart';
+import '../core/data/model/auth/auth_models.dart';
+import '../core/data/repository/auth_repository.dart';
+import '../core/services/preference_service.dart';
 import '../data/enum/enums.dart';
 import '../data/model/models.dart';
 import '../data/repository/repositories.dart';
-import '../service/services.dart';
-import '../utils/device_info_utils.dart';
+import '../core/services/services.dart';
+import '../core/utils/device_info_utils.dart';
 
 class LoginComponentController extends GetxController{
 
-  final LoginRepository loginRepository;
-
-  LoginComponentController({
-    required this.loginRepository
-  });
+  final authRepository = AuthRepository();
 
 
 
@@ -34,62 +33,59 @@ class LoginComponentController extends GetxController{
 
 
 
-  void fetchUserData(LoginRequestModel loginRequest) async {
+  void fetchUserData(LoginRequest loginRequest) async {
 
-    Logger().d("fetchUserData request ::: ${jsonEncode(loginRequest)}");
+    Logger().d("fetchUserData request ::: ${jsonEncode(loginRequest.toJson())}");
 
     try {
       LoadingOverlay.show();
 
-      CommonResponseModel commonResponse = await loginRepository.callLoginApi(loginRequest.toJson());
+      LoginResponse response = await authRepository.login(loginRequest);
 
-      if(commonResponse.successModel != null){
-        LoginResponseModel response = LoginResponseModel.fromJson(commonResponse.successModel!.content);
+      // 토큰 저장
+      await AppPreferences().prefs?.setString(AppPrefsKeys.userAccessToken, response.accessToken);
 
-        await AppPreferences().prefs?.setString(AppPrefsKeys.userAccessToken, response.access_token);
-        UserService.instance.userPublicInfo.value = response.user; // access token 삽입 후 코드 진행 되어야함 => getx ever때문
+      // UserPublicModel로 변환 (임시 - 기존 코드와 호환성 유지)
+      UserPublicModel userPublic = UserPublicModel(
+        id: response.userInfo.userId,
+        email: response.userInfo.email,
+        name: response.userInfo.name,
+        profile_url: response.userInfo.profileUrl,
+        social_type: loginRequest.socialType.value.toLowerCase(), // GOOGLE -> google
+        created_date: DateTime.now(),
+        last_login_date: DateTime.now(),
+      );
 
-        if(response.need_phone_verification){
-          LoadingOverlay.hide();
+      UserService.instance.userPublicInfo.value = userPublic;
 
+      // 전화번호 인증 필요 여부 확인
+      if(response.userInfo.phoneNumberVerificationDate == null){
+        LoadingOverlay.hide();
 
+        dynamic phoneVerificationResult;
 
-          dynamic phoneVerificationResult;
-
-          if(Get.currentRoute == AppRouter.root){
-            phoneVerificationResult = await Get.toNamed(AppRouter.phone_verification);
-          } else {
-            phoneVerificationResult = await Get.offNamed(AppRouter.phone_verification);
-          }
-
-          if(phoneVerificationResult != "success"){
-            return;
-          }
+        if(Get.currentRoute == AppRouter.root){
+          phoneVerificationResult = await Get.toNamed(AppRouter.phone_verification);
         } else {
-          // 전화번호 인증이 필요 없는 경우 로그인 화면 닫기
-          LoadingOverlay.hide();
-          if(Get.currentRoute == AppRouter.login) {
-            Get.back();
-          }
+          phoneVerificationResult = await Get.offNamed(AppRouter.phone_verification);
         }
 
-      } else if(commonResponse.failModel != null) {
-
-        if(commonResponse.statusCode == 409){
-          Fluttertoast.showToast(msg: "login.toast.exist_email".tr);
-        } else if(commonResponse.statusCode == 410) {
-          Fluttertoast.showToast(msg: "login.toast.withdrawal".tr);
-        } else if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
-          Logger().e("첫 로그인(가입)시에 이메일 정보가 request에 담겨있지 않음");
+        if(phoneVerificationResult != "success"){
+          return;
         }
-
+      } else {
+        // 전화번호 인증이 필요 없는 경우 로그인 화면 닫기
+        LoadingOverlay.hide();
+        if(Get.currentRoute == AppRouter.login) {
+          Get.back();
+        }
       }
 
     } catch (e, stackTrace) {
+      // Dio 에러는 DioService의 interceptor에서 처리됨
       Fluttertoast.showToast(msg: "toast.unknown_error".tr);
-      Logger().d("Error: $e");
-      Logger().d("stackTrace: $stackTrace");
+      Logger().e("Login Error: $e");
+      Logger().e("stackTrace: $stackTrace");
     } finally {
       LoadingOverlay.hide();
     }
@@ -133,16 +129,15 @@ class LoginComponentController extends GetxController{
         return;
       }
 
-      LoginRequestModel loginRequest = LoginRequestModel(
+      LoginRequest loginRequest = LoginRequest(
         name : kakaoAccount.name,
-        email : kakaoAccount.email,
-        // phone: user.kakaoAccount?.phoneNumber,
-        profile_url: kakaoAccount.profile?.profileImageUrl,
-        social_type: LoginPlatform.kakao.toDisplayString(),
-        social_id: user.id.toString(),
-        fcm_token : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
-        os_name: Platform.isIOS ? "ios" : "aos",
-        os_version: Platform.isIOS ?  await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
+        email : kakaoAccount.email ?? "",
+        profileUrl: kakaoAccount.profile?.profileImageUrl,
+        socialType: LoginPlatform.kakao.toSocialLoginType(),
+        socialId: user.id.toString(),
+        fcmToken : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
+        osName: Platform.isIOS ? "ios" : "aos",
+        osVersion: Platform.isIOS ?  await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
       );
 
       fetchUserData(loginRequest);
@@ -174,16 +169,15 @@ class LoginComponentController extends GetxController{
                 return;
               }
 
-              LoginRequestModel loginRequest = LoginRequestModel(
+              LoginRequest loginRequest = LoginRequest(
                 name: profile.name,
-                email: profile.email,
-                // phone: profile.mobile,
-                profile_url: profile.profileImage,
-                social_type: LoginPlatform.naver.toDisplayString(),
-                social_id: profile.id!,
-                fcm_token: AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
-                os_name: Platform.isIOS ? "ios" : "aos",
-                os_version: Platform.isIOS ? await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
+                email: profile.email ?? "",
+                profileUrl: profile.profileImage,
+                socialType: LoginPlatform.naver.toSocialLoginType(),
+                socialId: profile.id!,
+                fcmToken: AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
+                osName: Platform.isIOS ? "ios" : "aos",
+                osVersion: Platform.isIOS ? await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
               );
 
               fetchUserData(loginRequest);
@@ -223,16 +217,15 @@ class LoginComponentController extends GetxController{
       if (googleUser != null) {
         final GoogleSignInAuthentication googleSignInAuthentication = await googleUser.authentication;
 
-        LoginRequestModel loginRequest = LoginRequestModel(
+        LoginRequest loginRequest = LoginRequest(
           name : googleUser.displayName,
           email : googleUser.email,
-          // phone: null,
-          profile_url: googleUser.photoUrl,
-          social_type: LoginPlatform.google.toDisplayString(),
-          social_id: googleUser.id,
-          fcm_token : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
-          os_name: Platform.isIOS ? "ios" : "aos",
-          os_version: Platform.isIOS ?  await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
+          profileUrl: googleUser.photoUrl,
+          socialType: LoginPlatform.google.toSocialLoginType(),
+          socialId: googleUser.id,
+          fcmToken : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
+          osName: Platform.isIOS ? "ios" : "aos",
+          osVersion: Platform.isIOS ?  await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
         );
 
         fetchUserData(loginRequest);
@@ -260,16 +253,15 @@ class LoginComponentController extends GetxController{
         ],
       );
 
-      LoginRequestModel loginRequest = LoginRequestModel(
+      LoginRequest loginRequest = LoginRequest(
         name: credential.familyName,
-        email : credential.email,
-        // phone: null,
-        profile_url: null,
-        social_type: LoginPlatform.apple.toDisplayString(),
-        social_id: credential.userIdentifier ?? "unknown",
-        fcm_token : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
-        os_name: Platform.isIOS ? "ios" : "aos",
-        os_version: Platform.isIOS ?  await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
+        email : credential.email ?? "",
+        profileUrl: null,
+        socialType: LoginPlatform.apple.toSocialLoginType(),
+        socialId: credential.userIdentifier ?? "unknown",
+        fcmToken : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
+        osName: Platform.isIOS ? "ios" : "aos",
+        osVersion: Platform.isIOS ?  await DeviceInfoUtils.getIosInfo() : await DeviceInfoUtils.getAndroidInfo(),
       );
 
       fetchUserData(loginRequest);
