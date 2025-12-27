@@ -17,4 +17,17 @@ class CommonRepository {
         .map((json) => HomeBestFrame.fromJson(json))
         .toList();
   }
+
+  /// GET /api/v1/mobile/common/qna
+  /// QNA 리스트 조회
+  Future<List<Qna>> getQnas({String? lang}) async {
+    final response = await _dio.get(
+      '/api/v1/mobile/common/qna',
+      queryParameters: lang != null ? {'lang': lang} : null,
+    );
+
+    return (response.data as List)
+        .map((json) => Qna.fromJson(json))
+        .toList();
+  }
 }

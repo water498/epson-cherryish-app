@@ -8,7 +8,6 @@ part of 'qna.dart';
 
 Qna _$QnaFromJson(Map<String, dynamic> json) => Qna(
       id: (json['id'] as num).toInt(),
-      category: $enumDecode(_$QnaCategoryEnumMap, json['category']),
       title: json['title'] as String,
       answer: json['answer'] as String,
       isShow: json['is_show'] as bool,
@@ -22,7 +21,6 @@ Qna _$QnaFromJson(Map<String, dynamic> json) => Qna(
 
 Map<String, dynamic> _$QnaToJson(Qna instance) => <String, dynamic>{
       'id': instance.id,
-      'category': _$QnaCategoryEnumMap[instance.category]!,
       'title': instance.title,
       'answer': instance.answer,
       'is_show': instance.isShow,
@@ -31,13 +29,6 @@ Map<String, dynamic> _$QnaToJson(Qna instance) => <String, dynamic>{
       'updated_date': instance.updatedDate.toIso8601String(),
       'deleted_date': instance.deletedDate?.toIso8601String(),
     };
-
-const _$QnaCategoryEnumMap = {
-  QnaCategory.general: 'GENERAL',
-  QnaCategory.printer: 'PRINTER',
-  QnaCategory.editor: 'EDITOR',
-  QnaCategory.refund: 'REFUND',
-};
 
 const _$LanguageTypeEnumMap = {
   LanguageType.ko: 'KO',

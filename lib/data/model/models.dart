@@ -8,7 +8,6 @@ export 'event.dart';
 export 'event_frame.dart';
 export 'event_filter.dart';
 export 'home_best_frame.dart';
-export 'qna_model.dart';
 
 export 'validate_token_model.dart';
 export 'search_model.dart';

@@ -5,5 +5,4 @@ export 'event_access_type.dart';
 export 'editor_frame_type.dart';
 export 'print_queue_status.dart';
 export 'print_frame_type.dart';
-export 'qna_category.dart';
 export 'language_type.dart';

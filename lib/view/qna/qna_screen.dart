@@ -33,35 +33,6 @@ class QnaScreen extends GetView<QnaController> {
         children: [
           const SizedBox(height: 20,),
 
-          if(false)
-          Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              color: AppColors.blueGrey800,
-              border: Border.symmetric(
-                horizontal: BorderSide(
-                  color: AppColors.blueGrey700,
-                  width: 2,
-                )
-              )
-            ),
-            child: TabBar(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              controller: controller.tabController,
-              tabs: controller.tabs,
-              isScrollable: true,
-              labelColor: AppColors.primary400,
-              unselectedLabelColor: AppColors.blueGrey500,
-              indicatorColor: AppColors.primary400,
-              dividerColor: Colors.transparent,
-              indicatorSize: TabBarIndicatorSize.tab,
-              tabAlignment: TabAlignment.start,
-              labelStyle: AppThemes.bodyMedium.copyWith(fontFamily: "DungGeunMo"),
-              onTap: (value) {
-
-              },
-            ),
-          ),
           Obx(() {
 
             if(controller.qnaList.isEmpty) return const SizedBox();

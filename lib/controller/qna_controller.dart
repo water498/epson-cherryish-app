@@ -2,42 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/data/model/models.dart';
-import 'package:seeya/data/repository/repositories.dart';
-import 'package:seeya/view/common/loading_overlay.dart';
+import 'package:seeya/core/data/model/common/common_models.dart';
+import 'package:seeya/core/data/repository/common_repository.dart';
 
 class QnaController extends GetxController with GetSingleTickerProviderStateMixin {
 
-  final QnaRepository qnaRepository;
-
-  QnaController({required this.qnaRepository});
+  final commonRepository = CommonRepository();
 
 
 
-
-
-  late TabController tabController;
-  final List<Widget> tabs = [
-    const Tab(
-      text: '전체',
-    ),
-    const Tab(
-      text: '이미지 편집',
-    ),
-    const Tab(
-      text: '수령/반납',
-    ),
-    const Tab(
-      text: '취소/환불/교환',
-    ),
-    const Tab(
-      text: '장소',
-    ),
-  ];
-
-
-
-  RxList<QnaItemModel> qnaList = <QnaItemModel>[].obs;
+  RxList<Qna> qnaList = <Qna>[].obs;
 
 
 
@@ -48,7 +22,6 @@ class QnaController extends GetxController with GetSingleTickerProviderStateMixi
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: tabs.length, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchQnaList();
     });
@@ -56,30 +29,27 @@ class QnaController extends GetxController with GetSingleTickerProviderStateMixi
 
   Future<void> fetchQnaList () async {
     try {
-      CommonResponseModel commonResponse = await qnaRepository.fetchQnaListApi(50, "mobile");
+      // Get current language code
+      final locale = Get.locale ?? Get.deviceLocale;
+      final langCode = locale?.languageCode?.toUpperCase() ?? 'KO';
 
-      if(commonResponse.successModel != null){
+      // v2 API: Get QNA list with language code
+      List<Qna> items = await commonRepository.getQnas(lang: langCode);
 
-        QnaResponseModel response = QnaResponseModel.fromJson(commonResponse.successModel!.content);
-        var list = response.items.where((qna) => qna.isShow == true,).toList();
-        list.sort((a, b) => a.updated_date.compareTo(b.updated_date),);
-        qnaList.value = list;
+      // Filter by isShow and deletedDate
+      var list = items.where((qna) =>
+        qna.isShow == true && qna.deletedDate == null
+      ).toList();
 
-      } else if(commonResponse.failModel != null) {
+      // Sort by updatedDate
+      list.sort((a, b) => a.updatedDate.compareTo(b.updatedDate));
 
-        if(commonResponse.statusCode == 422){
-          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
-          Logger().e("Validation Error");
-        }
-
-      }
-
+      qnaList.value = list;
 
     } catch (e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
-    } finally {
-
+      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
     }
   }
 

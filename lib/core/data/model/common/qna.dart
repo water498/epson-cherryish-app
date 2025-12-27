@@ -6,7 +6,6 @@ part 'qna.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Qna {
   final int id;
-  final QnaCategory category;
   final String title;
   final String answer;
   final bool isShow;
@@ -17,7 +16,6 @@ class Qna {
 
   Qna({
     required this.id,
-    required this.category,
     required this.title,
     required this.answer,
     required this.isShow,
