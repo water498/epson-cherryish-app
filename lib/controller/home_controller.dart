@@ -5,17 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:seeya/core/data/model/common/common_models.dart';
+import 'package:seeya/core/data/repository/common_repository.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
 import '../core/config/app_secret.dart';
-import '../data/model/models.dart';
-import '../data/repository/repositories.dart';
+// v1 (deprecated)
+// import '../data/model/models.dart';
+// import '../data/repository/repositories.dart';
 
 class HomeController extends GetxController{
 
-  final HomeRepository homeRepository;
-
-  HomeController({required this.homeRepository});
+  final commonRepository = CommonRepository();
 
 
 
@@ -63,14 +64,9 @@ class HomeController extends GetxController{
     try{
       LoadingOverlay.show();
 
-      CommonResponseModel commonResponse = await homeRepository.fetchHomeFrameListApi();
-
-      if(commonResponse.successModel != null){
-        homeList.value = HomeBestFrame.fromJsonList(commonResponse.successModel!.content["items"]);
-
-      } else if(commonResponse.failModel != null) {
-
-      }
+      // v2 API
+      List<HomeBestFrame> frames = await commonRepository.getHomeBestFrames();
+      homeList.value = frames;
 
     }catch(e, stackTrace){
       Logger().e("error ::: $e");

@@ -86,7 +86,7 @@ class HomeScreen extends GetView<HomeController> {
                         child: Transform.scale(
                           scale: scaleValue,
                           child: SeeyaCachedImage(
-                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${controller.homeList[index].flipped_image_filepath}"),
+                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${controller.homeList[index].flippedImageFilepath}"),
                             fit: BoxFit.contain,
                           ),
                         ),

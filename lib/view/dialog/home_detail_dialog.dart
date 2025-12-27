@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/core/config/app_router.dart';
 import 'package:seeya/core/config/app_secret.dart';
-import 'package:seeya/data/model/models.dart';
+import 'package:seeya/core/data/model/common/common_models.dart';
 
 import '../../core/config/app_colors.dart';
 import '../../core/config/app_themes.dart';
@@ -37,7 +37,7 @@ class HomeDetailDialog extends StatelessWidget {
           Expanded(
             child: Center(
               child: SeeyaCachedImage(
-                imageUrl: Uri.encodeFull("${AppSecret.s3url}${selectedItem.preview_image_filepath}"),
+                imageUrl: Uri.encodeFull("${AppSecret.s3url}${selectedItem.previewImageFilepath}"),
                 fit: BoxFit.contain,
               ),
             )
