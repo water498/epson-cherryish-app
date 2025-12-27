@@ -109,9 +109,8 @@ class RootController extends GetxController{
   }
 
   void onMyPageClick(){
-    var authApi = Get.put(AuthApi());
-    var myPageRepository = Get.put(MyPageRepository(authApi: authApi));
-    var myPageController = Get.put(MyPageController(myPageRepository: myPageRepository));
+    // v2
+    var myPageController = Get.put(MyPageController());
     myPageController.validateToken();
   }
 
