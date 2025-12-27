@@ -312,7 +312,7 @@ class MapTabScreen extends GetView<MapTabController> {
                                                               child: AspectRatio(
                                                                   aspectRatio: 1,
                                                                   child: SeeyaCachedImage(
-                                                                    imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnail_image_filepath}"),
+                                                                    imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnailImageFilepath}"),
                                                                     fit: BoxFit.cover,
                                                                   )
                                                               ),
@@ -322,10 +322,10 @@ class MapTabScreen extends GetView<MapTabController> {
                                                               child: Column(
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                 children: [
-                                                                  Text(event.event_name, style: AppThemes.headline05.copyWith(color: AppColors.blueGrey100), overflow: TextOverflow.ellipsis, maxLines: 1,),
-                                                                  Text(event.place_name, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300), overflow: TextOverflow.ellipsis, maxLines: 2,),
+                                                                  Text(event.eventName ?? "", style: AppThemes.headline05.copyWith(color: AppColors.blueGrey100), overflow: TextOverflow.ellipsis, maxLines: 1,),
+                                                                  Text(event.placeName, style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300), overflow: TextOverflow.ellipsis, maxLines: 2,),
                                                                   const Expanded(child: SizedBox()),
-                                                                  Text("map.event_list_item_period".trParams({'start_date':FormatUtils.formatDate01(event.start_date) ?? "", 'end_date':FormatUtils.formatDate01(event.end_date) ?? ""}), style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300)),
+                                                                  Text("map.event_list_item_period".trParams({'start_date':FormatUtils.formatDate01(event.startDate) ?? "", 'end_date':FormatUtils.formatDate01(event.endDate) ?? ""}), style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300)),
                                                                 ],
                                                               ),
                                                             )
@@ -367,7 +367,7 @@ class MapTabScreen extends GetView<MapTabController> {
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
-                                            Text(controller.selectedClusterMarker[0].place_name, style: AppThemes.headline04.copyWith(color: AppColors.blueGrey000),),
+                                            Text(controller.selectedClusterMarker[0].placeName, style: AppThemes.headline04.copyWith(color: AppColors.blueGrey000),),
                                             const Expanded(child: SizedBox()),
                                             GestureDetector(
                                                 onTap: (){
@@ -402,12 +402,12 @@ class MapTabScreen extends GetView<MapTabController> {
                                                       Expanded(
                                                         child: AspectRatio(
                                                           aspectRatio: 1,
-                                                          child: SeeyaCachedImage(imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnail_image_filepath}"),fit: BoxFit.cover,),
+                                                          child: SeeyaCachedImage(imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnailImageFilepath}"),fit: BoxFit.cover,),
                                                         ),
                                                       ),
                                                       const SizedBox(height: 12,),
-                                                      Align(alignment: Alignment.centerLeft,child: Text(event.event_name, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100),maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.start, )),
-                                                      Align(alignment: Alignment.centerLeft,child: Text("${FormatUtils.formatDate01(event.start_date)} - ${FormatUtils.formatDate01(event.end_date)}", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300), textAlign: TextAlign.start, maxLines: 1, overflow: TextOverflow.ellipsis,)),
+                                                      Align(alignment: Alignment.centerLeft,child: Text(event.eventName ?? "", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100),maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.start, )),
+                                                      Align(alignment: Alignment.centerLeft,child: Text("${FormatUtils.formatDate01(event.startDate)} - ${FormatUtils.formatDate01(event.endDate)}", style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300), textAlign: TextAlign.start, maxLines: 1, overflow: TextOverflow.ellipsis,)),
                                                       const SizedBox(height: 30,),
                                                     ],
                                                   ),

@@ -6,23 +6,24 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/core/config/app_router.dart';
-import 'package:seeya/data/repository/repositories.dart';
+import 'package:seeya/core/data/model/event/event.dart';
+import 'package:seeya/core/data/repository/event_repository.dart';
 import 'package:seeya/core/utils/utils.dart';
 import 'package:seeya/core/utils/marker_icon_cache.dart';
 
 import '../core/config/app_secret.dart';
 import '../core/utils/geo_utils.dart';
 import '../data/enum/enums.dart';
-import '../data/model/models.dart';
+// v1 (deprecated)
+// import 'package:seeya/data/repository/repositories.dart';
+// import '../data/model/models.dart';
 import '../view/common/loading_overlay.dart';
 
 
 
 class MapTabController extends GetxController with GetSingleTickerProviderStateMixin{
 
-  final MapTabRepository mapTabRepository;
-
-  MapTabController({required this.mapTabRepository});
+  final eventRepository = EventRepository();
 
 
 
@@ -52,10 +53,10 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
   StreamSubscription<Position>? _positionStreamSubscription;
 
   // event data
-  RxList<EventModel> curEventList = <EventModel>[].obs;
-  List<EventModel> allEventList = [];
+  RxList<Event> curEventList = <Event>[].obs;
+  List<Event> allEventList = [];
   var isEventListFetched = false.obs;
-  RxList<EventModel> selectedClusterMarker = <EventModel>[].obs;
+  RxList<Event> selectedClusterMarker = <Event>[].obs;
 
   // search
   var searchResult = "".obs;
@@ -110,32 +111,23 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
     try{
       LoadingOverlay.show();
 
-      CommonResponseModel commonResponse = await mapTabRepository.fetchEventListApi(eventIds);
+      // v2 API
+      List<Event> response = await eventRepository.getEvents(eventIds: eventIds);
 
+      if(eventIds == null){
+        sortEventsByPopularity(response);
+        allEventList = response;
+      }
 
-      if(commonResponse.successModel != null){
-        List<EventModel> response = EventModel.fromJsonList(commonResponse.successModel!.content["items"]);
+      curEventList.value = response;
 
-        if(eventIds == null){
-          sortEventsByPopularity(response);
-          allEventList = response;
-        } else {
-
-        }
-
-        curEventList.value = response;
-
-        // 이벤트 로드 완료 후 마커 업데이트 및 카메라 이동
-        if(isMapInitialized.value && curEventList.isNotEmpty) {
-          await updateMarker();
-          await _updateCameraToPosition(
-            LatLng(curEventList[0].latitude, curEventList[0].longitude),
-          );
-          Logger().d('[MapTabController] Markers and camera updated after fetchEventList');
-        }
-
-      } else if(commonResponse.failModel != null) {
-
+      // 이벤트 로드 완료 후 마커 업데이트 및 카메라 이동
+      if(isMapInitialized.value && curEventList.isNotEmpty) {
+        await updateMarker();
+        await _updateCameraToPosition(
+          LatLng(curEventList[0].latitude, curEventList[0].longitude),
+        );
+        Logger().d('[MapTabController] Markers and camera updated after fetchEventList');
       }
 
       isEventListFetched(true);
@@ -254,7 +246,7 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
 
       // 클러스터링 범위 (m)
       const double clusterRadius = 15.0; // meter
-      List<List<EventModel>> clusters = _clusterEvents(curEventList, clusterRadius);
+      List<List<Event>> clusters = _clusterEvents(curEventList, clusterRadius);
 
       Logger().d('[MapTabController] Updating ${clusters.length} markers (from ${curEventList.length} events)');
 
@@ -269,7 +261,7 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
 
         // Load custom marker icon using MarkerIconCache
         final icon = await MarkerIconCache.getMarkerIcon(
-          "${AppSecret.s3url}${eventInfo.map_pin_image_filepath}",
+          "${AppSecret.s3url}${eventInfo.mapPinImageFilepath}",
           width: iconSize,
           height: iconSize,
         );
@@ -316,8 +308,8 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
 
 
 
-  List<List<EventModel>> _clusterEvents(List<EventModel> eventList, double clusterRadius) {
-    List<List<EventModel>> clusters = [];
+  List<List<Event>> _clusterEvents(List<Event> eventList, double clusterRadius) {
+    List<List<Event>> clusters = [];
 
     for (final event in eventList) {
       bool addedToCluster = false;
@@ -418,10 +410,10 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
 
 
   // sort
-  void sortEventsByPopularity(List<EventModel> events) {
-    events.sort((a, b) => b.popularity_score.compareTo(a.popularity_score));
+  void sortEventsByPopularity(List<Event> events) {
+    events.sort((a, b) => (b.popularityScore ?? 0).compareTo(a.popularityScore ?? 0));
   }
-  void sortEventsByDistance(Position userLatLong, List<EventModel> events) {
+  void sortEventsByDistance(Position userLatLong, List<Event> events) {
     events.sort((a, b) {
       final distanceA = GeoUtils.calculateDistance(userLatLong, a.latitude, a.longitude);
       final distanceB = GeoUtils.calculateDistance(userLatLong, b.latitude, b.longitude);

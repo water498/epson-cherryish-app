@@ -16,6 +16,10 @@ class Event {
   final String placeName;
   final double longitude;
   final double latitude;
+  final String? tags;
+  final String? qrImageFilepath;
+  final String? webLink;
+  final int? popularityScore;
   final DateTime createdDate;
   final DateTime updatedDate;
   final DateTime? deletedDate;
@@ -33,6 +37,10 @@ class Event {
     required this.placeName,
     required this.longitude,
     required this.latitude,
+    this.tags,
+    this.qrImageFilepath,
+    this.webLink,
+    this.popularityScore,
     required this.createdDate,
     required this.updatedDate,
     this.deletedDate,

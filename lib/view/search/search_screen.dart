@@ -164,7 +164,7 @@ class SearchScreen extends GetView<SearchScreenController> {
 
                                   if(searchHistory.isEvent){
                                     await controller.setSearchHistoryData();
-                                    Get.toNamed(AppRouter.event_detail, arguments: searchHistory.event_id ?? 0);
+                                    Get.toNamed(AppRouter.event_detail, arguments: searchHistory.id ?? 0);
                                     return;
                                   }
 
@@ -244,16 +244,16 @@ class SearchScreen extends GetView<SearchScreenController> {
                                       keyword: "",
                                       isEvent: true,
                                       id: Uuid().v4(),
-                                      event_id: searchResponseEvent.event_id,
-                                      event_name: searchResponseEvent.event_name,
-                                      place_name: searchResponseEvent.place_name,
+                                      event_id: searchResponseEvent.id,
+                                      event_name: searchResponseEvent.eventName,
+                                      place_name: searchResponseEvent.placeName,
                                     )
                                 );
-                                Get.toNamed(AppRouter.event_detail, arguments: searchResponseEvent.event_id);
+                                Get.toNamed(AppRouter.event_detail, arguments: searchResponseEvent.id);
                               },
                               onDelete: () {},
-                              title: searchResponseEvent.event_name,
-                              subTitle: searchResponseEvent.place_name,
+                              title: searchResponseEvent.eventName ?? "",
+                              subTitle: searchResponseEvent.placeName,
                               isEvent: true,
                               isFromPref: false,
                             );

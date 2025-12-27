@@ -3,16 +3,19 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/data/repository/repositories.dart';
+import 'package:seeya/core/data/model/event/event.dart';
+import 'package:seeya/core/data/model/event/editor_frame.dart';
+import 'package:seeya/core/data/model/event/event_detail_response.dart';
+import 'package:seeya/core/data/repository/event_repository.dart';
 
-import '../data/model/models.dart';
+// v1 (deprecated)
+// import 'package:seeya/data/repository/repositories.dart';
+// import '../data/model/models.dart';
 import '../view/common/loading_overlay.dart';
 
 class EventDetailController extends GetxController{
 
-  final EventDetailRepository eventDetailRepository;
-
-  EventDetailController({required this.eventDetailRepository});
+  final eventRepository = EventRepository();
 
 
 
@@ -26,9 +29,8 @@ class EventDetailController extends GetxController{
   late final ScrollController scrollController;
   var isAppBarExpanded = true.obs;
 
-  Rxn<EventModel> event = Rxn<EventModel>();
-  RxList<EventFrameModel> eventFrameList = <EventFrameModel>[].obs;
-  RxList<EventFilterModel> eventFilterList = <EventFilterModel>[].obs;
+  Rxn<Event> event = Rxn<Event>();
+  RxList<EditorFrame> eventFrameList = <EditorFrame>[].obs;
 
 
   @override
@@ -78,17 +80,11 @@ class EventDetailController extends GetxController{
 
       await Future.delayed(const Duration(milliseconds: 300));
 
-      CommonResponseModel commonResponse = await eventDetailRepository.fetchEventDetailsApi(eventId);
+      // v2 API
+      EventDetailResponse response = await eventRepository.getEventDetail(eventId);
 
-      if(commonResponse.successModel != null){
-
-        event.value = EventModel.fromJson(commonResponse.successModel!.content["event"]);
-        eventFrameList.value = EventFrameModel.fromJsonList(commonResponse.successModel!.content["event_editor_frames"]);
-        eventFilterList.value = EventFilterModel.fromJsonList(commonResponse.successModel!.content["event_editor_filters"]);
-
-      } else if(commonResponse.failModel != null) {
-
-      }
+      event.value = response.event;
+      eventFrameList.value = response.editorFrames;
 
     }catch(e, stackTrace){
       Logger().e("error ::: $e");

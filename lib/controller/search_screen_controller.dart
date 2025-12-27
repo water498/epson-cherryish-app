@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/data/model/models.dart';
-import 'package:seeya/data/repository/repositories.dart';
+import 'package:seeya/core/data/model/event/event.dart';
+import 'package:seeya/core/data/repository/event_repository.dart';
 
+// v1 (deprecated)
+// import 'package:seeya/data/model/models.dart';
+// import 'package:seeya/data/repository/repositories.dart';
+import '../data/model/models.dart'; // SearchHistoryModel만 사용
 import '../view/search/search_history_manager.dart';
 
 class SearchScreenController extends GetxController{
 
-  final SearchScreenRepository searchScreenRepository;
-
-  SearchScreenController({required this.searchScreenRepository});
+  final eventRepository = EventRepository();
 
 
 
@@ -22,7 +24,7 @@ class SearchScreenController extends GetxController{
   SearchHistoryManager historyManager = SearchHistoryManager();
   RxList<SearchHistoryModel> searchHistories = <SearchHistoryModel>[].obs; // 전체 검색 기록
   RxList<SearchHistoryModel> searchMatchingHistories = <SearchHistoryModel>[].obs; // Keyword에 필터링된 검색 기록
-  RxList<SearchResponseModel> searchResponseList = <SearchResponseModel>[].obs;
+  RxList<Event> searchResponseList = <Event>[].obs;
 
 
 
@@ -74,22 +76,14 @@ class SearchScreenController extends GetxController{
 
       print("keyword $searchKeyword");
 
-      CommonResponseModel commonResponse = await searchScreenRepository.searchEventsFromKeywordApi(searchKeyword);
-
-      if(commonResponse.successModel != null){
-        List<SearchResponseModel> response = SearchResponseModel.fromJsonList(commonResponse.successModel!.content["items"]);
-        searchResponseList.value = response;
-
-      } else if(commonResponse.failModel != null) {
-        throw Exception();
-      }
+      // v2 API
+      List<Event> response = await eventRepository.searchEvents(searchKeyword);
+      searchResponseList.value = response;
 
     } catch (e, stackTrace) {
       Fluttertoast.showToast(msg: "toast.unknown_error".tr);
       Logger().d("Error: $e");
       Logger().d("stackTrace: $stackTrace");
-    } finally {
-
     }
 
   }

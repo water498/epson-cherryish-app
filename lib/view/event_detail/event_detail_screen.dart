@@ -63,7 +63,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                         ),
                       ],
                     ),
-                    title: Text(isExpanded ? "": event?.event_name ?? "", style: AppThemes.headline04.copyWith(color: AppColors.blueGrey000, height: 0),textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                    title: Text(isExpanded ? "": event?.eventName ?? "", style: AppThemes.headline04.copyWith(color: AppColors.blueGrey000, height: 0),textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis,),
                     centerTitle: true,
 
                     actions: [
@@ -88,7 +88,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
 
                           if(event != null)
                           SeeyaCachedImage(
-                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnail_image_filepath}"),
+                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${event.thumbnailImageFilepath}"),
                             fit: BoxFit.cover,
                           ),
 
@@ -140,8 +140,8 @@ class EventDetailScreen extends GetView<EventDetailController> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(event?.event_name ?? "", style: AppThemes.headline03.copyWith(color: AppColors.blueGrey100),),
-                              Text(event?.place_name ?? "", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),),
+                              Text(event?.eventName ?? "", style: AppThemes.headline03.copyWith(color: AppColors.blueGrey100),),
+                              Text(event?.placeName ?? "", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),),
                               const SizedBox(height: 24,),
                               // Row(
                               //   children: [
@@ -161,7 +161,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      "${FormatUtils.formatDate01(event?.start_date) ?? ""} - ${FormatUtils.formatDate01(event?.end_date) ?? ""}",
+                                      "${FormatUtils.formatDate01(event?.startDate) ?? ""} - ${FormatUtils.formatDate01(event?.endDate) ?? ""}",
                                       style: AppThemes.headline05.copyWith(color: AppColors.blueGrey300),
                                     )
                                   ),
@@ -179,11 +179,11 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text("${event?.address ?? ""} ${event?.address_detail ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),),
+                                        Text("${event?.address ?? ""} ${event?.addressDetail ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),),
                                         GestureDetector(
                                             behavior: HitTestBehavior.translucent,
                                             onTap: () {
-                                              Clipboard.setData(ClipboardData(text: "${event?.address ?? ""} ${event?.address_detail ?? ""}"));
+                                              Clipboard.setData(ClipboardData(text: "${event?.address ?? ""} ${event?.addressDetail ?? ""}"));
                                               Fluttertoast.showToast(msg: "event_detail.toast.copied".tr);
                                             },
                                             child: Text("event_detail.address_copy".tr, style: AppThemes.bodySmall.copyWith(color: AppColors.primary400),)
@@ -208,8 +208,8 @@ class EventDetailScreen extends GetView<EventDetailController> {
 
                           bool isFinishedEvent = false;
 
-                          if(controller.event.value != null && controller.event.value!.end_date != null){
-                            isFinishedEvent = DateTime.now().isAfter(controller.event.value!.end_date!);
+                          if(controller.event.value != null && controller.event.value!.endDate != null){
+                            isFinishedEvent = DateTime.now().isAfter(controller.event.value!.endDate!);
                           }
 
                           return Container(
@@ -234,8 +234,8 @@ class EventDetailScreen extends GetView<EventDetailController> {
 
                                     bool isFinishedEvent = true;
 
-                                    if(controller.event.value != null && controller.event.value!.end_date != null){
-                                      isFinishedEvent = !DateTime.now().isBefore(controller.event.value!.end_date!);
+                                    if(controller.event.value != null && controller.event.value!.endDate != null){
+                                      isFinishedEvent = !DateTime.now().isBefore(controller.event.value!.endDate!);
                                     }
 
                                     if(isFinishedEvent) {
@@ -245,14 +245,12 @@ class EventDetailScreen extends GetView<EventDetailController> {
 
                                     if(event == null) return;
 
-                                    var selectedFrameFilters = controller.eventFilterList.where((filter) => filter.event_editor_frame_uid == frame.uid,).toList();
-
+                                    // v2: filters are embedded in EditorFrame
                                     Get.toNamed(
                                         AppRouter.decorate_frame,
                                         arguments: {
                                           "event": event,
                                           "event_frame": frame,
-                                          "event_filters": selectedFrameFilters,
                                         }
                                     );
 
@@ -268,7 +266,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                           )
                                       ),
                                       child: SeeyaCachedImage(
-                                        imageUrl: Uri.encodeFull("${AppSecret.s3url}${frame.preview_image_filepath}"),
+                                        imageUrl: Uri.encodeFull("${AppSecret.s3url}${frame.resizedFrameImageFilepath}"),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
