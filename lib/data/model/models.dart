@@ -13,5 +13,3 @@ export 'qna_model.dart';
 export 'validate_token_model.dart';
 export 'search_model.dart';
 export 'point.dart';
-export 'print_history_model.dart';
-export 'report_model.dart';

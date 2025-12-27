@@ -4,10 +4,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/core/config/app_themes.dart';
-import 'package:seeya/data/enum/enums.dart';
 
 import '../../core/config/app_colors.dart';
 import '../../controller/controllers.dart';
+import '../tab_map/event_sort_key_enum.dart';
 
 
 class SortKeyListBottomSheet extends StatefulWidget {

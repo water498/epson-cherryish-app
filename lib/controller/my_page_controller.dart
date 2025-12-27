@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
@@ -8,16 +7,12 @@ import 'package:naver_login_sdk/naver_login_sdk.dart';
 import 'package:seeya/core/data/model/auth/user_detail.dart';
 import 'package:seeya/core/data/repository/auth_repository.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 // v1 (deprecated)
 // import 'package:seeya/data/repository/repositories.dart';
 
 import '../core/config/app_prefs_keys.dart';
-import '../core/config/app_router.dart';
 import '../core/services/preference_service.dart';
-import '../data/enum/enums.dart';
-import '../data/model/models.dart';
 import '../core/services/services.dart';
 
 class MyPageController extends GetxController {
@@ -94,7 +89,7 @@ class MyPageController extends GetxController {
 
     await FirebaseAuth.instance.signOut();
     await AppPreferences().prefs?.remove(AppPrefsKeys.userAccessToken); // remove access token
-    await AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.none.toDisplayString());
+    await AppPreferences().prefs?.remove(AppPrefsKeys.loginPlatform); // remove login platform
     UserService.instance.userDetail.value = null;
 
   }

@@ -21,9 +21,6 @@ abstract class AppRouter {
   static const String custom_splash = '/custom_splash';
   static const String enter_user_info = '/enter_user_info';
   static const String sign_up_finish = '/sign_up_finish';
-  static const String report = '/report';
-  static const String error_report = '/error_report';
-  static const String inquiry_detail = '/inquiry_detail';
   static const String phone_verification = '/phone_verification';
   static const String image_crop = '/image_crop';
   static const String setting = '/setting';
@@ -119,21 +116,6 @@ abstract class AppRouter {
     GetPage(
       name: sign_up_finish,
       page: () => SignUpFinishScreen(),
-    ),
-    GetPage(
-      name: report,
-      page: () => ReportScreen(),
-      binding: ReportBinding(),
-    ),
-    GetPage(
-      name: error_report,
-      page: () => ErrorReportScreen(),
-      binding: ErrorReportBinding(),
-    ),
-    GetPage(
-      name: inquiry_detail,
-      page: () => InquiryDetailScreen(),
-      binding: InquiryDetailBinding(),
     ),
     GetPage(
       name: phone_verification,

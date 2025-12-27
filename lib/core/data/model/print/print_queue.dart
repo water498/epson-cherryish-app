@@ -13,9 +13,6 @@ class PrintQueue {
   final DateTime? printingDate;
   final DateTime? printingRequestDate;
   final String? printingErrorMessage;
-  final PrintErrorReportStatus? printErrorReportStatus;
-  final String? printErrorReportMessage;
-  final String? printErrorReportFilepath;
   final DateTime createdDate;
   final DateTime updatedDate;
   final DateTime? deletedDate;
@@ -29,9 +26,6 @@ class PrintQueue {
     this.printingDate,
     this.printingRequestDate,
     this.printingErrorMessage,
-    this.printErrorReportStatus,
-    this.printErrorReportMessage,
-    this.printErrorReportFilepath,
     required this.createdDate,
     required this.updatedDate,
     this.deletedDate,

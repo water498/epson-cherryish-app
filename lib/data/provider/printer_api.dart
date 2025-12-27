@@ -55,8 +55,4 @@ class PrinterApi extends BaseApi {
   Future<Response> requestPrintApi(Map<String, dynamic> request) async {
     return await post("/mobile/print/request", request);
   }
-
-  Future<Response> fetchPrintHistories() async {
-    return await get("/mobile/print/history/list");
-  }
 }

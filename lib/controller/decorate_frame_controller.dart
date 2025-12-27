@@ -153,7 +153,7 @@ class DecorateFrameController extends GetxController{
           title: "decorate_frame_complete_dialog.title".trParams({'waitCount':waitCount.toString()}),
           button01text: "decorate_frame_complete_dialog.button01".tr,
           onButton01Click: () async {
-            Get.offNamed(AppRouter.report);
+            Get.offNamed(AppRouter.print_history);
           },
           button02text: "decorate_frame_complete_dialog.button02".tr,
           onButton02Click: () async {

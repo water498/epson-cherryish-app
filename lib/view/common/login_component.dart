@@ -7,7 +7,7 @@ import 'package:seeya/data/repository/login_repository.dart';
 
 import '../../core/config/app_colors.dart';
 import '../../core/config/app_themes.dart';
-import '../../data/enum/enums.dart';
+import '../../core/data/enum/social_login_type.dart';
 import '../../data/provider/providers.dart';
 import 'sns_login_button.dart';
 
@@ -39,26 +39,26 @@ class LoginComponent extends GetView<LoginComponentController> {
 
             SnsLoginButton(onTap: () async {
               controller.signInWithKakao();
-            }, socialType: LoginPlatform.kakao),
+            }, socialType: SocialLoginType.kakao),
 
             const SizedBox(height: 8,),
 
             SnsLoginButton(onTap: () async {
               controller.signInWithNaver();
-            }, socialType: LoginPlatform.naver),
+            }, socialType: SocialLoginType.naver),
 
             const SizedBox(height: 8,),
 
             SnsLoginButton(onTap: () async {
               controller.signInWithGoogle();
-            }, socialType: LoginPlatform.google),
+            }, socialType: SocialLoginType.google),
 
             const SizedBox(height: 8,),
 
             if(Platform.isIOS)
             SnsLoginButton(onTap: () async {
               controller.signInWithApple();
-            }, socialType: LoginPlatform.apple),
+            }, socialType: SocialLoginType.apple),
           ],
         )
     );

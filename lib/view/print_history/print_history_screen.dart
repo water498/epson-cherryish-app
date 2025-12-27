@@ -55,13 +55,10 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
                         onTap: () {
-
-                          if(history.print_filepath == null) return;
-
                           Get.toNamed(
                               AppRouter.image_viewer,
                               arguments: {
-                                "image_path" : Uri.encodeFull("${AppSecret.s3url}${history.print_filepath}"),
+                                "image_path" : Uri.encodeFull("${AppSecret.s3url}${history.originalImageFilepath}"),
                                 "hero_tag" : "print_history_viewer$index",
                               }
                           );
@@ -69,7 +66,7 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                         child: Hero(
                           tag: "print_history_viewer$index",
                           child: SeeyaCachedImage(
-                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${history.print_filepath}"),
+                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${history.thumbnailFilepath}"),
                           ),
                         ),
                       ),

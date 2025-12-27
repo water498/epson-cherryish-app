@@ -6,13 +6,10 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:logger/logger.dart';
 import 'package:naver_login_sdk/naver_login_sdk.dart';
 import 'package:seeya/core/data/repository/auth_repository.dart';
-import 'package:seeya/data/repository/repositories.dart';
 
 import '../core/config/app_prefs_keys.dart';
 import '../core/config/app_router.dart';
 import '../core/services/preference_service.dart';
-import '../data/enum/enums.dart';
-import '../data/model/models.dart';
 import '../core/services/services.dart';
 import '../view/common/loading_overlay.dart';
 
@@ -94,7 +91,7 @@ class WithdrawalController extends GetxController{
 
     await FirebaseAuth.instance.signOut();
     await AppPreferences().prefs?.remove(AppPrefsKeys.userAccessToken); // remove access token
-    await AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.none.toDisplayString());
+    await AppPreferences().prefs?.remove(AppPrefsKeys.loginPlatform); // remove login platform
     UserService.instance.userDetail.value = null;
 
 

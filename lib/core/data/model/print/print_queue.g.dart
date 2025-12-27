@@ -19,10 +19,6 @@ PrintQueue _$PrintQueueFromJson(Map<String, dynamic> json) => PrintQueue(
           ? null
           : DateTime.parse(json['printing_request_date'] as String),
       printingErrorMessage: json['printing_error_message'] as String?,
-      printErrorReportStatus: $enumDecodeNullable(
-          _$PrintErrorReportStatusEnumMap, json['print_error_report_status']),
-      printErrorReportMessage: json['print_error_report_message'] as String?,
-      printErrorReportFilepath: json['print_error_report_filepath'] as String?,
       createdDate: DateTime.parse(json['created_date'] as String),
       updatedDate: DateTime.parse(json['updated_date'] as String),
       deletedDate: json['deleted_date'] == null
@@ -40,10 +36,6 @@ Map<String, dynamic> _$PrintQueueToJson(PrintQueue instance) =>
       'printing_date': instance.printingDate?.toIso8601String(),
       'printing_request_date': instance.printingRequestDate?.toIso8601String(),
       'printing_error_message': instance.printingErrorMessage,
-      'print_error_report_status':
-          _$PrintErrorReportStatusEnumMap[instance.printErrorReportStatus],
-      'print_error_report_message': instance.printErrorReportMessage,
-      'print_error_report_filepath': instance.printErrorReportFilepath,
       'created_date': instance.createdDate.toIso8601String(),
       'updated_date': instance.updatedDate.toIso8601String(),
       'deleted_date': instance.deletedDate?.toIso8601String(),
@@ -55,10 +47,4 @@ const _$PrintQueueStatusEnumMap = {
   PrintQueueStatus.printing: 'PRINTING',
   PrintQueueStatus.completed: 'COMPLETED',
   PrintQueueStatus.error: 'ERROR',
-};
-
-const _$PrintErrorReportStatusEnumMap = {
-  PrintErrorReportStatus.pending: 'PENDING',
-  PrintErrorReportStatus.rejected: 'REJECTED',
-  PrintErrorReportStatus.refunded: 'REFUNDED',
 };

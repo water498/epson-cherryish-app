@@ -6,4 +6,3 @@ export 'qna_api.dart';
 export 'home_api.dart';
 export 'printer_api.dart';
 export 'search_api.dart';
-export 'report_api.dart';

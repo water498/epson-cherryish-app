@@ -17,7 +17,7 @@ import '../core/config/app_router.dart';
 import '../core/data/model/auth/auth_models.dart';
 import '../core/data/repository/auth_repository.dart';
 import '../core/services/preference_service.dart';
-import '../data/enum/enums.dart';
+import '../core/data/enum/social_login_type.dart';
 import '../data/model/models.dart';
 import '../data/repository/repositories.dart';
 import '../core/services/services.dart';
@@ -123,7 +123,7 @@ class LoginComponentController extends GetxController{
         name : kakaoAccount.name,
         email : kakaoAccount.email ?? "",
         profileUrl: kakaoAccount.profile?.profileImageUrl,
-        socialType: LoginPlatform.kakao.toSocialLoginType(),
+        socialType: SocialLoginType.kakao,
         socialId: user.id.toString(),
         fcmToken : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
         osName: Platform.isIOS ? "ios" : "aos",
@@ -131,7 +131,7 @@ class LoginComponentController extends GetxController{
       );
 
       fetchUserData(loginRequest);
-      AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.kakao.toDisplayString());
+      AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, SocialLoginType.kakao.toDisplayString());
 
     } catch (e) {
       Logger().e("kakao login error ::: $e");
@@ -163,7 +163,7 @@ class LoginComponentController extends GetxController{
                 name: profile.name,
                 email: profile.email ?? "",
                 profileUrl: profile.profileImage,
-                socialType: LoginPlatform.naver.toSocialLoginType(),
+                socialType: SocialLoginType.naver,
                 socialId: profile.id!,
                 fcmToken: AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
                 osName: Platform.isIOS ? "ios" : "aos",
@@ -171,7 +171,7 @@ class LoginComponentController extends GetxController{
               );
 
               fetchUserData(loginRequest);
-              AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.naver.toDisplayString());
+              AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, SocialLoginType.naver.toDisplayString());
             },
             onFailure: (httpStatus, message) {
               Logger().e("naver profile failure ::: $httpStatus, $message");
@@ -211,7 +211,7 @@ class LoginComponentController extends GetxController{
           name : googleUser.displayName,
           email : googleUser.email,
           profileUrl: googleUser.photoUrl,
-          socialType: LoginPlatform.google.toSocialLoginType(),
+          socialType: SocialLoginType.google,
           socialId: googleUser.id,
           fcmToken : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
           osName: Platform.isIOS ? "ios" : "aos",
@@ -219,7 +219,7 @@ class LoginComponentController extends GetxController{
         );
 
         fetchUserData(loginRequest);
-        AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.google.toDisplayString());
+        AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, SocialLoginType.google.toDisplayString());
 
       }
     }catch (e){
@@ -247,7 +247,7 @@ class LoginComponentController extends GetxController{
         name: credential.familyName,
         email : credential.email ?? "",
         profileUrl: null,
-        socialType: LoginPlatform.apple.toSocialLoginType(),
+        socialType: SocialLoginType.apple,
         socialId: credential.userIdentifier ?? "unknown",
         fcmToken : AppPreferences().prefs?.getString(AppPrefsKeys.fcmToken),
         osName: Platform.isIOS ? "ios" : "aos",
@@ -255,7 +255,7 @@ class LoginComponentController extends GetxController{
       );
 
       fetchUserData(loginRequest);
-      AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.apple.toDisplayString());
+      AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, SocialLoginType.apple.toDisplayString());
 
     } catch (e) {
       Logger().e("Apple login error ::: $e");

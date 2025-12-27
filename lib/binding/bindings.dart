@@ -14,8 +14,5 @@ export 'print_history_binding.dart';
 export 'search_screen_binding.dart';
 export 'event_detail_binding.dart';
 export 'decorate_frame_binding.dart';
-export 'report_binding.dart';
-export 'error_report_binding.dart';
-export 'inquiry_detail_binding.dart';
 export 'payment_binding.dart';
 

@@ -1,23 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/core/config/app_router.dart';
 import 'package:seeya/core/data/model/event/event.dart';
 import 'package:seeya/core/data/repository/event_repository.dart';
-import 'package:seeya/core/utils/utils.dart';
 import 'package:seeya/core/utils/marker_icon_cache.dart';
+import 'package:seeya/core/utils/utils.dart';
 
 import '../core/config/app_secret.dart';
-import '../core/utils/geo_utils.dart';
-import '../data/enum/enums.dart';
 // v1 (deprecated)
 // import 'package:seeya/data/repository/repositories.dart';
 // import '../data/model/models.dart';
 import '../view/common/loading_overlay.dart';
+import '../view/tab_map/event_sort_key_enum.dart';
 
 
 

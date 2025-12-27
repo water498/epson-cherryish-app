@@ -3,14 +3,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:seeya/core/config/app_colors.dart';
 import 'package:seeya/core/config/app_themes.dart';
-import 'package:seeya/data/enum/enums.dart';
+import 'package:seeya/core/data/enum/social_login_type.dart';
 
 import 'bouncing_button.dart';
 
 class SnsLoginButton extends StatelessWidget {
 
   final VoidCallback onTap;
-  final LoginPlatform socialType;
+  final SocialLoginType socialType;
 
   const SnsLoginButton({
     required this.onTap,
@@ -29,37 +29,34 @@ class SnsLoginButton extends StatelessWidget {
     var platformText = "";
 
     switch (socialType){
-      case LoginPlatform.kakao : {
+      case SocialLoginType.kakao : {
         buttonColor = const Color(0xccFFEB00);
         strokeColor = const Color(0xffFFEB00);
         iconPath = "assets/image/ic_logo_kakao.svg";
         platformText = "Kakao";
         break;
       }
-      case LoginPlatform.naver : {
+      case SocialLoginType.naver : {
         buttonColor = const Color(0xcc04C75B);
         strokeColor = const Color(0xff04C75B);
         iconPath = "assets/image/ic_logo_naver.svg";
         platformText = "Naver";
         break;
       }
-      case LoginPlatform.google : {
+      case SocialLoginType.google : {
         buttonColor = const Color(0xffffffff);
         strokeColor = AppColors.blueGrey200;
         iconPath = "assets/image/ic_logo_google.svg";
         platformText = "Google";
         break;
       }
-      case LoginPlatform.apple : {
+      case SocialLoginType.apple : {
         buttonColor = AppColors.blueGrey100;
         strokeColor = AppColors.blueGrey000;
         iconPath = "assets/image/ic_logo_apple.svg";
         platformText = "Apple";
         textColor = Colors.white;
         break;
-      }
-      default : {
-
       }
     }
 

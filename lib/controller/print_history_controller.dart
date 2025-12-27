@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:seeya/data/model/models.dart';
-import 'package:seeya/data/repository/repositories.dart';
-import 'package:seeya/view/common/loading_overlay.dart';
+import 'package:seeya/core/data/model/print/print_models.dart';
+import 'package:seeya/core/data/repository/print_repository.dart';
 
 class PrintHistoryController extends GetxController{
 
-  final PrintHistoryRepository printHistoryRepository;
-
-  PrintHistoryController({required this.printHistoryRepository});
+  final printRepository = PrintRepository();
 
 
 
 
 
 
-  RxList<PrintHistoryModel> historyList = <PrintHistoryModel>[].obs;
+  RxList<PrintQueueItem> historyList = <PrintQueueItem>[].obs;
   var isLoadFinish = false.obs;
   late final PageController pageController;
+
+  static const int limit = 100; // 한 번에 가져올 항목 수
 
 
   @override
@@ -42,21 +42,18 @@ class PrintHistoryController extends GetxController{
 
   Future<void> fetchHistory() async {
     try {
-      CommonResponseModel commonResponse = await printHistoryRepository.fetchPrintHistories();
+      // v2 API: Get print queue items
+      PrintQueueResponse response = await printRepository.getPrintQueues(
+        skip: 0,
+        limit: limit,
+      );
 
-      if(commonResponse.successModel != null){
-
-        List<PrintHistoryModel> response = PrintHistoryModel.fromJsonList(commonResponse.successModel!.content["items"]);
-        historyList.value = response;
-
-      } else if(commonResponse.failModel != null){
-
-      }
-
+      historyList.value = response.items;
 
     } catch (e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
+      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
     } finally {
       isLoadFinish(true);
     }

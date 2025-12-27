@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:seeya/core/config/app_router.dart';
 import 'package:seeya/controller/controllers.dart';
-import 'package:seeya/data/enum/enums.dart';
 import 'package:seeya/view/common/bouncing_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 

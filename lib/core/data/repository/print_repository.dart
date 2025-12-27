@@ -15,4 +15,21 @@ class PrintRepository {
 
     return PrintQueue.fromJson(response.data);
   }
+
+  /// GET /api/v1/mobile/print/queue
+  /// 프린트 히스토리 목록 조회
+  Future<PrintQueueResponse> getPrintQueues({
+    required int skip,
+    required int limit,
+  }) async {
+    final response = await _dio.get(
+      '/api/v1/mobile/print/queue',
+      queryParameters: {
+        'skip': skip,
+        'limit': limit,
+      },
+    );
+
+    return PrintQueueResponse.fromJson(response.data);
+  }
 }

@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/core/config/app_colors.dart';
 import 'package:seeya/core/config/app_themes.dart';
-import 'package:seeya/data/enum/enums.dart';
+import 'package:seeya/core/data/enum/social_login_type.dart';
 import 'package:seeya/core/services/services.dart';
 
 class SettingSnsIcons extends StatelessWidget {
@@ -16,65 +16,64 @@ class SettingSnsIcons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    var socialTypeString = UserService.instance.userDetail.value?.socialType?.value.toLowerCase();
-    var socialType = LoginPlatformUtils.stringToEnum(socialTypeString);
+    var socialType = UserService.instance.userDetail.value?.socialType;
 
 
     return Row(
       children: [
         Container(
           decoration: BoxDecoration(
-            color: socialType == LoginPlatform.kakao ? const Color(0xccFFEB00) : AppColors.blueGrey800,
+            color: socialType == SocialLoginType.kakao ? const Color(0xccFFEB00) : AppColors.blueGrey800,
             border: Border.all(
-              color: socialType == LoginPlatform.kakao ? const Color(0xffFFEB00) : AppColors.blueGrey600,
+              color: socialType == SocialLoginType.kakao ? const Color(0xffFFEB00) : AppColors.blueGrey600,
               width: 2,
             )
           ),
           child: SvgPicture.asset(
             "assets/image/ic_logo_kakao.svg",
-            colorFilter: socialType == LoginPlatform.kakao ? null : const ColorFilter.mode(AppColors.blueGrey600, BlendMode.srcIn),
+            colorFilter: socialType == SocialLoginType.kakao ? null : const ColorFilter.mode(AppColors.blueGrey600, BlendMode.srcIn),
           ),
         ),
         const SizedBox(width: 8,),
         Container(
           decoration: BoxDecoration(
-              color: socialType == LoginPlatform.naver ? const Color(0xcc04C75B) : AppColors.blueGrey800,
+              color: socialType == SocialLoginType.naver ? const Color(0xcc04C75B) : AppColors.blueGrey800,
               border: Border.all(
-                color: socialType == LoginPlatform.naver ? const Color(0xff04C75B) : AppColors.blueGrey600,
+                color: socialType == SocialLoginType.naver ? const Color(0xff04C75B) : AppColors.blueGrey600,
                 width: 2,
               )
           ),
           child: SvgPicture.asset(
             "assets/image/ic_logo_naver.svg",
-            colorFilter: socialType == LoginPlatform.naver ? null : const ColorFilter.mode(AppColors.blueGrey600, BlendMode.srcIn),
+            colorFilter: socialType == SocialLoginType.naver ? null : const ColorFilter.mode(AppColors.blueGrey600, BlendMode.srcIn),
           ),
         ),
         const SizedBox(width: 8,),
         Container(
           decoration: BoxDecoration(
-              color: socialType == LoginPlatform.google ? const Color(0xffffffff) : AppColors.blueGrey800,
+              color: socialType == SocialLoginType.google ? const Color(0xffffffff) : AppColors.blueGrey800,
               border: Border.all(
-                color: socialType == LoginPlatform.google ? AppColors.blueGrey200 : AppColors.blueGrey600,
+                color: socialType == SocialLoginType.google ? AppColors.blueGrey200 : AppColors.blueGrey600,
                 width: 2,
               )
           ),
           child: SvgPicture.asset(
             "assets/image/ic_logo_google.svg",
-            colorFilter: socialType == LoginPlatform.google ? null : const ColorFilter.mode(AppColors.blueGrey600, BlendMode.srcIn),
+            colorFilter: socialType == SocialLoginType.google ? null : const ColorFilter.mode(AppColors.blueGrey600, BlendMode.srcIn),
           ),
         ),
         const SizedBox(width: 8,),
         Container(
           decoration: BoxDecoration(
-              color: socialType == LoginPlatform.apple ? AppColors.blueGrey100 : AppColors.blueGrey800,
+              color: socialType == SocialLoginType.apple ? AppColors.blueGrey100 : AppColors.blueGrey800,
               border: Border.all(
-                color: socialType == LoginPlatform.apple ? AppColors.blueGrey000 : AppColors.blueGrey600,
+                color: socialType == SocialLoginType.apple ? AppColors.blueGrey000 : AppColors.blueGrey600,
                 width: 2,
               )
           ),
           child: SvgPicture.asset(
             "assets/image/ic_logo_apple.svg",
-            colorFilter: socialType == LoginPlatform.apple ? null : const ColorFilter.mode(AppColors.blueGrey600, BlendMode.srcIn),
+            colorFilter: socialType == SocialLoginType.apple ? null : const ColorFilter.mode(AppColors.blueGrey600, BlendMode.srcIn),
           ),
         ),
       ],

@@ -1,20 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:logger/logger.dart';
-import 'package:seeya/core/utils/device_info_utils.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-import '../core/config/app_prefs_keys.dart';
-import '../core/config/app_router.dart';
-import '../data/enum/enums.dart';
-import '../data/model/models.dart';
 import '../data/repository/repositories.dart';
-import '../core/services/services.dart';
 
 class LoginController extends GetxController{
 
