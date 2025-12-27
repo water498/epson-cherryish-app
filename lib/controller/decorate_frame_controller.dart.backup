@@ -140,6 +140,138 @@ class DecorateFrameController extends GetxController{
 
 
 
+  // v1 API (deprecated - use uploadAndCreatePrintQueue for v2)
+  @Deprecated('Use uploadAndCreatePrintQueue() for v2 API')
+  Future<void> checkPrinterAccess () async {
+    try {
+      LoadingOverlay.show();
+
+      CommonResponseModel commonResponse = await decorateFrameRepository.checkPrinterAccess(event.id);
+
+      if(commonResponse.successModel != null){
+
+        PrinterAccessResponseModel response = PrinterAccessResponseModel.fromJson(commonResponse.successModel!.content);
+
+        if(response.result == "possible"){
+
+          await uploadFinalImage(response.print_queue_id!);
+
+        } else if (response.result == "already"){
+          Fluttertoast.showToast(msg: "decorate_frame.toast.all_consumed".tr);
+        } else {
+          Fluttertoast.showToast(msg: "decorate_frame.toast.cant_user".tr);
+        }
+
+      } else if(commonResponse.failModel != null){
+
+        if(commonResponse.statusCode == 409){
+          Fluttertoast.showToast(msg: "decorate_frame.toast.already_finish".tr);
+        } else {
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+        }
+
+      }
+
+    } catch (e, stackTrace){
+      Logger().e("error ::: $e");
+      Logger().e("stackTrace ::: $stackTrace");
+      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+    } finally {
+      LoadingOverlay.hide();
+    }
+  }
+
+
+
+  // v1 API (deprecated - use uploadAndCreatePrintQueue for v2)
+  @Deprecated('Use uploadAndCreatePrintQueue() for v2 API')
+  Future<void> uploadFinalImage(int print_queue_id) async {
+    try {
+      LoadingOverlay.show("loading.overlay04".tr);
+
+      var resultFile = await ImageUtils.makeFinalFrameImage(
+          eventFrame,
+          mergedPhotoList,
+          eventFilterList
+      );
+
+      if(resultFile == null) {
+        Fluttertoast.showToast(msg: "decorate_frame.toast.merge_error".tr);
+        return;
+      }
+
+
+      CommonResponseModel commonResponse = await decorateFrameRepository.uploadFinalImage(event.id, resultFile);
+
+
+      if(commonResponse.successModel != null){
+
+        String filepath = commonResponse.successModel!.content["filepath"];
+        await requestPrintApi(filepath, print_queue_id);
+
+      } else if(commonResponse.failModel != null){
+
+        if(commonResponse.statusCode == 422){
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+        } else {
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+        }
+
+      }
+
+    } catch (e, stackTrace){
+      Logger().e("error ::: $e");
+      Logger().e("stackTrace ::: $stackTrace");
+      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+    } finally {
+      LoadingOverlay.hide();
+    }
+  }
+
+
+
+  // v1 API (deprecated - use uploadAndCreatePrintQueue for v2)
+  @Deprecated('Use uploadAndCreatePrintQueue() for v2 API')
+  Future<void> requestPrintApi (String filepath, int print_queue_id) async {
+    try {
+      LoadingOverlay.show();
+
+      var request = {
+        "print_filepath" : filepath,
+        "event_id" : event.id,
+        "print_queue_id" : print_queue_id,
+      };
+
+      CommonResponseModel commonResponse = await decorateFrameRepository.requestPrintApi(request);
+
+      if(commonResponse.successModel != null){
+
+        RequestPrintResponseModel response = RequestPrintResponseModel.fromJson(commonResponse.successModel!.content);
+
+        LoadingOverlay.show("loading.overlay05".tr, 1);
+        await Future.delayed(const Duration(seconds: 3));
+        showCompletedDialog(response.wait_count);
+
+      } else if(commonResponse.failModel != null){
+
+        if(commonResponse.statusCode == 409){
+          Fluttertoast.showToast(msg: "decorate_frame.toast.already_printing".tr);
+        } else if(commonResponse.statusCode == 422){
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+        } else {
+          Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+        }
+
+      }
+
+    } catch (e, stackTrace){
+      Logger().e("error ::: $e");
+      Logger().e("stackTrace ::: $stackTrace");
+      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+    } finally {
+      LoadingOverlay.hide();
+    }
+  }
 
 
 

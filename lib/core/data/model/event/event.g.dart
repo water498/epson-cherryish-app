@@ -8,6 +8,7 @@ part of 'event.dart';
 
 Event _$EventFromJson(Map<String, dynamic> json) => Event(
       id: (json['id'] as num).toInt(),
+      printerId: (json['printer_id'] as num?)?.toInt(),
       eventName: json['event_name'] as String?,
       mapPinImageFilepath: json['map_pin_image_filepath'] as String?,
       thumbnailImageFilepath: json['thumbnail_image_filepath'] as String?,
@@ -32,6 +33,7 @@ Event _$EventFromJson(Map<String, dynamic> json) => Event(
 
 Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
       'id': instance.id,
+      'printer_id': instance.printerId,
       'event_name': instance.eventName,
       'map_pin_image_filepath': instance.mapPinImageFilepath,
       'thumbnail_image_filepath': instance.thumbnailImageFilepath,

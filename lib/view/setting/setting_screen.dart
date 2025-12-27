@@ -71,7 +71,7 @@ class SettingScreen extends GetView<SettingController> {
                             width: maxLabelWidth,
                             child: Text("setting.user_info_name".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                         ),
-                        Expanded(child: Obx(() => Text("${UserService.instance.userPublicInfo.value?.name ?? "시야 손님 ${UserService.instance.userPublicInfo.value?.id ?? ""}"}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
+                        Expanded(child: Obx(() => Text("${UserService.instance.userDetail.value?.name ?? "시야 손님 ${UserService.instance.userDetail.value?.userId ?? ""}"}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
                       ],
                     ),
                     const SizedBox(height: 20,),
@@ -82,7 +82,7 @@ class SettingScreen extends GetView<SettingController> {
                             child: Text("setting.user_info_phone".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                         ),
                         Obx(() {
-                          if(UserService.instance.userPrivateInfo.value == null){
+                          if(UserService.instance.userDetail.value?.phoneNumberVerificationDate == null){
                             return BouncingButton(
                               onTap: () async {
                                 var result = await Get.toNamed(AppRouter.phone_verification);
@@ -99,7 +99,7 @@ class SettingScreen extends GetView<SettingController> {
                               ),
                             );
                           }else {
-                            return Expanded(child: Obx(() => Text("${UserService.instance.userPrivateInfo.value?.phone_number ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),));
+                            return Expanded(child: Obx(() => Text("${UserService.instance.userDetail.value?.phoneNumber ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),));
                           }
                         },),
 
@@ -113,7 +113,7 @@ class SettingScreen extends GetView<SettingController> {
                             width: maxLabelWidth,
                             child: Text("setting.user_info_email".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                         ),
-                        Expanded(child: Obx(() => Text("${UserService.instance.userPublicInfo.value?.email ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
+                        Expanded(child: Obx(() => Text("${UserService.instance.userDetail.value?.email ?? ""}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
                       ],
                     ),
                   ],

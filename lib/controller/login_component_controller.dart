@@ -45,21 +45,11 @@ class LoginComponentController extends GetxController{
       // 토큰 저장
       await AppPreferences().prefs?.setString(AppPrefsKeys.userAccessToken, response.accessToken);
 
-      // UserPublicModel로 변환 (임시 - 기존 코드와 호환성 유지)
-      UserPublicModel userPublic = UserPublicModel(
-        id: response.userInfo.userId,
-        email: response.userInfo.email,
-        name: response.userInfo.name,
-        profile_url: response.userInfo.profileUrl,
-        social_type: loginRequest.socialType.value.toLowerCase(), // GOOGLE -> google
-        created_date: DateTime.now(),
-        last_login_date: DateTime.now(),
-      );
-
-      UserService.instance.userPublicInfo.value = userPublic;
+      // v2: Store UserDetail directly
+      UserService.instance.userDetail.value = response.userDetail;
 
       // 전화번호 인증 필요 여부 확인
-      if(response.userInfo.phoneNumberVerificationDate == null){
+      if(response.userDetail.phoneNumberVerificationDate == null){
         LoadingOverlay.hide();
 
         dynamic phoneVerificationResult;

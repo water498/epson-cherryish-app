@@ -41,7 +41,7 @@ class SignUpFinishScreen extends StatelessWidget {
           SvgPicture.asset("assets/image/ic_check_large.svg"),
           const SizedBox(height: 32,),
           Text("sign_up_finish.title".tr, style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000), textAlign: TextAlign.center,),
-          Obx(() => Text("sign_up_finish.sub_title".trParams({"user":UserService.instance.userPublicInfo.value?.name ?? ""}), style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300), textAlign: TextAlign.center,),),
+          Obx(() => Text("sign_up_finish.sub_title".trParams({"user":UserService.instance.userDetail.value?.name ?? ""}), style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300), textAlign: TextAlign.center,),),
         ],
       ),
     );

@@ -5,6 +5,7 @@ part 'event.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Event {
   final int id;
+  final int? printerId;
   final String? eventName;
   final String? mapPinImageFilepath;
   final String? thumbnailImageFilepath;
@@ -26,6 +27,7 @@ class Event {
 
   Event({
     required this.id,
+    this.printerId,
     this.eventName,
     this.mapPinImageFilepath,
     this.thumbnailImageFilepath,

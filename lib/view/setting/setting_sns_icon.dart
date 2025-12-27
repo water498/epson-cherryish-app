@@ -16,7 +16,7 @@ class SettingSnsIcons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    var socialTypeString = UserService.instance.userPublicInfo.value?.social_type;
+    var socialTypeString = UserService.instance.userDetail.value?.socialType?.value.toLowerCase();
     var socialType = LoginPlatformUtils.stringToEnum(socialTypeString);
 
 

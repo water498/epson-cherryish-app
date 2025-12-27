@@ -301,14 +301,24 @@ class CameraScreenController extends GetxController{
 
       LoadingOverlay.show("loading.overlay02".tr);
       final croppedImage = img.copyCrop(decodedImage, x: offsetX, y: offsetY, width: width, height: (width*(ratio)).toInt());
-      final croppedBytes = img.encodePng(croppedImage);
-      await tempFile.writeAsBytes(croppedBytes);
+
+      // v2 API: Resize to exact filter dimensions (786x1064)
+      LoadingOverlay.show("loading.overlay03".tr);
+      final resizedImage = img.copyResize(
+        croppedImage,
+        width: SeeyaFrameConfigs.filterWidth.toInt(),
+        height: SeeyaFrameConfigs.filterHeight.toInt(),
+        interpolation: img.Interpolation.linear,
+      );
+      final resizedBytes = img.encodePng(resizedImage);
+      await tempFile.writeAsBytes(resizedBytes);
+      Logger().d("resized image - width: ${SeeyaFrameConfigs.filterWidth} height: ${SeeyaFrameConfigs.filterHeight}");
 
 
       if(filter.image_filepath != null){
-        LoadingOverlay.show("loading.overlay03".tr);
+        LoadingOverlay.show("loading.overlay04".tr);
         final overlayImage = await FileUtils.findFileFromUrl("${AppSecret.s3url}${filter.image_filepath}");
-        await ImageUtils().overlayImages(width, (width*(ratio)).toInt(), tempFile, overlayImage);
+        await ImageUtils().overlayImages(SeeyaFrameConfigs.filterWidth.toInt(), SeeyaFrameConfigs.filterHeight.toInt(), tempFile, overlayImage);
       }
 
       var model = CameraResultModel(filter_uid: filter.uid, file: tempFile);

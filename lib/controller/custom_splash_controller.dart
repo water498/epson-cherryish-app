@@ -65,25 +65,9 @@ class CustomSplashController extends GetxController{
 
   Future<void> validateToken() async {
     try {
-      // v2 API
+      // v2 API: Get user details and store directly
       UserDetail userDetail = await authRepository.getMe();
-
-      // Convert UserDetail to UserPublicModel for compatibility
-      UserPublicModel userPublic = UserPublicModel(
-        id: userDetail.userId,
-        name: userDetail.name,
-        email: userDetail.email,
-        profile_url: userDetail.profileUrl,
-        fcm_token: userDetail.fcmToken,
-        os_name: userDetail.osName,
-        os_version: userDetail.osVersion,
-        created_date: userDetail.createdDate ?? DateTime.now(),
-        last_login_date: userDetail.lastLoginDate ?? DateTime.now(),
-        deleted_date: userDetail.deletedDate,
-        social_type: userDetail.socialType?.value ?? 'unknown',
-      );
-
-      UserService.instance.userPublicInfo.value = userPublic;
+      UserService.instance.userDetail.value = userDetail;
 
     } catch (e, stackTrace) {
       Logger().d("Error: $e");

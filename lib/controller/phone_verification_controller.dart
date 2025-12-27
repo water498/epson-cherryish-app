@@ -277,26 +277,8 @@ class PhoneVerificationController extends GetxController{
 
       UserDetail response = await authRepository.verifyPhone(request);
 
-      // UserPrivateModel로 변환 (임시 - 기존 코드와 호환성 유지)
-      UserPublicModel userPublic = UserPublicModel(
-        id: response.userId,
-        email: response.email,
-        name: response.name,
-        profile_url: response.profileUrl,
-        social_type: response.socialType?.value.toLowerCase() ?? "",
-        created_date: DateTime.now(),
-        last_login_date: response.lastLoginDate ?? DateTime.now(),
-      );
-
-      UserPrivateModel userPrivate = UserPrivateModel(
-        userPublicModel: userPublic,
-        phone_number: response.phoneNumber ?? "",
-        phone_number_verification_date: response.phoneNumberVerificationDate ?? DateTime.now(),
-        social_id: "",
-      );
-
-      UserService.instance.userPublicInfo.value = userPublic;
-      UserService.instance.userPrivateInfo.value = userPrivate;
+      // v2: Store UserDetail directly
+      UserService.instance.userDetail.value = response;
 
       stopTimer();
       Get.back(result: "success");

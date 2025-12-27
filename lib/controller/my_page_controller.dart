@@ -45,33 +45,9 @@ class MyPageController extends GetxController {
 
   Future<void> validateToken() async {
     try {
-      // v2 API
+      // v2 API: Get user details and store directly
       UserDetail userDetail = await authRepository.getMe();
-
-      // Convert UserDetail to existing model structure for compatibility
-      UserPublicModel userPublic = UserPublicModel(
-        id: userDetail.userId,
-        name: userDetail.name,
-        email: userDetail.email,
-        profile_url: userDetail.profileUrl,
-        fcm_token: userDetail.fcmToken,
-        os_name: userDetail.osName,
-        os_version: userDetail.osVersion,
-        created_date: userDetail.createdDate ?? DateTime.now(),
-        last_login_date: userDetail.lastLoginDate ?? DateTime.now(),
-        deleted_date: userDetail.deletedDate,
-        social_type: userDetail.socialType?.value ?? 'unknown',
-      );
-
-      UserPrivateModel userPrivate = UserPrivateModel(
-        userPublicModel: userPublic,
-        phone_number: userDetail.phoneNumber ?? '',
-        phone_number_verification_date: userDetail.phoneNumberVerificationDate ?? DateTime.now(),
-        social_id: userDetail.socialId ?? '',
-      );
-
-      UserService.instance.userPublicInfo.value = userPrivate.userPublicModel;
-      UserService.instance.userPrivateInfo.value = userPrivate;
+      UserService.instance.userDetail.value = userDetail;
 
     } catch (e, stackTrace) {
       Logger().d("Error: $e");
@@ -119,7 +95,7 @@ class MyPageController extends GetxController {
     await FirebaseAuth.instance.signOut();
     await AppPreferences().prefs?.remove(AppPrefsKeys.userAccessToken); // remove access token
     await AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.none.toDisplayString());
-    UserService.instance.userPublicInfo.value = null;
+    UserService.instance.userDetail.value = null;
 
   }
 

@@ -95,7 +95,7 @@ class WithdrawalController extends GetxController{
     await FirebaseAuth.instance.signOut();
     await AppPreferences().prefs?.remove(AppPrefsKeys.userAccessToken); // remove access token
     await AppPreferences().prefs?.setString(AppPrefsKeys.loginPlatform, LoginPlatform.none.toDisplayString());
-    UserService.instance.userPublicInfo.value = null;
+    UserService.instance.userDetail.value = null;
 
 
     Get.offAllNamed(AppRouter.custom_splash);

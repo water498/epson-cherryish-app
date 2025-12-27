@@ -57,8 +57,7 @@ class BaseApiRepository extends GetxService {
         Get.offAllNamed(AppRouter.block);
       },
       403: () async {
-        UserService.instance.userPublicInfo.value = null;
-        UserService.instance.userPrivateInfo.value = null;
+        UserService.instance.userDetail.value = null;
         await AppPreferences().prefs?.remove(AppPrefsKeys.userAccessToken); // remove access token
         if(requestPath == "/mobile/auth/validate/token" || requestPath == "/mobile/auth/profile"){
           return;

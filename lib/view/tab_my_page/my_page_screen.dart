@@ -65,9 +65,9 @@ class MyPageScreen extends GetView<MyPageController> {
                           width: 73,
                           height: 73,
                           child: Obx(() {
-                            if(UserService.instance.userPublicInfo.value?.profile_url != null){
+                            if(UserService.instance.userDetail.value?.profileUrl != null){
                               return SeeyaCachedImage(
-                                imageUrl: Uri.encodeFull("${UserService.instance.userPublicInfo.value!.profile_url!}"),
+                                imageUrl: Uri.encodeFull("${UserService.instance.userDetail.value!.profileUrl!}"),
                                 fit: BoxFit.cover,
                               );
                             }else {
@@ -82,14 +82,14 @@ class MyPageScreen extends GetView<MyPageController> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Obx(() {
-                            var userInfo = UserService.instance.userPublicInfo.value;
+                            var userInfo = UserService.instance.userDetail.value;
                             if(userInfo?.name == null || userInfo == null){
-                              return Text("my_page.no_name_user".trParams({'user_id': (userInfo?.id ?? 0).toString()}), style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),);
+                              return Text("my_page.no_name_user".trParams({'user_id': (userInfo?.userId ?? 0).toString()}), style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),);
                             } else {
                               return Text("my_page.seeya_user".trParams({'name':userInfo.name!}), style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),);
                             }
                           },),
-                          Obx(() => Text("my_page.login_from".trParams({'platform': UserService.instance.userPublicInfo.value?.social_type ?? ""}), style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),),
+                          Obx(() => Text("my_page.login_from".trParams({'platform': UserService.instance.userDetail.value?.socialType?.value ?? ""}), style: AppThemes.bodySmall.copyWith(color: AppColors.blueGrey300),),),
                         ],
                       )
                     ],

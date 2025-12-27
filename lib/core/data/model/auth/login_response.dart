@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'user_info.dart';
+import 'package:seeya/core/data/model/auth/auth_models.dart';
 
 part 'login_response.g.dart';
 
@@ -7,12 +7,12 @@ part 'login_response.g.dart';
 class LoginResponse {
   final String accessToken;
   final String tokenType;
-  final UserInfo userInfo;
+  final UserDetail userDetail;
 
   LoginResponse({
     required this.accessToken,
     required this.tokenType,
-    required this.userInfo,
+    required this.userDetail,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>

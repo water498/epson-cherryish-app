@@ -85,8 +85,7 @@ class DioService extends GetxService {
         break;
       case 403:
         // 토큰 만료/유효하지 않음
-        UserService.instance.userPublicInfo.value = null;
-        UserService.instance.userPrivateInfo.value = null;
+        UserService.instance.userDetail.value = null;
         AppPreferences().prefs?.remove(AppPrefsKeys.userAccessToken);
 
         // 토큰 검증 API인 경우는 로그인 화면으로 이동하지 않음

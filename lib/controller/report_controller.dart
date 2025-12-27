@@ -186,7 +186,7 @@ class ReportController extends GetxController{
           onButton02Click: () async {
 
             if(printHistory.merchant_uid != "none"){
-              if(UserService.instance.userPublicInfo.value == null){
+              if(UserService.instance.userDetail.value == null){
                 Fluttertoast.showToast(msg: "report.toast.fail_load_user".tr);
                 return;
               }
