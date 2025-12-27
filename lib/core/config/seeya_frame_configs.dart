@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../../data/model/models.dart';
 
 abstract class SeeyaFrameConfigs {

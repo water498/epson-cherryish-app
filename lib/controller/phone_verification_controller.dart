@@ -8,7 +8,6 @@ import 'package:logger/logger.dart';
 import 'package:seeya/core/config/app_router.dart';
 import 'package:seeya/core/data/model/auth/auth_models.dart';
 import 'package:seeya/core/data/repository/auth_repository.dart';
-import 'package:seeya/data/repository/repositories.dart';
 import 'package:seeya/core/services/services.dart';
 import 'package:seeya/core/utils/utils.dart';
 import 'package:seeya/view/common/loading_overlay.dart';

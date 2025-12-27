@@ -6,10 +6,6 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/core/config/app_router.dart';
 
-import '../core/config/app_prefs_keys.dart';
-import '../data/provider/providers.dart';
-import '../data/repository/repositories.dart';
-import '../core/services/services.dart';
 import '../view/screens.dart';
 import 'controllers.dart';
 

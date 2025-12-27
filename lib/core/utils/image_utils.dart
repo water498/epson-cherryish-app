@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'package:fc_native_image_resize/fc_native_image_resize.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';

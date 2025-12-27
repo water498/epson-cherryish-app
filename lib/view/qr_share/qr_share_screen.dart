@@ -41,7 +41,7 @@ class QrShareScreen extends StatelessWidget {
           children: [
             Expanded(
               child: SeeyaCachedImage(
-                imageUrl : Uri.encodeFull("${AppSecret.s3url}${controller.eventModel.qr_image_filepath}"),
+                imageUrl : Uri.encodeFull("${AppSecret.s3url}${controller.event.qrImageFilepath}"),
                 fit: BoxFit.contain,
                 width: size,
                 height: size,
@@ -49,8 +49,8 @@ class QrShareScreen extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () async {
-                // Share.share(controller.eventModel.web_link);
-                Share.share("https://www.seeya-printer.com/event/${controller.eventModel.id}");
+                // Share.share(controller.event.webLink);
+                Share.share("https://www.seeya-printer.com/event/${controller.event.id}");
               },
               child: Container(
                 width: double.infinity,

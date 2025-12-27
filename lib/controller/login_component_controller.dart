@@ -18,8 +18,6 @@ import '../core/data/model/auth/auth_models.dart';
 import '../core/data/repository/auth_repository.dart';
 import '../core/services/preference_service.dart';
 import '../core/data/enum/social_login_type.dart';
-import '../data/model/models.dart';
-import '../data/repository/repositories.dart';
 import '../core/services/services.dart';
 import '../core/utils/device_info_utils.dart';
 

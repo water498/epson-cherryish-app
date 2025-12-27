@@ -3,12 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:seeya/controller/controllers.dart';
-import 'package:seeya/data/repository/login_repository.dart';
 
 import '../../core/config/app_colors.dart';
 import '../../core/config/app_themes.dart';
 import '../../core/data/enum/social_login_type.dart';
-import '../../data/provider/providers.dart';
 import 'sns_login_button.dart';
 
 class LoginComponent extends GetView<LoginComponentController> {

@@ -30,6 +30,16 @@ class PrintRepository {
       },
     );
 
-    return PrintQueueResponse.fromJson(response.data);
+    // Handle both response formats
+    if (response.data is List) {
+      // If API returns a list directly
+      final items = (response.data as List)
+          .map((item) => PrintQueueItem.fromJson(item as Map<String, dynamic>))
+          .toList();
+      return PrintQueueResponse(count: items.length, items: items);
+    } else {
+      // If API returns the expected object format
+      return PrintQueueResponse.fromJson(response.data);
+    }
   }
 }

@@ -111,53 +111,6 @@ class EnterUserInfoController extends GetxController{
 
 
 
-  Future<void> updateUserInfo(LoginRequestModel loginRequest) async {
-    final url = Uri.parse("${AppSecret.baseUrl}/public/auth/mobile/login");
-
-    final token = AppPreferences().prefs?.getString(AppPrefsKeys.userAccessToken);
-    if(token == null) return;
-
-    try {
-      isLoading.value = true;
-
-      final headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token', // 실제 access token으로 대체
-      };
-
-      final body = jsonEncode({
-        loginRequest
-      });
-
-      final response = await http.put(
-        url,
-        headers: headers,
-        body: body,
-      );
-
-      Logger().d("response.statusCode ::: ${response.statusCode}");
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-
-        bool result = jsonResponse["success"];
-        String access_token = jsonResponse["access_token"];
-
-        Logger().d("result ::: $result access token ::: $access_token");
-
-        if(result){
-
-        }else {
-
-        }
-
-      } else {
-        Fluttertoast.showToast(msg: "toast.unknown_error".tr, gravity: ToastGravity.TOP);
-      }
-    } finally {
-      isLoading.value = false;
-    }
-  }
 
 
 

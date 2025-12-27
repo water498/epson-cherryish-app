@@ -1,13 +1,8 @@
 import 'package:get/get.dart';
 
-import '../data/repository/repositories.dart';
-
 class LoginController extends GetxController{
 
-
-  final LoginRepository loginRepository;
-
-  LoginController({required this.loginRepository});
+  LoginController();
 
 
 

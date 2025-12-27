@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/core/config/app_router.dart';
 import 'package:seeya/data/model/models.dart';
-import 'package:seeya/data/repository/repositories.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
 
 import '../core/data/model/event/event.dart';
@@ -12,7 +11,6 @@ import '../core/data/model/event/editor_frame.dart';
 import '../core/data/repository/file_repository.dart';
 import '../core/data/repository/print_repository.dart';
 import '../core/data/model/print/print_models.dart';
-import '../core/utils/utils.dart';
 import '../view/dialog/dialogs.dart';
 
 class DecorateFrameController extends GetxController{
@@ -20,11 +18,6 @@ class DecorateFrameController extends GetxController{
   // v2 repositories
   final fileRepository = FileRepository();
   final printRepository = PrintRepository();
-
-  // v1 repository (deprecated - for backward compatibility)
-  final DecorateFrameRepository decorateFrameRepository;
-
-  DecorateFrameController({required this.decorateFrameRepository});
 
 
 
