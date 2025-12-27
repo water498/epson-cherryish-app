@@ -43,6 +43,13 @@ class SearchScreenController extends GetxController{
 
     // 검색 api
     debounce(searchText, (keyword) async {
+      // 검색어가 비어있거나 공백만 있으면 API 호출하지 않음
+      if (keyword.trim().isEmpty) {
+        searchResponseList.value = []; // 결과 초기화
+        searchMatchingHistories.value = []; // 검색 기록도 초기화
+        return;
+      }
+
       await fetchSearchResult(textController.text);
 
       // 내 검색 기록 필터링
@@ -71,6 +78,11 @@ class SearchScreenController extends GetxController{
 
 
   Future<void> fetchSearchResult(String searchKeyword) async {
+    // 이중 검증: 공백 확인
+    if (searchKeyword.trim().isEmpty) {
+      searchResponseList.value = [];
+      return;
+    }
 
     try {
 
