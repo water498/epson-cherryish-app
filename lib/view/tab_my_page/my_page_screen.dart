@@ -77,7 +77,7 @@ class MyPageScreen extends GetView<MyPageController> {
                           Obx(() {
                             var userInfo = UserService.instance.userDetail.value;
                             if(userInfo?.name == null || userInfo == null){
-                              return Text("my_page.no_name_user".trParams({'user_id': (userInfo?.userId ?? 0).toString()}), style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),);
+                              return Text("my_page.no_name_user".trParams({'user_id': (userInfo?.id ?? 0).toString()}), style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),);
                             } else {
                               return Text("my_page.seeya_user".trParams({'name':userInfo.name!}), style: AppThemes.headline03.copyWith(color: AppColors.blueGrey000),);
                             }

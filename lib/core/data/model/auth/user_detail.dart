@@ -5,7 +5,7 @@ part 'user_detail.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class UserDetail {
-  final int userId;
+  final int id;
   final String? name;
   final UserStatus? status;
   final String email;
@@ -23,7 +23,7 @@ class UserDetail {
   final DateTime? lastLoginDate;
 
   UserDetail({
-    required this.userId,
+    required this.id,
     this.name,
     this.status,
     required this.email,

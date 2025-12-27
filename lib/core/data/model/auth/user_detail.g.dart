@@ -7,7 +7,7 @@ part of 'user_detail.dart';
 // **************************************************************************
 
 UserDetail _$UserDetailFromJson(Map<String, dynamic> json) => UserDetail(
-      userId: (json['user_id'] as num).toInt(),
+      id: (json['id'] as num).toInt(),
       name: json['name'] as String?,
       status: $enumDecodeNullable(_$UserStatusEnumMap, json['status']),
       email: json['email'] as String,
@@ -39,7 +39,7 @@ UserDetail _$UserDetailFromJson(Map<String, dynamic> json) => UserDetail(
 
 Map<String, dynamic> _$UserDetailToJson(UserDetail instance) =>
     <String, dynamic>{
-      'user_id': instance.userId,
+      'id': instance.id,
       'name': instance.name,
       'status': _$UserStatusEnumMap[instance.status],
       'email': instance.email,

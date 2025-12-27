@@ -7,12 +7,12 @@ part 'login_response.g.dart';
 class LoginResponse {
   final String accessToken;
   final String tokenType;
-  final UserDetail userDetail;
+  final UserDetail userInfo;
 
   LoginResponse({
     required this.accessToken,
     required this.tokenType,
-    required this.userDetail,
+    required this.userInfo,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>

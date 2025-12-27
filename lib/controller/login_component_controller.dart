@@ -44,10 +44,10 @@ class LoginComponentController extends GetxController{
       await AppPreferences().prefs?.setString(AppPrefsKeys.userAccessToken, response.accessToken);
 
       // v2: Store UserDetail directly
-      UserService.instance.userDetail.value = response.userDetail;
+      UserService.instance.userDetail.value = response.userInfo;
 
       // 전화번호 인증 필요 여부 확인
-      if(response.userDetail.phoneNumberVerificationDate == null){
+      if(response.userInfo.phoneNumberVerificationDate == null){
         LoadingOverlay.hide();
 
         dynamic phoneVerificationResult;

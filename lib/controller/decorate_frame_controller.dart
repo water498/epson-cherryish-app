@@ -11,6 +11,7 @@ import '../core/data/model/event/editor_frame.dart';
 import '../core/data/repository/file_repository.dart';
 import '../core/data/repository/print_repository.dart';
 import '../core/data/model/print/print_models.dart';
+import '../core/services/user_service.dart';
 import '../view/dialog/dialogs.dart';
 
 class DecorateFrameController extends GetxController{
@@ -190,6 +191,13 @@ class DecorateFrameController extends GetxController{
 
   /// v2 API: Upload 4 images individually and create print queue
   Future<void> uploadAndCreatePrintQueue() async {
+
+    // Check phone verification
+    if (UserService.instance.userDetail.value?.phoneNumberVerificationDate == null) {
+      Get.toNamed(AppRouter.phone_verification);
+      return;
+    }
+
     try {
       LoadingOverlay.show();
 
