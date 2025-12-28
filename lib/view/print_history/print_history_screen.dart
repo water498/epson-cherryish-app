@@ -45,10 +45,14 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
           );
         }
 
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          itemCount: controller.historyList.length,
-          itemBuilder: (context, index) {
+        return RefreshIndicator(
+          onRefresh: () async {
+            await controller.fetchHistory();
+          },
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            itemCount: controller.historyList.length,
+            itemBuilder: (context, index) {
             final history = controller.historyList[index];
 
             return GestureDetector(
@@ -73,14 +77,12 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                       // 썸네일 이미지
                       Hero(
                         tag: "print_history_viewer$index",
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SizedBox(
-                            width: 80,
-                            height: 80,
-                            child: SeeyaCachedImage(
-                              imageUrl: Uri.encodeFull("${AppSecret.s3url}${history.thumbnailImageFilepath}"),
-                            ),
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          child: SeeyaCachedImage(
+                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${history.thumbnailImageFilepath}"),
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
@@ -133,6 +135,7 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
               ),
             );
           },
+        ),
         );
       }),
     );
