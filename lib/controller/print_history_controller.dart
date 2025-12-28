@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -9,35 +8,16 @@ class PrintHistoryController extends GetxController{
 
   final printRepository = PrintRepository();
 
-
-
-
-
-
   RxList<PrintQueue> historyList = <PrintQueue>[].obs;
   var isLoadFinish = false.obs;
-  late final PageController pageController;
 
   static const int limit = 100; // 한 번에 가져올 항목 수
 
 
   @override
   void onInit() {
-    pageController = PageController(
-        initialPage: 0,
-        viewportFraction: 0.9
-    );
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      fetchHistory();
-    });
-
     super.onInit();
-  }
-
-  @override
-  void onClose() {
-    pageController.dispose();
-    super.onClose();
+    fetchHistory();
   }
 
   Future<void> fetchHistory() async {

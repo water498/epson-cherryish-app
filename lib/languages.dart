@@ -154,6 +154,7 @@ class Languages extends Translations {
 
       'print_history.title':'프린트 히스토리',
       'print_history.empty':'히스토리가 존재하지 않습니다.',
+      'print_history.no_event_name':'이벤트 정보 없음',
 
       'report.title':'에러 리포트',
       'report.tab_bar_menu1':'이용 내역',
@@ -165,6 +166,7 @@ class Languages extends Translations {
       'report.item_status_reported':'문의 완료',
       'report.item_status_pending':'출력중',
       'report.item_status_wait':'대기중',
+      'report.item_status_none':'알 수 없음',
 
       'report.toast.all_consumed':'재출력 횟수를 모두 소진하셨습니다.',
       'report.toast.cant_use':'현재 이용할 수 없는 상황입니다. 잠시 후에 다시 시도해주세요.',
@@ -370,6 +372,7 @@ class Languages extends Translations {
       "seeya_guide.step3_description": "After payment, your precious moment\nwill be printed and ready in no time!",
       "print_history.title": "Print History",
       "print_history.empty": "No history available.",
+      "print_history.no_event_name": "No Event Info",
       "report.title": "Error Report",
       "report.tab_bar_menu1": "Usage History",
       "report.tab_bar_menu2": "Inquiry History",
@@ -380,6 +383,7 @@ class Languages extends Translations {
       "report.item_status_reported": "Reported",
       "report.item_status_pending": "Printing",
       "report.item_status_wait": "Waiting",
+      "report.item_status_none": "Unknown",
       "report.toast.all_consumed": "You\'ve used all your reprint chances.",
       "report.toast.cant_use": "Service currently unavailable. Please try again later.",
       "report.toast.already_finish": "This event has already ended.",
@@ -573,6 +577,7 @@ class Languages extends Translations {
       "seeya_guide.step3_description": "決済完了後、少し待つだけで\nあなたの特別な瞬間が手元に！",
       "print_history.title": "プリント履歴",
       "print_history.empty": "履歴がありません。",
+      "print_history.no_event_name": "イベント情報なし",
       "report.title": "エラー報告",
       "report.tab_bar_menu1": "使用履歴",
       "report.tab_bar_menu2": "お問い合わせ",
@@ -583,6 +588,7 @@ class Languages extends Translations {
       "report.item_status_reported": "お問い合わせ済み",
       "report.item_status_pending": "印刷中",
       "report.item_status_wait": "待機中",
+      "report.item_status_none": "不明",
       "report.toast.all_consumed": "再印刷回数をすべて使用しました。",
       "report.toast.cant_use": "現在サービスをご利用いただけません。しばらくしてから再度お試しください。",
       "report.toast.already_finish": "このイベントは終了しています。",
