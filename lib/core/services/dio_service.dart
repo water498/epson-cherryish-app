@@ -52,7 +52,7 @@ class DioService extends GetxService {
         if (e.type == DioExceptionType.connectionTimeout ||
             e.type == DioExceptionType.receiveTimeout ||
             e.type == DioExceptionType.sendTimeout) {
-          Fluttertoast.showToast(msg: "네트워크 연결 시간이 초과되었습니다. 다시 시도해주세요.");
+          Fluttertoast.showToast(msg: 'toast.network_timeout'.tr);
         } else if (e.type == DioExceptionType.badResponse) {
           int? statusCode = e.response?.statusCode;
           String requestPath = e.requestOptions.path;
@@ -61,9 +61,9 @@ class DioService extends GetxService {
             _handleStatusCode(statusCode, requestPath);
           }
         } else if (e.type == DioExceptionType.cancel) {
-          Fluttertoast.showToast(msg: "요청이 취소되었습니다.");
+          Fluttertoast.showToast(msg: 'toast.request_cancelled'.tr);
         } else if (e.type == DioExceptionType.unknown) {
-          Fluttertoast.showToast(msg: "알 수 없는 에러가 발생하였습니다.");
+          Fluttertoast.showToast(msg: 'toast.unknown_error'.tr);
         }
 
         return handler.next(e);

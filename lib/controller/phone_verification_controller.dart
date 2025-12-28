@@ -263,7 +263,7 @@ class PhoneVerificationController extends GetxController{
   void reset(bool showToast){
     isTimeExpired.value = true;
     stopTimer();
-    if(showToast) Fluttertoast.showToast(msg: "phone_verification.toast.code_expired_retry",gravity: ToastGravity.TOP);
+    if(showToast) Fluttertoast.showToast(msg: "phone_verification.toast.code_expired_retry".tr,gravity: ToastGravity.TOP);
     showVerifyCodeWidget(false);
   }
 

@@ -35,9 +35,9 @@ class LocalNotificationService {
     try {
 
       AndroidNotificationDetails androidPlatformChannelSpecifics =
-      const AndroidNotificationDetails(
-        '시야 알림 기본',
-        '시야 알림',
+      AndroidNotificationDetails(
+        'notification.channel_name'.tr,
+        'notification.channel_description'.tr,
 
         playSound: true,
         // sound: RawResourceAndroidNotificationSound('notification'),

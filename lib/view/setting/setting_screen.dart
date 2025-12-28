@@ -69,7 +69,7 @@ class SettingScreen extends GetView<SettingController> {
                             width: maxLabelWidth,
                             child: Text("setting.user_info_name".tr, style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey300),)
                         ),
-                        Expanded(child: Obx(() => Text("${UserService.instance.userDetail.value?.name ?? "시야 손님 ${UserService.instance.userDetail.value?.id ?? ""}"}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
+                        Expanded(child: Obx(() => Text("${UserService.instance.userDetail.value?.name ?? "my_page.no_name_user".trParams({'user_id': '${UserService.instance.userDetail.value?.id ?? ""}'})}", style: AppThemes.bodyMedium.copyWith(color: AppColors.blueGrey100, fontFamily: "Inter"),),)),
                       ],
                     ),
                     const SizedBox(height: 20,),

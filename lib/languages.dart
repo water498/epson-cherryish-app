@@ -8,6 +8,11 @@ class Languages extends Translations {
       'toast.unknown_error':'알 수 없는 오류가 발생했습니다. 다시 시도해주세요.',
       'toast.error404':'요청하신 리소스를 찾을 수 없습니다.',
       'toast.error500':'처리중 알 수 없는 에러가 발생하였습니다.',
+      'toast.network_timeout':'네트워크 연결 시간이 초과되었습니다. 다시 시도해주세요.',
+      'toast.request_cancelled':'요청이 취소되었습니다.',
+
+      'notification.channel_name':'시야 알림',
+      'notification.channel_description':'시야 앱 알림',
 
       'enter_user_info.bottom_button':'완료',
       'enter_user_info.title':'필수 정보 입력',
@@ -240,6 +245,11 @@ class Languages extends Translations {
       'toast.unknown_error': 'An unknown error occurred. Please try again.',
       'toast.error404': 'Requested resource not found.',
       'toast.error500': 'An unexpected error occurred during processing.',
+      'toast.network_timeout': 'Network connection timed out. Please try again.',
+      'toast.request_cancelled': 'Request has been cancelled.',
+
+      'notification.channel_name': 'Seeya Notifications',
+      'notification.channel_description': 'Seeya app notifications',
       'enter_user_info.bottom_button': 'Done',
       'enter_user_info.title': 'Enter Required Info',
       'enter_user_info.name': 'Name',
@@ -436,6 +446,11 @@ class Languages extends Translations {
       'toast.unknown_error': '不明なエラーが発生しました。再試行してください。',
       'toast.error404': 'リクエストされたリソースが見つかりません。',
       'toast.error500': '処理中にエラーが発生しました。',
+      'toast.network_timeout': 'ネットワーク接続がタイムアウトしました。再度お試しください。',
+      'toast.request_cancelled': 'リクエストがキャンセルされました。',
+
+      'notification.channel_name': 'Seeya通知',
+      'notification.channel_description': 'Seeyaアプリの通知',
       'enter_user_info.bottom_button': '完了',
       'enter_user_info.title': '必須情報の入力',
       'enter_user_info.name': '名前',
