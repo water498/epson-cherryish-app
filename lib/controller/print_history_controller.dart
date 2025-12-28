@@ -14,7 +14,7 @@ class PrintHistoryController extends GetxController{
 
 
 
-  RxList<PrintQueueItem> historyList = <PrintQueueItem>[].obs;
+  RxList<PrintQueue> historyList = <PrintQueue>[].obs;
   var isLoadFinish = false.obs;
   late final PageController pageController;
 
@@ -43,12 +43,12 @@ class PrintHistoryController extends GetxController{
   Future<void> fetchHistory() async {
     try {
       // v2 API: Get print queue items
-      PrintQueueResponse response = await printRepository.getPrintQueues(
+      List<PrintQueue> items = await printRepository.getPrintQueues(
         skip: 0,
         limit: limit,
       );
 
-      historyList.value = response.items;
+      historyList.value = items;
 
     } catch (e, stackTrace){
       Logger().e("error ::: $e");

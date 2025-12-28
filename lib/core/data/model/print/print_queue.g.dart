@@ -24,6 +24,9 @@ PrintQueue _$PrintQueueFromJson(Map<String, dynamic> json) => PrintQueue(
       deletedDate: json['deleted_date'] == null
           ? null
           : DateTime.parse(json['deleted_date'] as String),
+      event: json['event'] == null
+          ? null
+          : Event.fromJson(json['event'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PrintQueueToJson(PrintQueue instance) =>
@@ -39,6 +42,7 @@ Map<String, dynamic> _$PrintQueueToJson(PrintQueue instance) =>
       'created_date': instance.createdDate.toIso8601String(),
       'updated_date': instance.updatedDate.toIso8601String(),
       'deleted_date': instance.deletedDate?.toIso8601String(),
+      'event': instance.event,
     };
 
 const _$PrintQueueStatusEnumMap = {

@@ -20,7 +20,7 @@ import GoogleMaps
         
         print("URL Received: \(url.absoluteString)")
         
-        if url.absoluteString.hasPrefix("kakao"){
+        if url.absoluteString.hasPrefix("kakao") || url.absoluteString.hasPrefix("seeyanaverlogin"){
             super.application(app, open:url, options: options)
             return true
         } else if url.absoluteString.contains("seeya-app"){

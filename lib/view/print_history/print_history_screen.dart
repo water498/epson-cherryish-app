@@ -66,7 +66,7 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                         child: Hero(
                           tag: "print_history_viewer$index",
                           child: SeeyaCachedImage(
-                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${history.thumbnailFilepath}"),
+                            imageUrl: Uri.encodeFull("${AppSecret.s3url}${history.thumbnailImageFilepath}"),
                           ),
                         ),
                       ),

@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import '../../enum/enums.dart';
+import '../event/event.dart';
 
 part 'print_queue.g.dart';
 
@@ -16,6 +17,7 @@ class PrintQueue {
   final DateTime createdDate;
   final DateTime updatedDate;
   final DateTime? deletedDate;
+  final Event? event;
 
   PrintQueue({
     required this.id,
@@ -29,6 +31,7 @@ class PrintQueue {
     required this.createdDate,
     required this.updatedDate,
     this.deletedDate,
+    this.event,
   });
 
   factory PrintQueue.fromJson(Map<String, dynamic> json) =>

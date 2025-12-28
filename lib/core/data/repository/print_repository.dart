@@ -18,7 +18,7 @@ class PrintRepository {
 
   /// GET /api/v1/mobile/print/queue
   /// 프린트 히스토리 목록 조회
-  Future<PrintQueueResponse> getPrintQueues({
+  Future<List<PrintQueue>> getPrintQueues({
     required int skip,
     required int limit,
   }) async {
@@ -30,16 +30,9 @@ class PrintRepository {
       },
     );
 
-    // Handle both response formats
-    if (response.data is List) {
-      // If API returns a list directly
-      final items = (response.data as List)
-          .map((item) => PrintQueueItem.fromJson(item as Map<String, dynamic>))
-          .toList();
-      return PrintQueueResponse(count: items.length, items: items);
-    } else {
-      // If API returns the expected object format
-      return PrintQueueResponse.fromJson(response.data);
-    }
+    // API returns a list directly
+    return (response.data as List)
+        .map((item) => PrintQueue.fromJson(item as Map<String, dynamic>))
+        .toList();
   }
 }
