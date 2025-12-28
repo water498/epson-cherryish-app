@@ -71,7 +71,7 @@ class LoginComponentController extends GetxController{
 
     } catch (e, stackTrace) {
       // Dio 에러는 DioService의 interceptor에서 처리됨
-      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+      // Fluttertoast.showToast(msg: "toast.unknown_error".tr);
       Logger().e("Login Error: $e");
       Logger().e("stackTrace: $stackTrace");
     } finally {

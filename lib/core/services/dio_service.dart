@@ -58,7 +58,7 @@ class DioService extends GetxService {
           String requestPath = e.requestOptions.path;
 
           if (statusCode != null) {
-            _handleStatusCode(statusCode, requestPath);
+            _handleStatusCode(statusCode, requestPath, e);
           }
         } else if (e.type == DioExceptionType.cancel) {
           Fluttertoast.showToast(msg: 'toast.request_cancelled'.tr);
@@ -73,11 +73,15 @@ class DioService extends GetxService {
     return this;
   }
 
-  void _handleStatusCode(int statusCode, String requestPath) {
+  void _handleStatusCode(int statusCode, String requestPath, DioException e) {
+
     switch (statusCode) {
       case 401:
-        // 전화번호 인증 필요
-        Get.toNamed(AppRouter.phone_verification);
+        // 전화번호 인증 필요 - 로그인 상태일 때만
+        final accessToken = AppPreferences().prefs?.getString(AppPrefsKeys.userAccessToken);
+        if (accessToken != null && accessToken.isNotEmpty) {
+          Get.toNamed(AppRouter.phone_verification);
+        }
         break;
       case 402:
         // 차단된 사용자
@@ -104,6 +108,9 @@ class DioService extends GetxService {
       case 503:
         // 서버 점검
         Get.offAllNamed(AppRouter.server_maintenance);
+        break;
+      default:
+        Fluttertoast.showToast(msg: e.response?.data['detail']);
         break;
     }
   }

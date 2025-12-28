@@ -40,6 +40,12 @@ class MyPageController extends GetxController {
 
   Future<void> validateToken() async {
     try {
+      // accessToken이 없으면 API 호출하지 않음 (비로그인 상태)
+      final accessToken = AppPreferences().prefs?.getString(AppPrefsKeys.userAccessToken);
+      if (accessToken == null || accessToken.isEmpty) {
+        return;
+      }
+
       // v2 API: Get user details and store directly
       UserDetail userDetail = await authRepository.getMe();
       UserService.instance.userDetail.value = userDetail;

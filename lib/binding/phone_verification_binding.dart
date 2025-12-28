@@ -6,7 +6,7 @@ class PhoneVerificationBinding implements Bindings {
 
   @override
   void dependencies() {
-    Get.lazyPut<PhoneVerificationController>(() => PhoneVerificationController());
+    Get.put<PhoneVerificationController>(PhoneVerificationController());
   }
 
 }

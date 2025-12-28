@@ -29,6 +29,7 @@ class PhoneVerificationController extends GetxController{
 
   var showVerifyCodeWidget = false.obs;
   var isPhoneEmpty = true.obs;
+  var isLoading = false.obs; // 중복 클릭 방지용
 
   // String countryCode = "+82";
   String isoCode = "KR"; // 국가 코드
@@ -76,11 +77,11 @@ class PhoneVerificationController extends GetxController{
   @override
   void onClose() {
     stopTimer();
+    phoneTextController.removeListener(_phoneListener);
     phoneFocusNode.dispose();
     codeFocusNode.dispose();
     phoneTextController.dispose();
     codeTextController.dispose();
-    phoneTextController.removeListener(_phoneListener);
     super.onClose();
   }
 
@@ -128,7 +129,7 @@ class PhoneVerificationController extends GetxController{
         } else if(e.code.contains("quota-exceeded")){
           Fluttertoast.showToast(msg: "phone_verification.toast.quota".tr,gravity: ToastGravity.TOP);
         } else if(e.code.contains("web-context-cancelled")){
-
+          // 사용자가 reCAPTCHA를 취소한 경우 - 에러 메시지 없이 조용히 처리
         } else {
           Fluttertoast.showToast(msg: "phone_verification.toast.error".tr,gravity: ToastGravity.TOP);
         }
@@ -217,6 +218,9 @@ class PhoneVerificationController extends GetxController{
 
 
   onButtonClick(BuildContext context) async {
+    // 중복 클릭 방지
+    if (isLoading.value) return;
+
     if(timer == null && !showVerifyCodeWidget.value){
       // 인증번호 받기
       var phoneNumber = phoneTextController.value.text;
@@ -227,7 +231,9 @@ class PhoneVerificationController extends GetxController{
         Fluttertoast.showToast(msg: "phone_verification.toast.code_short".tr,gravity: ToastGravity.TOP);
         return;
       }
-      verifySMSCode(codeTextController.value.text);
+      isLoading.value = true;
+      await verifySMSCode(codeTextController.value.text);
+      isLoading.value = false;
     }
 
   }
@@ -265,6 +271,10 @@ class PhoneVerificationController extends GetxController{
     stopTimer();
     if(showToast) Fluttertoast.showToast(msg: "phone_verification.toast.code_expired_retry".tr,gravity: ToastGravity.TOP);
     showVerifyCodeWidget(false);
+    // 모든 필드 초기화
+    codeTextController.text = "";
+    phoneTextController.text = "";
+    _verificationId = "";
   }
 
 
@@ -286,6 +296,9 @@ class PhoneVerificationController extends GetxController{
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
       Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+      // 서버 에러 발생 시 타이머 중지 및 UI 리셋
+      stopTimer();
+      reset(false);
     } finally {
 
     }
