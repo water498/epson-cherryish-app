@@ -60,7 +60,7 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                 Get.toNamed(
                   AppRouter.image_viewer,
                   arguments: {
-                    "image_path": Uri.encodeFull("${AppSecret.s3url}${history.originalImageFilepath}"),
+                    "image_path": Uri.encodeFull("${AppSecret.s3url}${history.thumbnailImageFilepath}"),
                     "hero_tag": "print_history_viewer$index",
                   }
                 );
