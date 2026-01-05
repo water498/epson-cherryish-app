@@ -260,7 +260,7 @@ class MapTabController extends GetxController with GetSingleTickerProviderStateM
 
         // Load custom marker icon using MarkerIconCache
         final icon = await MarkerIconCache.getMarkerIcon(
-          "${AppSecret.s3url}${eventInfo.mapPinImageFilepath}",
+          "${eventInfo.mapPinImageFilepath}",
           width: iconSize,
           height: iconSize,
         );

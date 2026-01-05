@@ -295,7 +295,7 @@ class PhoneVerificationController extends GetxController{
     } catch (e, stackTrace) {
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
-      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+      // Fluttertoast.showToast(msg: "toast.unknown_error".tr);
       // 서버 에러 발생 시 타이머 중지 및 UI 리셋
       stopTimer();
       reset(false);

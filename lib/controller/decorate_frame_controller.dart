@@ -235,13 +235,13 @@ class DecorateFrameController extends GetxController{
       );
 
       LoadingOverlay.show("loading.creating_print_queue".tr);
-      await printRepository.createPrintQueue(request);
+      final printQueue = await printRepository.createPrintQueue(request);
 
       LoadingOverlay.show("loading.overlay05".tr, 1);
       await Future.delayed(const Duration(seconds: 3));
 
-      // Show success dialog (reusing existing dialog, wait_count = 0 as placeholder)
-      showCompletedDialog(0);
+      // Show success dialog with actual print queue ID
+      showCompletedDialog(printQueue.id);
 
     } catch (e, stackTrace){
       Logger().e("error ::: $e");

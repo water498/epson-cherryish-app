@@ -13,6 +13,8 @@ import 'package:seeya/data/model/models.dart';
 import 'package:seeya/core/utils/utils.dart';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/v4.dart';
+import 'package:image/image.dart' as img;
+import 'package:seeya/core/config/seeya_frame_configs.dart';
 
 class ImageCropController extends GetxController{
 
@@ -71,15 +73,31 @@ class ImageCropController extends GetxController{
 
       RenderRepaintBoundary boundary = boundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
-      // final originalRatio = imageHeight / boundary.size.height;
-      final originalRatio = 786 / boundary.size.width;
-      Logger().d("originalRatio ::: ${originalRatio}");
-      final image = await boundary.toImage(pixelRatio: originalRatio);
+      // Capture the boundary as image
+      final image = await boundary.toImage(pixelRatio: 3.0);
       final byteData = await image.toByteData(format: ImageByteFormat.png);
       final pngBytes = byteData!.buffer.asUint8List();
 
-      await _saveImage(pngBytes, "${const Uuid().v4()}.png");
+      // Decode the captured image
+      final capturedImage = img.decodeImage(pngBytes);
+      if (capturedImage == null) {
+        throw Exception("Failed to decode captured image");
+      }
+
+      // Resize to exact filter dimensions (786x1064) - same as camera
+      final resizedImage = img.copyResize(
+        capturedImage,
+        width: SeeyaFrameConfigs.filterWidth.toInt(),  // 786
+        height: SeeyaFrameConfigs.filterHeight.toInt(), // 1064
+        interpolation: img.Interpolation.linear,
+      );
+
+      // Encode back to PNG
+      final finalBytes = Uint8List.fromList(img.encodePng(resizedImage));
+
+      await _saveImage(finalBytes, "${const Uuid().v4()}.png");
     } catch(e){
+      Logger().e("Error capturing image: $e");
       isCapturing(false);
     } finally {
 

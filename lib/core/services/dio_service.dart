@@ -45,7 +45,7 @@ class DioService extends GetxService {
         Logger().d("RESPONSE[${response.statusCode}] => DATA: ${response.data}");
         return handler.next(response);
       },
-      onError: (e, handler) {
+      onError: (e, handler) async {
         Logger().e("ERROR[${e.response?.statusCode}] => MESSAGE: ${e.message}");
         Logger().e("ERROR[${e.response?.statusCode}] => DATA: ${e.response?.data}");
 
@@ -58,7 +58,7 @@ class DioService extends GetxService {
           String requestPath = e.requestOptions.path;
 
           if (statusCode != null) {
-            _handleStatusCode(statusCode, requestPath, e);
+            await _handleStatusCode(statusCode, requestPath, e);
           }
         } else if (e.type == DioExceptionType.cancel) {
           Fluttertoast.showToast(msg: 'toast.request_cancelled'.tr);
@@ -73,14 +73,17 @@ class DioService extends GetxService {
     return this;
   }
 
-  void _handleStatusCode(int statusCode, String requestPath, DioException e) {
+  Future<void> _handleStatusCode(int statusCode, String requestPath, DioException e) async {
 
     switch (statusCode) {
       case 401:
-        // 전화번호 인증 필요 - 로그인 상태일 때만
+        // 전화번호 인증 필요 - 토큰 유효성 확인 후 처리
         final accessToken = AppPreferences().prefs?.getString(AppPrefsKeys.userAccessToken);
         if (accessToken != null && accessToken.isNotEmpty) {
-          Get.toNamed(AppRouter.phone_verification);
+          // auth/me API를 제외한 경우만 토큰 유효성 확인
+          if (requestPath != "/api/v1/mobile/auth/me") {
+            await _verifyTokenAndNavigate(accessToken);
+          }
         }
         break;
       case 402:
@@ -112,6 +115,32 @@ class DioService extends GetxService {
       default:
         Fluttertoast.showToast(msg: e.response?.data['detail']);
         break;
+    }
+  }
+
+  Future<void> _verifyTokenAndNavigate(String accessToken) async {
+    try {
+      // 별도의 Dio 인스턴스 생성 (인터셉터 없이)
+      final authDio = Dio(BaseOptions(
+        baseUrl: AppSecret.baseUrl,
+        connectTimeout: const Duration(seconds: 10),
+        headers: {
+          'api-key': AppSecret.apiKey,
+          'authorization': 'Bearer $accessToken',
+        },
+      ));
+
+      // auth/me API 호출로 토큰 유효성 확인
+      await authDio.get('/api/v1/mobile/auth/me');
+
+      // 토큰이 유효함 → 폰 인증 필요
+      Get.toNamed(AppRouter.phone_verification);
+    } catch (e) {
+      // 토큰이 만료되었거나 유효하지 않음 → 로그인 화면으로
+      Logger().e("Token validation failed: $e");
+      UserService.instance.userDetail.value = null;
+      AppPreferences().prefs?.remove(AppPrefsKeys.userAccessToken);
+      Get.toNamed(AppRouter.login);
     }
   }
 }

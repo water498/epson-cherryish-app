@@ -104,8 +104,18 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                                 color: AppColors.blueGrey100,
                                 fontWeight: FontWeight.w600,
                               ),
-                              maxLines: 1,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 6),
+
+                            // 대기번호
+                            Text(
+                              "${"print_history.queue_number".tr}: #${history.id}",
+                              style: AppThemes.bodyMedium.copyWith(
+                                color: AppColors.primary400,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             const SizedBox(height: 4),
 
@@ -119,10 +129,12 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                                     color: AppColors.blueGrey400,
                                   ),
                                   const SizedBox(width: 4),
-                                  Text(
-                                    DateFormat('yyyy.MM.dd HH:mm').format(history.printingRequestDate!),
-                                    style: AppThemes.bodySmall.copyWith(
-                                      color: AppColors.blueGrey400,
+                                  Expanded(
+                                    child: Text(
+                                      DateFormat('yyyy.MM.dd HH:mm').format(history.printingRequestDate!),
+                                      style: AppThemes.bodySmall.copyWith(
+                                        color: AppColors.blueGrey400,
+                                      ),
                                     ),
                                   ),
                                 ],

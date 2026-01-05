@@ -155,6 +155,7 @@ class Languages extends Translations {
       'print_history.title':'프린트 히스토리',
       'print_history.empty':'히스토리가 존재하지 않습니다.',
       'print_history.no_event_name':'이벤트 정보 없음',
+      'print_history.queue_number':'대기번호',
 
       'report.title':'에러 리포트',
       'report.tab_bar_menu1':'이용 내역',
@@ -373,6 +374,7 @@ class Languages extends Translations {
       "print_history.title": "Print History",
       "print_history.empty": "No history available.",
       "print_history.no_event_name": "No Event Info",
+      "print_history.queue_number": "Queue Number",
       "report.title": "Error Report",
       "report.tab_bar_menu1": "Usage History",
       "report.tab_bar_menu2": "Inquiry History",
@@ -578,6 +580,7 @@ class Languages extends Translations {
       "print_history.title": "プリント履歴",
       "print_history.empty": "履歴がありません。",
       "print_history.no_event_name": "イベント情報なし",
+      "print_history.queue_number": "受付番号",
       "report.title": "エラー報告",
       "report.tab_bar_menu1": "使用履歴",
       "report.tab_bar_menu2": "お問い合わせ",
