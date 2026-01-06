@@ -40,7 +40,7 @@ class WithdrawalController extends GetxController{
     } catch (e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
-      Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+      // Interceptor에서 에러 toast를 처리하므로 여기서는 로깅만 수행
     } finally {
       LoadingOverlay.hide();
     }

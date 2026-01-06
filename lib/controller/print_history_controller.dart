@@ -86,17 +86,7 @@ class PrintHistoryController extends GetxController{
     } catch (e, stackTrace){
       Logger().e("error ::: $e");
       Logger().e("stackTrace ::: $stackTrace");
-
-      // 에러 코드별 처리
-      if (e.toString().contains('403')) {
-        Fluttertoast.showToast(msg: "print_history.toast.no_permission".tr);
-      } else if (e.toString().contains('404')) {
-        Fluttertoast.showToast(msg: "print_history.toast.not_found".tr);
-      } else if (e.toString().contains('409')) {
-        Fluttertoast.showToast(msg: "print_history.toast.reprint_conflict".tr);
-      } else {
-        Fluttertoast.showToast(msg: "toast.unknown_error".tr);
-      }
+      // Interceptor에서 에러 toast를 처리하므로 여기서는 로깅만 수행
     } finally {
       LoadingOverlay.hide();
     }
@@ -112,11 +102,7 @@ class PrintHistoryController extends GetxController{
       builder: (context) {
         return CommonDialog(
           title: "print_history_reprint_complete_dialog.title".trParams({'queueId': queueId.toString()}),
-          button01text: "print_history_reprint_complete_dialog.button01".tr,
-          onButton01Click: () async {
-            // Stay on print history page
-          },
-          button02text: "print_history_reprint_complete_dialog.button02".tr,
+          button02text: "print_history_reprint_complete_dialog.button01".tr,
           onButton02Click: () async {
             // Go to root (which contains MyPage tab)
             Get.until((route) => Get.currentRoute == AppRouter.root);
