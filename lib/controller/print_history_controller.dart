@@ -104,8 +104,7 @@ class PrintHistoryController extends GetxController{
           title: "print_history_reprint_complete_dialog.title".trParams({'queueId': queueId.toString()}),
           button02text: "print_history_reprint_complete_dialog.button01".tr,
           onButton02Click: () async {
-            // Go to root (which contains MyPage tab)
-            Get.until((route) => Get.currentRoute == AppRouter.root);
+
           },
         );
       },
