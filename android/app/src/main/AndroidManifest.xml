@@ -59,8 +59,8 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="seeya-printer.com" android:pathPrefix="/event"/>
-                <data android:scheme="https"/>
+                <data android:scheme="http" android:host="www.seeya-printer.com" android:pathPrefix="/deeplink/event"/>
+                <data android:scheme="https" android:host="www.seeya-printer.com" android:pathPrefix="/deeplink/event"/>
             </intent-filter>
 
 

@@ -61,10 +61,12 @@ class RootController extends GetxController{
     var pathSegments = uri.pathSegments;
     var joinedPath = '/${pathSegments.join('/')}';
 
-    if (pathSegments.contains("event") && pathSegments.length >= 2) {
+    if (pathSegments.length >= 3 &&
+        pathSegments[0] == "deeplink" &&
+        pathSegments[1] == "event") {
 
       try{
-        var eventId = int.parse(pathSegments.last);
+        var eventId = int.parse(pathSegments[2]);
         Get.toNamed(AppRouter.event_detail, arguments: eventId);
       }catch (e){
         Logger().e("deeplink event id parsing error");

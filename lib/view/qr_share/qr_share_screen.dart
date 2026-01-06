@@ -50,7 +50,7 @@ class QrShareScreen extends StatelessWidget {
             GestureDetector(
               onTap: () async {
                 // Share.share(controller.event.webLink);
-                Share.share("https://www.seeya-printer.com/event/${controller.event.id}");
+                Share.share("https://www.seeya-printer.com/deeplink/event/${controller.event.id}");
               },
               child: Container(
                 width: double.infinity,
