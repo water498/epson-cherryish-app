@@ -35,4 +35,14 @@ class PrintRepository {
         .map((item) => PrintQueue.fromJson(item as Map<String, dynamic>))
         .toList();
   }
+
+  /// POST /api/v1/mobile/print/queue/{queue_id}/reprint
+  /// 프린트 큐 재출력
+  Future<PrintQueue> reprintQueue(int queueId) async {
+    final response = await _dio.post(
+      '/api/v1/mobile/print/queue/$queueId/reprint',
+    );
+
+    return PrintQueue.fromJson(response.data);
+  }
 }

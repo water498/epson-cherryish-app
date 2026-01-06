@@ -1,8 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:seeya/core/config/app_router.dart';
 import 'package:seeya/core/data/model/print/print_models.dart';
 import 'package:seeya/core/data/repository/print_repository.dart';
+import 'package:seeya/view/common/loading_overlay.dart';
+import 'package:seeya/view/dialog/common_dialog.dart';
 
 class PrintHistoryController extends GetxController{
 
@@ -37,6 +41,89 @@ class PrintHistoryController extends GetxController{
     } finally {
       isLoadFinish(true);
     }
+  }
+
+  /// 재출력 버튼 클릭 시 호출
+  Future<void> reprintItem(int index) async {
+    if(Get.context == null) return;
+
+    final item = historyList[index];
+
+    showDialog(
+      context: Get.context!,
+      builder: (context) => CommonDialog(
+        title: "report_reprint_dialog.title".tr,
+        button01text: "report_reprint_dialog.button01".tr,
+        onButton01Click: () async {
+          // Cancel - dialog closes automatically
+        },
+        button02text: "report_reprint_dialog.button02".tr,
+        onButton02Click: () async {
+          await _executeReprint(item.id);
+        },
+      ),
+    );
+  }
+
+  /// 재출력 API 호출 실행
+  Future<void> _executeReprint(int queueId) async {
+    try {
+      LoadingOverlay.show();
+
+      // API 호출
+      final newPrintQueue = await printRepository.reprintQueue(queueId);
+
+      // 성공 메시지 표시 (3초)
+      LoadingOverlay.show("loading.overlay05".tr, 1);
+      await Future.delayed(const Duration(seconds: 3));
+
+      // 완료 다이얼로그 표시
+      showCompletedDialog(newPrintQueue.id);
+
+      // 히스토리 목록 새로고침
+      await fetchHistory();
+
+    } catch (e, stackTrace){
+      Logger().e("error ::: $e");
+      Logger().e("stackTrace ::: $stackTrace");
+
+      // 에러 코드별 처리
+      if (e.toString().contains('403')) {
+        Fluttertoast.showToast(msg: "print_history.toast.no_permission".tr);
+      } else if (e.toString().contains('404')) {
+        Fluttertoast.showToast(msg: "print_history.toast.not_found".tr);
+      } else if (e.toString().contains('409')) {
+        Fluttertoast.showToast(msg: "print_history.toast.reprint_conflict".tr);
+      } else {
+        Fluttertoast.showToast(msg: "toast.unknown_error".tr);
+      }
+    } finally {
+      LoadingOverlay.hide();
+    }
+  }
+
+  /// 재출력 완료 다이얼로그 표시
+  void showCompletedDialog(int queueId) {
+    if(Get.context == null) return;
+
+    showDialog(
+      context: Get.context!,
+      barrierDismissible: false,
+      builder: (context) {
+        return CommonDialog(
+          title: "print_history_reprint_complete_dialog.title".trParams({'queueId': queueId.toString()}),
+          button01text: "print_history_reprint_complete_dialog.button01".tr,
+          onButton01Click: () async {
+            // Stay on print history page
+          },
+          button02text: "print_history_reprint_complete_dialog.button02".tr,
+          onButton02Click: () async {
+            // Go to root (which contains MyPage tab)
+            Get.until((route) => Get.currentRoute == AppRouter.root);
+          },
+        );
+      },
+    );
   }
 
 }

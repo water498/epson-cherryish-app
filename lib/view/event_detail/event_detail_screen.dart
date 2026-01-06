@@ -266,7 +266,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                           )
                                       ),
                                       child: SeeyaCachedImage(
-                                        imageUrl: Uri.encodeFull("${AppSecret.s3url}${frame.resizedFrameImageFilepath}"),
+                                        imageUrl: Uri.encodeFull("${AppSecret.s3url}${frame.resizedMergedFrameImageFilepath}"),
                                         fit: BoxFit.cover,
                                       ),
                                     ),

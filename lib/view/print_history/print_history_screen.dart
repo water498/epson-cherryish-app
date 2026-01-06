@@ -142,6 +142,30 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                           ],
                         ),
                       ),
+
+                      // 재출력 버튼
+                      const SizedBox(width: 8),
+
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () => controller.reprintItem(index),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: AppColors.blueGrey600,
+                              width: 2,
+                            )
+                          ),
+                          child: Text(
+                            "usage_history.reprint".tr,
+                            style: AppThemes.bodySmall.copyWith(
+                              color: AppColors.blueGrey200,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
               ),
