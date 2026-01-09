@@ -89,11 +89,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>카메라를 사용해 사진을 찍어 병합하거나 QR코드 스캔을 위해 위해 접근 권한이 필요합니다.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>앱이 실행 중이거나 백그라운드에서 사용자의 위치 정보를 사용하여 실시간 위치 추적, 주변 서비스 추천 등을 제공하기 위해 필요합니다.</string>
+	<string>주변 포토부스를 실시간으로 찾고, 거리별로 정렬된 목록을 제공하기 위해 위치 정보가 필요합니다. 예: "500m 거리의 홍대 포토부스"</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>앱이 백그라운드에서도 항상 사용자의 위치 정보를 사용하기 위해 필요합니다.</string>
+	<string>주변 포토부스를 찾고 거리순으로 정렬하기 위해 위치 정보가 필요합니다.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>앱이 실행 중일 때 사용자의 위치 정보를 사용하기 위해 필요합니다.</string>
+	<string>주변 포토부스 위치를 지도에 표시하고, 사용자와의 거리를 계산하여 가까운 순으로 정렬하기 위해 위치 정보가 필요합니다.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>앱에서 이미지 병합을 통해 생성한 사진 저장을 위해 접근 권한이 필요합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
