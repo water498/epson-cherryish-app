@@ -12,7 +12,7 @@ abstract class FormatUtils {
     if(timestamp == null){
       return "";
     }
-    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000).toLocal();
     DateFormat formatter = DateFormat(format);
     return formatter.format(dateTime);
   }
@@ -37,7 +37,9 @@ abstract class FormatUtils {
 
 
   static String? formatDate01(DateTime? date) {
-    return date == null ? null : '${date.year.toString().padLeft(4, '0')}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
+    if (date == null) return null;
+    final localDate = date.toLocal();
+    return '${localDate.year.toString().padLeft(4, '0')}.${localDate.month.toString().padLeft(2, '0')}.${localDate.day.toString().padLeft(2, '0')}';
   }
 
 
@@ -56,20 +58,22 @@ abstract class FormatUtils {
   static String formatDateTimeToYYYYMMDDHHMM(DateTime? dateTime) {
     if(dateTime == null) return "";
 
-    final year = dateTime.year.toString().padLeft(4, '0');
-    final month = dateTime.month.toString().padLeft(2, '0');
-    final day = dateTime.day.toString().padLeft(2, '0');
-    final hour = dateTime.hour.toString().padLeft(2, '0');
-    final minute = dateTime.minute.toString().padLeft(2, '0');
+    final localDateTime = dateTime.toLocal();
+    final year = localDateTime.year.toString().padLeft(4, '0');
+    final month = localDateTime.month.toString().padLeft(2, '0');
+    final day = localDateTime.day.toString().padLeft(2, '0');
+    final hour = localDateTime.hour.toString().padLeft(2, '0');
+    final minute = localDateTime.minute.toString().padLeft(2, '0');
 
     return "$year.$month.$day $hour:$minute";
   }
 
   static String formatDateTimeToYYYYMMDD(DateTime? dateTime) {
     if(dateTime == null) return "";
-    final year = dateTime.year.toString().padLeft(4, '0');
-    final month = dateTime.month.toString().padLeft(2, '0');
-    final day = dateTime.day.toString().padLeft(2, '0');
+    final localDateTime = dateTime.toLocal();
+    final year = localDateTime.year.toString().padLeft(4, '0');
+    final month = localDateTime.month.toString().padLeft(2, '0');
+    final day = localDateTime.day.toString().padLeft(2, '0');
 
     return "$year.$month.$day";
   }

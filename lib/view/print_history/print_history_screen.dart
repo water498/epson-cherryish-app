@@ -131,7 +131,7 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                                   const SizedBox(width: 4),
                                   Expanded(
                                     child: Text(
-                                      DateFormat('yyyy.MM.dd HH:mm').format(history.printingRequestDate!),
+                                      DateFormat('yyyy.MM.dd HH:mm').format(history.printingRequestDate!.toLocal()),
                                       style: AppThemes.bodySmall.copyWith(
                                         color: AppColors.blueGrey400,
                                       ),

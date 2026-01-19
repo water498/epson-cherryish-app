@@ -209,7 +209,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                           bool isFinishedEvent = false;
 
                           if(controller.event.value != null && controller.event.value!.endDate != null){
-                            isFinishedEvent = DateTime.now().isAfter(controller.event.value!.endDate!);
+                            isFinishedEvent = DateTime.now().toUtc().isAfter(controller.event.value!.endDate!.toUtc());
                           }
 
                           return Container(
@@ -235,7 +235,7 @@ class EventDetailScreen extends GetView<EventDetailController> {
                                     bool isFinishedEvent = true;
 
                                     if(controller.event.value != null && controller.event.value!.endDate != null){
-                                      isFinishedEvent = !DateTime.now().isBefore(controller.event.value!.endDate!);
+                                      isFinishedEvent = !DateTime.now().toUtc().isBefore(controller.event.value!.endDate!.toUtc());
                                     }
 
                                     if(isFinishedEvent) {
