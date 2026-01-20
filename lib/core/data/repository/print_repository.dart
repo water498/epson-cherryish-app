@@ -45,4 +45,12 @@ class PrintRepository {
 
     return PrintQueue.fromJson(response.data);
   }
+
+  /// DELETE /api/v1/mobile/print/queue/{queue_id}
+  /// 프린트 큐 삭제 (모바일에서 숨김)
+  Future<void> deletePrintQueue(int queueId) async {
+    await _dio.delete(
+      '/api/v1/mobile/print/queue/$queueId',
+    );
+  }
 }

@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:seeya/core/config/app_router.dart';
+import 'package:seeya/core/data/enum/print_queue_status.dart';
 import 'package:seeya/core/data/model/print/print_models.dart';
 import 'package:seeya/core/data/repository/print_repository.dart';
 import 'package:seeya/view/common/loading_overlay.dart';
@@ -118,6 +119,57 @@ class PrintHistoryController extends GetxController{
         );
       },
     );
+  }
+
+  /// 삭제 버튼 클릭 시 호출
+  Future<void> deleteItem(int index) async {
+    if(Get.context == null) return;
+
+    final item = historyList[index];
+
+    // completed 또는 error 상태만 삭제 가능
+    if(item.status != PrintQueueStatus.completed && item.status != PrintQueueStatus.error) {
+      return;
+    }
+
+    showDialog(
+      context: Get.context!,
+      builder: (context) => CommonDialog(
+        title: "print_history_delete_dialog.title".tr,
+        description: "print_history_delete_dialog.description".tr,
+        button01text: "print_history_delete_dialog.button01".tr,
+        onButton01Click: () async {
+          // Cancel - dialog closes automatically
+        },
+        button02text: "print_history_delete_dialog.button02".tr,
+        onButton02Click: () async {
+          await _executeDelete(item.id, index);
+        },
+      ),
+    );
+  }
+
+  /// 삭제 API 호출 실행
+  Future<void> _executeDelete(int queueId, int index) async {
+    try {
+      LoadingOverlay.show();
+
+      // API 호출
+      await printRepository.deletePrintQueue(queueId);
+
+      // 리스트에서 제거
+      historyList.removeAt(index);
+
+      // 성공 토스트 표시
+      Fluttertoast.showToast(msg: "print_history.toast.delete_success".tr);
+
+    } catch (e, stackTrace){
+      Logger().e("error ::: $e");
+      Logger().e("stackTrace ::: $stackTrace");
+      Fluttertoast.showToast(msg: "print_history.toast.delete_fail".tr);
+    } finally {
+      LoadingOverlay.hide();
+    }
   }
 
 }

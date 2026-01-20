@@ -139,42 +139,81 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                                   ),
                                 ],
                               ),
+
+                            const SizedBox(height: 4,),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Builder(
+                                  builder: (context) {
+                                    // 이벤트 종료 여부 판단
+                                    final isEventFinished = history.event?.endDate != null
+                                        ? DateTime.now().toUtc().isAfter(history.event!.endDate!.toUtc())
+                                        : false;
+
+                                    return GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
+                                      onTap: isEventFinished ? null : () => controller.reprintItem(index),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: isEventFinished ? AppColors.blueGrey800 : AppColors.blueGrey600,
+                                              width: 2,
+                                            )
+                                        ),
+                                        child: Text(
+                                          "usage_history.reprint".tr,
+                                          style: AppThemes.bodySmall.copyWith(
+                                            color: isEventFinished ? AppColors.blueGrey600 : AppColors.blueGrey200,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+
+                                // 삭제 버튼
+                                const SizedBox(width: 8),
+
+                                Builder(
+                                  builder: (context) {
+                                    // completed 또는 error 상태만 삭제 가능
+                                    final canDelete = history.status == PrintQueueStatus.completed ||
+                                        history.status == PrintQueueStatus.error;
+
+                                    return GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
+                                      onTap: canDelete ? () => controller.deleteItem(index) : null,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: canDelete ? AppColors.error : AppColors.blueGrey800,
+                                              width: 2,
+                                            )
+                                        ),
+                                        child: Text(
+                                          "print_history.delete".tr,
+                                          style: AppThemes.bodySmall.copyWith(
+                                            color: canDelete ? AppColors.error : AppColors.blueGrey600,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+
                           ],
                         ),
                       ),
 
-                      // 재출력 버튼
-                      const SizedBox(width: 8),
 
-                      Builder(
-                        builder: (context) {
-                          // 이벤트 종료 여부 판단
-                          final isEventFinished = history.event?.endDate != null
-                            ? DateTime.now().toUtc().isAfter(history.event!.endDate!.toUtc())
-                            : false;
-
-                          return GestureDetector(
-                            behavior: HitTestBehavior.translucent,
-                            onTap: isEventFinished ? null : () => controller.reprintItem(index),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: isEventFinished ? AppColors.blueGrey800 : AppColors.blueGrey600,
-                                  width: 2,
-                                )
-                              ),
-                              child: Text(
-                                "usage_history.reprint".tr,
-                                style: AppThemes.bodySmall.copyWith(
-                                  color: isEventFinished ? AppColors.blueGrey600 : AppColors.blueGrey200,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
                     ],
                   ),
               ),
