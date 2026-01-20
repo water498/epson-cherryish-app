@@ -146,25 +146,34 @@ class PrintHistoryScreen extends GetView<PrintHistoryController> {
                       // 재출력 버튼
                       const SizedBox(width: 8),
 
-                      GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () => controller.reprintItem(index),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: AppColors.blueGrey600,
-                              width: 2,
-                            )
-                          ),
-                          child: Text(
-                            "usage_history.reprint".tr,
-                            style: AppThemes.bodySmall.copyWith(
-                              color: AppColors.blueGrey200,
-                              fontWeight: FontWeight.w600,
+                      Builder(
+                        builder: (context) {
+                          // 이벤트 종료 여부 판단
+                          final isEventFinished = history.event?.endDate != null
+                            ? DateTime.now().toUtc().isAfter(history.event!.endDate!.toUtc())
+                            : false;
+
+                          return GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: isEventFinished ? null : () => controller.reprintItem(index),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: isEventFinished ? AppColors.blueGrey800 : AppColors.blueGrey600,
+                                  width: 2,
+                                )
+                              ),
+                              child: Text(
+                                "usage_history.reprint".tr,
+                                style: AppThemes.bodySmall.copyWith(
+                                  color: isEventFinished ? AppColors.blueGrey600 : AppColors.blueGrey200,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                     ],
                   ),

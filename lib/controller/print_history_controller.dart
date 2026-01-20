@@ -49,6 +49,15 @@ class PrintHistoryController extends GetxController{
 
     final item = historyList[index];
 
+    // 이벤트 종료 여부 체크
+    if(item.event?.endDate != null) {
+      bool isEventFinished = DateTime.now().toUtc().isAfter(item.event!.endDate!.toUtc());
+      if(isEventFinished) {
+        Fluttertoast.showToast(msg: "print_history.toast.event_finished".tr);
+        return;
+      }
+    }
+
     showDialog(
       context: Get.context!,
       builder: (context) => CommonDialog(

@@ -159,6 +159,7 @@ class Languages extends Translations {
       'print_history.toast.no_permission':'재출력 권한이 없습니다.',
       'print_history.toast.not_found':'프린트 내역을 찾을 수 없습니다.',
       'print_history.toast.reprint_conflict':'재출력할 수 없습니다. 잠시 후 다시 시도해주세요.',
+      'print_history.toast.event_finished':'이벤트가 종료되어 재출력이 불가능합니다.',
 
       'report.title':'에러 리포트',
       'report.tab_bar_menu1':'이용 내역',
@@ -385,6 +386,7 @@ class Languages extends Translations {
       "print_history.toast.no_permission": "You don't have permission to reprint this item.",
       "print_history.toast.not_found": "Print history not found.",
       "print_history.toast.reprint_conflict": "Unable to reprint. Please try again later.",
+      "print_history.toast.event_finished": "This event has ended and reprinting is not available.",
       "report.title": "Error Report",
       "report.tab_bar_menu1": "Usage History",
       "report.tab_bar_menu2": "Inquiry History",
@@ -598,6 +600,7 @@ class Languages extends Translations {
       "print_history.toast.no_permission": "再印刷する権限がありません。",
       "print_history.toast.not_found": "プリント履歴が見つかりません。",
       "print_history.toast.reprint_conflict": "再印刷できません。しばらくしてから再度お試しください。",
+      "print_history.toast.event_finished": "イベントが終了したため、再印刷できません。",
       "report.title": "エラー報告",
       "report.tab_bar_menu1": "使用履歴",
       "report.tab_bar_menu2": "お問い合わせ",
