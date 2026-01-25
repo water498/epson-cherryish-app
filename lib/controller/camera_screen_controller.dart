@@ -190,8 +190,6 @@ class CameraScreenController extends GetxController{
       if (e is CameraException) {
         if(e.code.contains("CameraAccessDenied")){
           Fluttertoast.showToast(msg: "camera.toast.allow_permission".tr);
-          await Future.delayed(const Duration(milliseconds: 600));
-          openAppSettings();
         }else {
           Fluttertoast.showToast(msg: "camera.toast.init_error".tr);
         }
@@ -355,7 +353,6 @@ class CameraScreenController extends GetxController{
         var status = await Permission.photos.status;
         if (status.isDenied) {
           Logger().d('Access Denied');
-          openAppSettings();
         } else {
           Logger().e('Exception occured! ::: $e');
         }
