@@ -46,6 +46,15 @@ class RootController extends GetxController{
 
   void initDeepLink(){
     _appLinks = AppLinks();
+
+    // 콜드 스타트: 앱이 딥링크로 시작된 경우
+    _appLinks.getInitialLink().then((uri) {
+      if (uri != null) {
+        openAppLink(uri);
+      }
+    });
+
+    // 웜 스타트: 앱이 이미 실행 중일 때
     _linkSubscription = _appLinks.uriLinkStream.listen((uri) {
       openAppLink(uri);
     });
