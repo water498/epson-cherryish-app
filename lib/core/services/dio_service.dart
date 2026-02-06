@@ -43,6 +43,7 @@ class DioService extends GetxService {
       },
       onResponse: (response, handler) {
         Logger().d("RESPONSE[${response.statusCode}] => DATA: ${response.data}");
+        response.data = _appendUtcSuffix(response.data);
         return handler.next(response);
       },
       onError: (e, handler) async {
@@ -71,6 +72,23 @@ class DioService extends GetxService {
     ));
 
     return this;
+  }
+
+  static final _isoDateRegex = RegExp(
+    r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$',
+  );
+
+  static dynamic _appendUtcSuffix(dynamic data) {
+    if (data is String && _isoDateRegex.hasMatch(data)) {
+      return '${data}Z';
+    } else if (data is Map) {
+      return Map<String, dynamic>.fromEntries(
+        data.entries.map((e) => MapEntry(e.key as String, _appendUtcSuffix(e.value))),
+      );
+    } else if (data is List) {
+      return data.map(_appendUtcSuffix).toList();
+    }
+    return data;
   }
 
   Future<void> _handleStatusCode(int statusCode, String requestPath, DioException e) async {
